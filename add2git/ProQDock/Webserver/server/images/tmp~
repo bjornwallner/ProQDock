@@ -1,0 +1,48 @@
+
+#!/bin/bash
+montage -tile 8x1 -geometry 100x100+0+0 T0*.png header.png
+mogrify -bordercolor black -border 0x20 header.png
+
+IMG="header.png"
+OUTFILE="header2.png"
+DIM=`identify -format %wx%h $IMG`
+#pngcrush -m 3 -rem gama -rem phys -rem offs $IMG $OUTFILE
+
+# make a sharp square mask with rounded corners
+#convert -size $DIM xc:"#000000" \
+#        -fill white \
+#        -draw "RoundRectangle 8,8 392,392, 20,20" \
+#        mask.png
+#composite rounded.png header.png header3.png
+#convert -transparent "#081c32" header3.png header2.png 
+
+convert -size $DIM xc:"#081c32" \
+       -fill black \
+       -draw "RoundRectangle 0,0 800,140, 15,15" \
+	-transparent black \
+       rounded.png
+composite rounded.png header.png header3.png
+convert -transparent "#081c32" header3.png header2.png 
+
+#	
+#
+#
+## make a square mask with rounded corners and shadow
+#convert -size $DIM xc:black \
+#        -fill "#999999" \
+#        -draw "RoundRectangle 28,28 412,412, 20,20" \
+#        -blur 7x7 \
+#        -fill white \
+#        -draw "RoundRectangle 8,8 392,392, 20,20" \
+#        shadow.png
+#
+#
+#
+#convert -size $DIM xc:"#000000" gray.png
+#composite -compose over $OUTFILE gray.png mask.png op.png
+#convert op.png -matte opmat.png
+#composite -compose copyopacity shadow.png opmat.png avatar.png
+#
+## Reduce shadow to binary opacity by Floyd-Steinberg dithering
+#convert shadow.png -monochrome shadow-mono.png
+#composite -compose copyopacity shadow-mono.png opmat.png avatar-mono.png

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+n=$1
+
+if [ "$#" == "0" ]; then 
+echo "Enter update version number as a cmd"
+exit
+fi
+
+git add *
+git commit -a -m "update$n"
+git push
+

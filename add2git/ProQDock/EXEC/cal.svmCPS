@@ -1,0 +1,40 @@
+#!/bin/bash
+
+dir=C0-MODELS
+testset=$1
+
+echo $testset
+
+CPS=`echo $testset | cut -f1 -d'.'`.CPS
+
+echo /home/x_sabas/proj/BACKUP/CompEn-software/$dir
+
+rm temp1
+
+COUNTER=0
+
+for model in `ls /home/x_sabas/proj/BACKUP/CompEn-software/$dir/*.model`
+do
+echo $model
+pred=`echo $model | cut -f2 -d '/'`
+pred=`echo ${pred/model/pred}`
+echo $pred
+echo "~/proj/svm_light/svm_classify  $testset  $model  temp"
+~/proj/svm_light/svm_classify  $testset  $model  temp
+cat temp >> temp1
+sum1=`cat temp1 | awk 'BEGIN{sum=0}{sum=sum+$1}END {print sum};'`
+let COUNTER=COUNTER+1 
+echo $sum1
+done
+
+rm temp
+rm temp1
+
+pred=`expr $sum1/$COUNTER | bc -l`
+
+echo $pred > temp
+awk '{printf "%10.5f\n",$1}' temp > $CPS
+
+
+
+
