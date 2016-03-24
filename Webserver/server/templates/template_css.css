@@ -1,0 +1,468 @@
+/*---Body */
+
+form {
+/* removes space below form elements */
+	margin: 0;
+ 	padding: 0;
+}
+
+.inputboxheader {
+  font-family      : Verdana, Arial, Helvetica, sans-serif;
+  font-size        : 10px;
+  color            : #FF0000;
+  background-color : #F0F0F0;
+  border           : 1px solid #CCCCCC;
+    margin-right: 5px;
+}
+
+.site_name {
+	font-size: 18px;
+	font-weight: bold;
+	color: #76728B;
+}
+
+.title {
+font-family: sans-serif;
+font-size: 20px;
+text-indent: 5px;
+font-weight: bold;
+color : #ffffff;
+}
+
+.headerdate {
+color : #ffffff;
+}
+
+body {
+	background-color: #081c32;
+	background-image: url(../images/background.jpg);
+        background-repeat: repeat-x
+}
+
+
+
+td, tr, p, div {
+  font-family : Verdana, Arial, Helvetica, sans-serif;
+  font-size : 11px;
+  color : #000000;
+}
+a:link {
+	color: #0000ff; text-decoration: none;
+}
+a:visited {
+	color: #0000ff; text-decoration: none;
+}
+
+a:hover {
+	color: #ff0000;	text-decoration: none;
+}
+
+hr, hr.separator {
+	height : 1px;
+	width : 100%;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #D9D0BD;
+	border-bottom-color: #EFEBE2;
+}
+
+img.baseline { vertical-align: baseline; }
+
+img.sub { vertical-align: sub; }
+
+img.super { vertical-align: super; }
+
+img.top { vertical-align: top; }
+
+img.texttop { vertical-align: text-top; }
+
+img.middle { vertical-align: middle; }
+
+img.bottom { vertical-align: bottom; }
+
+img.textbottom { vertical-align: text-bottom; } 
+
+/* Mambo Menu Styling
+ * ------------*/
+
+/* menu -nav */
+#mainlevel-nav {
+margin: 0; padding: 0;
+}
+#mainlevel-nav a {
+	display: block;
+	float: left;
+	text-decoration: none;
+	color: #000000;
+	background: url(../images/warmish_topmenu_19.jpg) no-repeat 0px -0px;
+	font-size: 10px;
+	line-height: 24px;
+	font-weight: bold;
+	white-space: nowrap;
+	width: 131px;
+	height: 28px;
+	text-align: center;
+}
+#mainlevel-nav li {
+	list-style:none;
+	float: right;
+	margin: 0;
+	width: 130px;
+	font-size: 10px;
+	white-space: nowrap;
+	text-indent: 15px;
+	bottom: 5px;
+	display: block;
+}
+#mainlevel-nav a {
+float: none;
+}
+#mainlevel-nav a:hover {
+	color: #FF0000;
+	background-position: -136px 0px;
+}
+
+/* menu */
+a.mainlevel:link, a.mainlevel:visited {
+	color: #595C73;
+	width: 138px;
+	line-height: 20px;
+	font-weight: bold;
+	padding-top: 2px;
+	text-decoration: none;
+	text-align: left;
+	padding-left: 15px;
+	display: block;
+	float: left;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #B3A79B;
+}
+a.mainlevel:hover {
+	background-position: 0px -26px;
+	color: #FF0000;
+	border-bottom-color: #FFFFFF;
+	background-color: #CCCCCC;
+}
+
+a.sublevel:link, a.sublevel:visited {
+	color: #294470;
+	text-decoration: none;
+	padding-right: 25px;
+	padding-left: 4px;
+	width: 138px;
+	line-height: 14px;
+	text-align: right;
+}
+
+a.sublevel:hover {
+color: #FF0000;
+text-decoration: none;
+}
+
+
+#searchbox {
+  margin-right:5px;
+	margin: 0;
+ 	padding: 0;
+}
+
+
+/* mambo core stuff */
+table.moduletable {
+	width: 100%;
+	margin-bottom: 5px;
+	padding: 0px;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+table.moduletable th {
+	color: #BEB0A5;
+	line-height: 19px;
+	}
+table.moduletable td {}
+
+.pathway {
+	color: #999999;
+        font-style: italic;
+}
+a.pathway, a.pathway:visited {
+	color: #0000ff;
+        font-style: italic;
+}
+a.pathway:hover {
+        color: #ff0000;
+        font-style: italic;
+}
+
+
+/*** General Mambo Styles*/
+.back_button{}
+.pagenavbar {
+	color: #CC6633;
+} 
+.pagenav, a.pagenav, a.pagenav:visited{
+	color: #77824A;
+	height: 20px;
+	padding-right: 2px;
+	padding-left: 2px;
+	text-align: center;
+	padding-top: 2px;
+	border: 1px solid #BECC91;
+}
+a.pagenav:hover{
+	color: #CC6633;
+}
+
+	
+	
+.small {
+	font-size: 10px;
+	font-weight: bold;
+	color: #B68A78;
+}
+
+
+/**
+ * Mambo Form Styles
+ * -----------------
+ * Here are 2 styles that Mambo uses to let users control
+ * how their forms and buttons may look.
+ */
+ 
+.button {
+	background-color: #FFFFFF;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #C9A250;
+	border-right-color: #663300;
+	border-bottom-color: #663300;
+	border-left-color: #C9A250;
+	font-size: 10px;
+	font-weight: bold;
+	color: #990000;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+.inputbox {
+	background-color: #FFFFFF;
+border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+		border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #C9A250;
+	border-right-color: #663300;
+	border-bottom-color: #663300;
+	border-left-color: #C9A250;
+	font-size: 10px;
+	color: #ff0000;
+	margin: 0;
+ 	padding: 0;
+	}
+
+/**
+ * Mambo Tabbed Frontend Admin Interface
+ * -------------------------------------
+ * The CSS styles here defines how the frontend admin interface
+ * will look like when editing and adding news through frontend.
+ */
+ 
+.ontab {}
+.offtab {}
+.tabpadding {} 
+.tabheading {}
+.pagetext {}
+
+
+/**
+ * Mambo General styling for Sections/Categories/Contents
+ * ------------------------------------------------------
+ * These stylings are either sometimes or often used across
+ * Sections, categories and contents. They, therefore, deserves
+ * to be mentioned and separated from others.
+ */
+ 
+.createdate {
+	font-size: 10px;
+	color: #BEB370;
+} 
+.modifydate {
+	font-style: italic;
+} 
+.readon, a.readon:link, a.readon:visited{
+	color: #0000FF;
+	float: right;
+	background-repeat: no-repeat;
+	border: #7A713D;
+	background-position: 0px -4px;
+	padding-right: 6px;
+}
+a.readon:hover{
+	color: #FF0000;
+	float: right;
+	padding-left: 20px;
+	background-repeat: no-repeat;
+	border: #7A713D;
+	background-position: 2px -24px;
+	padding-right: 12px;
+}
+
+
+/** 
+ * Mambo Styling for Contents
+ * --------------------------
+ * All the styling for contents are listed
+ * below.
+ */
+
+.contentpane {}
+.contentpaneopen {}
+
+
+.contentdescription {}
+table.contenttoc {}
+table.contenttoc td {}
+.content_rating {}
+.content_vote {}
+
+
+
+
+
+
+/**
+ * Mambo Styles for Categories
+ * ---------------------------
+ * The following are the styling for "Category" items
+ * generated from the Sections area
+ */
+ /* For content item titles that are hyperlink instead of Read On */
+.contentheading, .componentheading{ 
+font-size: 14px;
+font-weight: bold;
+}
+.contentpagetitle, .category {
+background-image: url(../images/topeye_24.png);
+	background-position: 2px -2px;
+	background-repeat: no-repeat;
+	color: #CC6600;
+	font-weight: bold;
+padding-left: 18px;
+}
+a.contentpagetitle:link,a.category:link {
+	font-size: 12px;
+	font-weight: bold;
+ 	color: #0000FF;
+	text-align:left;
+	}
+a.contentpagetitle:visited, a.category:visited {
+	font-size: 12px;
+	font-weight: bold;
+ 	color: #0000FF;
+	text-align:left;
+	}
+
+a.contentpagetitle:hover, a.category:hover {
+	color: #FF0000;
+	font-weight: bold;
+	background-image: url(../images/topeye_29.png);
+	background-position: 2px -1px;
+	
+	}
+
+
+
+
+/**
+ * Mambo Blog styling
+ * ------------------
+ * Not too sure where this is used yet. I tried the blog section
+ * but it doesn't seem to use it. If you have info on this,
+ * email me. I'll update this part.
+ */
+ 
+.blogsection{}
+
+
+
+/**
+ * Mambo's Built-in Component's Syling
+ * -----------------------------------
+ * These stylings are used for Mambo's built-in components
+ * such as newsfeeds, weblinks, contact, search and polls.
+ * A commented subtitle will guide you which is for which
+ */
+ 
+ 
+ /*  Polls  */
+ 
+
+
+.poll {
+	font-size: 9px;
+	color: #546237;
+}
+table.pollstableborder {
+	border: 1px solid #8189C0;
+}
+
+/**
+ * Mambo Sections Styles
+ * ---------------------
+ * Styling of sections tables 
+ */
+
+.sectiontableheader {
+	background-color : #D1C2AF;
+	color            : #000099;
+	font-weight      : bold;
+	border: #615A29;
+}
+
+.sectiontableentry1 {
+  background-color : #FFFFFF;
+}
+
+.sectiontableentry2 {
+  background-color : #E6EAEE;
+}
+
+
+
+/*  Weblinks */
+.weblinks{} 
+
+
+/*  Newsfeeds */
+.newsfeedheading {} 
+.newsfeeddate {} 
+.fase4rdf {} 
+
+
+/* Search page */
+table.searchintro {} 
+
+
+/*  Contact's table settings  */
+table.contact {} 
+table.contact td.icons {} 
+table.contact td.details {}
+
+.article_seperator {
+	display: block;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #999999;
+}
