@@ -1,0 +1,1358 @@
+!  Delphi charge file generated from AMBER, all_amino94.in, all_aminont94.in, all_aminoct94.in
+!  J. Am. Chem. SOC. 1995, 117, 5179-5197
+!  Cornell et.al.
+!  Include N terminal & C terminal residues: all_aminont94.in, all_aminoct94.in
+!  Res order: G,A,V,L,I,F,Y,W,S,T,C(S),C(X),M,D,E,N,Q,K,R,P,H(D),H(E),H(P)
+!  Nterminal tag for residues: *NN/*()N (* stands for one letter code)
+!  Cterminal tag for residues: *CC/*()C (* stands for one letter code)
+!  No dummy atoms (charges must not be assigned to dummy atoms)
+!
+!
+atom__resnumbc_charge_
+N     GLY     -0.416
+CA    GLY     -0.025
+C     GLY      0.597
+O     GLY     -0.568
+H     GLY      0.272
+HA    GLY      0.070
+HA    GLY      0.070
+
+
+N     ALA     -0.416
+CA    ALA      0.034
+C     ALA      0.597
+O     ALA     -0.568
+CB    ALA     -0.183
+H     ALA      0.272
+HA    ALA      0.084
+HB    ALA      0.060
+HB    ALA      0.060
+HB    ALA      0.060
+
+
+N     VAL     -0.416
+CA    VAL     -0.087
+C     VAL      0.597
+O     VAL     -0.568
+CB    VAL      0.299
+CG1   VAL     -0.319
+CG2   VAL     -0.319
+H     VAL      0.272
+HA    VAL      0.097
+HB    VAL     -0.030
+HG1   VAL      0.079
+HG1   VAL      0.079
+HG1   VAL      0.079
+HG2   VAL      0.079
+HG2   VAL      0.079
+HG2   VAL      0.079
+
+
+N     LEU     -0.416
+CA    LEU     -0.052
+C     LEU      0.597
+O     LEU     -0.568
+CB    LEU     -0.110
+CG    LEU      0.353
+CD1   LEU     -0.412
+CD2   LEU     -0.412
+H     LEU      0.272
+HA    LEU      0.092
+HB    LEU      0.046
+HB    LEU      0.046
+HG    LEU     -0.036
+HD1   LEU      0.100
+HD1   LEU      0.100
+HD1   LEU      0.100
+HD2   LEU      0.100
+HD2   LEU      0.100
+HD2   LEU      0.100
+
+
+N     ILE     -0.416
+CA    ILE     -0.060
+C     ILE      0.597
+O     ILE     -0.568
+CB    ILE      0.130
+CG1   ILE     -0.043
+CG2   ILE     -0.321
+CD1   ILE     -0.066
+H     ILE      0.272
+HA    ILE      0.087
+HB    ILE      0.019
+HG1   ILE      0.024
+HG1   ILE      0.024
+HG2   ILE      0.088
+HG2   ILE      0.088
+HG2   ILE      0.088
+HD1   ILE      0.019
+HD1   ILE      0.019
+HD1   ILE      0.019
+
+
+N     PHE     -0.416
+CA    PHE     -0.002
+C     PHE      0.597
+O     PHE     -0.568
+CB    PHE     -0.034
+CG    PHE      0.012
+CD1   PHE     -0.126
+CD2   PHE     -0.126
+CE1   PHE     -0.171
+CE2   PHE     -0.171
+CZ    PHE     -0.107
+H     PHE      0.272
+HA    PHE      0.098
+HB    PHE      0.030
+HB    PHE      0.030
+HD1   PHE      0.133
+HD2   PHE      0.133
+HE1   PHE      0.143
+HE2   PHE      0.143
+HZ    PHE      0.130
+
+
+N     TYR     -0.416
+CA    TYR     -0.001
+C     TYR      0.597
+O     TYR     -0.568
+CB    TYR     -0.015
+CG    TYR     -0.001
+CD1   TYR     -0.191
+CD2   TYR     -0.191
+CE1   TYR     -0.235
+CE2   TYR     -0.235
+CZ    TYR      0.323
+OH    TYR     -0.558
+H     TYR      0.272
+HA    TYR      0.088
+HB    TYR      0.030
+HB    TYR      0.030
+HD1   TYR      0.170
+HD2   TYR      0.170
+HE1   TYR      0.166
+HE2   TYR      0.166
+HH    TYR      0.399
+
+
+N     TRP     -0.416
+CA    TRP     -0.028
+C     TRP      0.597
+O     TRP     -0.568
+CB    TRP     -0.005
+CG    TRP     -0.142
+CD1   TRP     -0.164
+CD2   TRP      0.124
+NE1   TRP     -0.342
+CE2   TRP      0.138
+CE3   TRP     -0.239
+CZ2   TRP     -0.260
+CZ3   TRP     -0.197
+CH2   TRP     -0.113
+H     TRP      0.272
+HA    TRP      0.112
+HB    TRP      0.035
+HB    TRP      0.035
+HD1   TRP      0.206
+HE1   TRP      0.341
+HE3   TRP      0.170
+HZ2   TRP      0.157
+HZ3   TRP      0.145
+HH2   TRP      0.142
+
+
+N     SER     -0.416
+CA    SER     -0.025
+C     SER      0.597
+O     SER     -0.568
+CB    SER      0.212
+OG    SER     -0.655
+H     SER      0.272
+HA    SER      0.085
+HB    SER      0.035
+HB    SER      0.035
+HG    SER      0.428
+
+
+N     THR     -0.416
+CA    THR     -0.039
+C     THR      0.597
+O     THR     -0.568
+CB    THR      0.365
+OG1   THR     -0.676
+CG2   THR     -0.244
+H     THR      0.272
+HA    THR      0.101
+HB    THR      0.006
+HG1   THR      0.410
+HG2   THR      0.064
+HG2   THR      0.064
+HG2   THR      0.064
+
+
+N     CYS     -0.416
+CA    CYS      0.021
+C     CYS      0.597
+O     CYS     -0.568
+CB    CYS     -0.123
+SG    CYS     -0.312
+H     CYS      0.272
+HA    CYS      0.112
+HB    CYS      0.112
+HB    CYS      0.112
+HG    CYS      0.193
+
+
+N     CYX     -0.416
+CA    CYX      0.043
+C     CYX      0.597
+O     CYX     -0.568
+CB    CYX     -0.079
+SG    CYX     -0.108
+H     CYX      0.272
+HA    CYX      0.077
+HB    CYX      0.091
+HB    CYX      0.091
+
+
+N     MET     -0.416
+CA    MET     -0.024
+C     MET      0.597
+O     MET     -0.568
+CB    MET      0.034
+CG    MET      0.002
+SD    MET     -0.274
+CE    MET     -0.054
+H     MET      0.272
+HA    MET      0.088
+HB    MET      0.024
+HB    MET      0.024
+HG    MET      0.044
+HG    MET      0.044
+HE    MET      0.069
+HE    MET      0.069
+HE    MET      0.069
+
+
+N     ASP     -0.516
+CA    ASP      0.038
+C     ASP      0.537
+O     ASP     -0.582
+CB    ASP     -0.030
+CG    ASP      0.799
+OD1   ASP     -0.802
+OD2   ASP     -0.802
+H     ASP      0.294
+HA    ASP      0.088
+HB    ASP     -0.012
+HB    ASP     -0.012
+
+
+N     GLU     -0.516
+CA    GLU      0.040
+C     GLU      0.537
+O     GLU     -0.583
+CB    GLU      0.056
+CG    GLU      0.014
+CD    GLU      0.805
+OE1   GLU     -0.819
+OE2   GLU     -0.819
+H     GLU      0.294
+HA    GLU      0.111
+HB    GLU     -0.017
+HB    GLU     -0.017
+HG    GLU     -0.043
+HG    GLU     -0.043
+
+
+N     ASN     -0.416
+CA    ASN      0.014
+C     ASN      0.597
+O     ASN     -0.568
+CB    ASN     -0.205
+CG    ASN      0.713
+OD1   ASN     -0.593
+ND2   ASN     -0.919
+H     ASN      0.272
+HA    ASN      0.105
+HB    ASN      0.080
+HB    ASN      0.080
+HD2   ASN      0.420
+HD2   ASN      0.420
+
+
+N     GLN     -0.416
+CA    GLN      0.003
+C     GLN      0.597
+O     GLN     -0.568
+CB    GLN     -0.004
+CG    GLN     -0.065
+CD    GLN      0.695
+OE1   GLN     -0.609
+NE2   GLN     -0.944
+H     GLN      0.272
+HA    GLN      0.085
+HB    GLN      0.017
+HB    GLN      0.017
+HG    GLN      0.035
+HG    GLN      0.035
+HE2   GLN      0.425
+HE2   GLN      0.425
+
+
+N     LYS     -0.348
+CA    LYS     -0.240
+C     LYS      0.734
+O     LYS     -0.589
+CB    LYS     -0.009
+CG    LYS      0.019
+CD    LYS     -0.048
+CE    LYS     -0.014
+NZ    LYS     -0.385
+H     LYS      0.275
+HA    LYS      0.143
+HB    LYS      0.036
+HB    LYS      0.036
+HG    LYS      0.010
+HG    LYS      0.010
+HD    LYS      0.062
+HD    LYS      0.062
+HE    LYS      0.113
+HE    LYS      0.113
+HZ    LYS      0.340
+HZ    LYS      0.340
+HZ    LYS      0.340
+
+
+N     ARG     -0.348
+CA    ARG     -0.264
+C     ARG      0.734
+O     ARG     -0.589
+CB    ARG     -0.001
+CG    ARG      0.039
+CD    ARG      0.049
+NE    ARG     -0.533
+CZ    ARG      0.808
+NH1   ARG     -0.863
+NH2   ARG     -0.863
+H     ARG      0.275
+HA    ARG      0.156
+HB    ARG      0.033
+HB    ARG      0.033
+HG    ARG      0.029
+HG    ARG      0.029
+HD    ARG      0.069
+HD    ARG      0.069
+HE    ARG      0.346
+HH1   ARG      0.448
+HH1   ARG      0.448
+HH2   ARG      0.448
+HH2   ARG      0.448
+
+
+N     PRO     -0.255
+CA    PRO     -0.027
+C     PRO      0.590
+O     PRO     -0.575
+CB    PRO     -0.007
+CG    PRO      0.019
+CD    PRO      0.019
+HA    PRO      0.064
+HB    PRO      0.026
+HB    PRO      0.026
+HG    PRO      0.021
+HG    PRO      0.021
+HD    PRO      0.039
+HD    PRO      0.039
+
+
+N     HID     -0.416
+CA    HID      0.019
+C     HID      0.597
+O     HID     -0.568
+CB    HID     -0.046
+CG    HID     -0.027
+ND1   HID     -0.380
+CD2   HID      0.129
+CE1   HID      0.206
+NE2   HID     -0.573
+H     HID      0.272
+HA    HID      0.088
+HB    HID      0.040
+HB    HID      0.040
+HD1   HID      0.365
+HD2   HID      0.115
+HE1   HID      0.139
+
+
+N     HIE     -0.416
+CA    HIE     -0.058
+C     HIE      0.597
+O     HIE     -0.568
+CB    HIE     -0.008
+CG    HIE      0.187
+ND1   HIE     -0.543
+CD2   HIE     -0.221
+CE1   HIE      0.164
+NE2   HIE     -0.280
+H     HIE      0.272
+HA    HIE      0.136
+HB    HIE      0.037
+HB    HIE      0.037
+HD2   HIE      0.186
+HE1   HIE      0.144
+HE2   HIE      0.334
+
+
+N     HIP     -0.348
+CA    HIP     -0.136
+C     HIP      0.734
+O     HIP     -0.589
+CB    HIP     -0.042
+CG    HIP     -0.001
+ND1   HIP     -0.151
+CD2   HIP     -0.114
+CE1   HIP     -0.017
+NE2   HIP     -0.172
+H     HIP      0.275
+HA    HIP      0.121
+HB    HIP      0.081
+HB    HIP      0.081
+HD1   HIP      0.387
+HD2   HIP      0.232
+HE1   HIP      0.268
+HE2   HIP      0.391
+
+!Nterminal
+
+
+N     GNN      0.294
+CA    GNN     -0.010
+C     GNN      0.616
+O     GNN     -0.572
+H     GNN      0.164
+H     GNN      0.164
+H     GNN      0.164
+HA    GNN      0.090
+HA    GNN      0.090
+
+
+N     ANN      0.141
+CA    ANN      0.096
+C     ANN      0.616
+O     ANN     -0.572
+CB    ANN     -0.060
+H     ANN      0.200
+H     ANN      0.200
+H     ANN      0.200
+HA    ANN      0.089
+HB    ANN      0.030
+HB    ANN      0.030
+HB    ANN      0.030
+
+
+N     VNN      0.058
+CA    VNN     -0.005
+C     VNN      0.616
+O     VNN     -0.572
+CB    VNN      0.320
+CG1   VNN     -0.313
+CG2   VNN     -0.313
+H     VNN      0.228
+H     VNN      0.228
+H     VNN      0.228
+HA    VNN      0.109
+HB    VNN     -0.022
+HG1   VNN      0.073
+HG1   VNN      0.073
+HG1   VNN      0.073
+HG2   VNN      0.073
+HG2   VNN      0.073
+HG2   VNN      0.073
+
+
+N     LNN      0.101
+CA    LNN      0.010
+C     LNN      0.612
+O     LNN     -0.571
+CB    LNN     -0.024
+CG    LNN      0.342
+CD1   LNN     -0.411
+CD2   LNN     -0.411
+H     LNN      0.215
+H     LNN      0.215
+H     LNN      0.215
+HA    LNN      0.105
+HB    LNN      0.026
+HB    LNN      0.026
+HG    LNN     -0.038
+HD1   LNN      0.098
+HD1   LNN      0.098
+HD1   LNN      0.098
+HD2   LNN      0.098
+HD2   LNN      0.098
+HD2   LNN      0.098
+
+
+N     INN      0.031
+CA    INN      0.026
+C     INN      0.612
+O     INN     -0.571
+CB    INN      0.189
+CG1   INN     -0.039
+CG2   INN     -0.372
+CD1   INN     -0.093
+H     INN      0.233
+H     INN      0.233
+H     INN      0.233
+HA    INN      0.103
+HB    INN      0.021
+HG1   INN      0.020
+HG1   INN      0.020
+HG2   INN      0.095
+HG2   INN      0.095
+HG2   INN      0.095
+HD1   INN      0.023
+HD1   INN      0.023
+HD1   INN      0.023
+
+
+N     FNN      0.174
+CA    FNN      0.073
+C     FNN      0.612
+O     FNN     -0.571
+CB    FNN      0.033
+CG    FNN      0.003
+CD1   FNN     -0.139
+CD2   FNN     -0.139
+CE1   FNN     -0.160
+CE2   FNN     -0.160
+CZ    FNN     -0.120
+H     FNN      0.192
+H     FNN      0.192
+H     FNN      0.192
+HA    FNN      0.104
+HB    FNN      0.010
+HB    FNN      0.010
+HD1   FNN      0.137
+HD2   FNN      0.137
+HE1   FNN      0.143
+HE2   FNN      0.143
+HZ    FNN      0.134
+
+
+N     YNN      0.194
+CA    YNN      0.057
+C     YNN      0.612
+O     YNN     -0.571
+CB    YNN      0.065
+CG    YNN     -0.021
+CD1   YNN     -0.200
+CD2   YNN     -0.200
+CE1   YNN     -0.224
+CE2   YNN     -0.224
+CZ    YNN      0.314
+OH    YNN     -0.558
+H     YNN      0.187
+H     YNN      0.187
+H     YNN      0.187
+HA    YNN      0.098
+HB    YNN      0.010
+HB    YNN      0.010
+HD1   YNN      0.172
+HD2   YNN      0.172
+HE1   YNN      0.165
+HE2   YNN      0.165
+HH    YNN      0.403
+
+
+N     WNN      0.191
+CA    WNN      0.042
+C     WNN      0.612
+O     WNN     -0.571
+CB    WNN      0.054
+CG    WNN     -0.165
+CD1   WNN     -0.179
+CD2   WNN      0.113
+NE1   WNN     -0.344
+CE2   WNN      0.158
+CE3   WNN     -0.227
+CZ2   WNN     -0.271
+CZ3   WNN     -0.203
+CH2   WNN     -0.108
+H     WNN      0.189
+H     WNN      0.189
+H     WNN      0.189
+HA    WNN      0.116
+HB    WNN      0.022
+HB    WNN      0.022
+HD1   WNN      0.220
+HE1   WNN      0.341
+HE3   WNN      0.165
+HZ2   WNN      0.158
+HZ3   WNN      0.146
+HH2   WNN      0.141
+
+
+N     SNN      0.185
+CA    SNN      0.057
+C     SNN      0.616
+O     SNN     -0.572
+CB    SNN      0.260
+OG    SNN     -0.671
+H     SNN      0.190
+H     SNN      0.190
+H     SNN      0.190
+HA    SNN      0.077
+HB    SNN      0.027
+HB    SNN      0.027
+HG    SNN      0.424
+
+
+N     TNN      0.181
+CA    TNN      0.003
+C     TNN      0.616
+O     TNN     -0.572
+CB    TNN      0.451
+OG1   TNN     -0.676
+CG2   TNN     -0.255
+H     TNN      0.193
+H     TNN      0.193
+H     TNN      0.193
+HA    TNN      0.109
+HB    TNN     -0.032
+HG1   TNN      0.407
+HG2   TNN      0.063
+HG2   TNN      0.063
+HG2   TNN      0.063
+
+
+N     CSN      0.133
+CA    CSN      0.093
+C     CSN      0.612
+O     CSN     -0.571
+CB    CSN     -0.120
+SG    CSN     -0.330
+H     CSN      0.202
+H     CSN      0.202
+H     CSN      0.202
+HA    CSN      0.141
+HB    CSN      0.119
+HB    CSN      0.119
+HG    CSN      0.198
+
+
+N     CXN      0.207
+CA    CXN      0.106
+C     CXN      0.612
+O     CXN     -0.571
+CB    CXN     -0.028
+SG    CXN     -0.098
+H     CXN      0.182
+H     CXN      0.182
+H     CXN      0.182
+HA    CXN      0.092
+HB    CXN      0.067
+HB    CXN      0.067
+
+
+N     MNN      0.160
+CA    MNN      0.022
+C     MNN      0.612
+O     MNN     -0.571
+CB    MNN      0.087
+CG    MNN      0.033
+SD    MNN     -0.277
+CE    MNN     -0.034
+H     MNN      0.198
+H     MNN      0.198
+H     MNN      0.198
+HA    MNN      0.112
+HB    MNN      0.013
+HB    MNN      0.013
+HG    MNN      0.029
+HG    MNN      0.029
+HE    MNN      0.060
+HE    MNN      0.059
+HE    MNN      0.059
+
+
+N     DNN      0.078
+CA    DNN      0.029
+C     DNN      0.562
+O     DNN     -0.589
+CB    DNN     -0.024
+CG    DNN      0.820
+OD1   DNN     -0.808
+OD2   DNN     -0.808
+H     DNN      0.220
+H     DNN      0.220
+H     DNN      0.220
+HA    DNN      0.114
+HB    DNN     -0.017
+HB    DNN     -0.017
+
+
+N     ENN      0.002
+CA    ENN      0.059
+C     ENN      0.562
+O     ENN     -0.589
+CB    ENN      0.092
+CG    ENN     -0.024
+CD    ENN      0.809
+OE1   ENN     -0.819
+OE2   ENN     -0.819
+H     ENN      0.239
+H     ENN      0.239
+H     ENN      0.239
+HA    ENN      0.120
+HB    ENN     -0.023
+HB    ENN     -0.023
+HG    ENN     -0.032
+HG    ENN     -0.032
+
+
+N     NNN      0.180
+CA    NNN      0.037
+C     NNN      0.616
+O     NNN     -0.572
+CB    NNN     -0.028
+CG    NNN      0.583
+OD1   NNN     -0.574
+ND2   NNN     -0.863
+H     NNN      0.192
+H     NNN      0.192
+H     NNN      0.192
+HA    NNN      0.123
+HB    NNN      0.052
+HB    NNN      0.052
+HD2   NNN      0.409
+HD2   NNN      0.409
+
+
+N     QNN      0.149
+CA    QNN      0.054
+C     QNN      0.612
+O     QNN     -0.571
+CB    QNN      0.065
+CG    QNN     -0.090
+CD    QNN      0.735
+OE1   QNN     -0.613
+NE2   QNN     -1.003
+H     QNN      0.200
+H     QNN      0.200
+H     QNN      0.200
+HA    QNN      0.102
+HB    QNN      0.005
+HB    QNN      0.005
+HG    QNN      0.033
+HG    QNN      0.033
+HE2   QNN      0.442
+HE2   QNN      0.442
+
+
+N     KNN      0.097
+CA    KNN     -0.002
+C     KNN      0.721
+O     KNN     -0.601
+CB    KNN      0.022
+CG    KNN     -0.005
+CD    KNN     -0.061
+CE    KNN     -0.018
+NZ    KNN     -0.376
+H     KNN      0.217
+H     KNN      0.217
+H     KNN      0.217
+HA    KNN      0.118
+HB    KNN      0.028
+HB    KNN      0.028
+HG    KNN      0.012
+HG    KNN      0.012
+HD    KNN      0.063
+HD    KNN      0.063
+HE    KNN      0.117
+HE    KNN      0.117
+HZ    KNN      0.338
+HZ    KNN      0.338
+HZ    KNN      0.338
+
+
+N     RNN      0.131
+CA    RNN     -0.023
+C     RNN      0.721
+O     RNN     -0.601
+CB    RNN      0.012
+CG    RNN      0.024
+CD    RNN      0.094
+NE    RNN     -0.565
+CZ    RNN      0.828
+NH1   RNN     -0.869
+NH2   RNN     -0.869
+H     RNN      0.208
+H     RNN      0.208
+H     RNN      0.208
+HA    RNN      0.124
+HB    RNN      0.023
+HB    RNN      0.023
+HG    RNN      0.031
+HG    RNN      0.031
+HD    RNN      0.053
+HD    RNN      0.053
+HE    RNN      0.359
+HH1   RNN      0.449
+HH1   RNN      0.449
+HH2   RNN      0.449
+HH2   RNN      0.449
+
+
+N     PNN     -0.202
+CA    PNN      0.100
+C     PNN      0.526
+O     PNN     -0.500
+CB    PNN     -0.115
+CG    PNN     -0.121
+CD    PNN     -0.012
+H     PNN      0.312
+H     PNN      0.312
+HA    PNN      0.100
+HB    PNN      0.100
+HB    PNN      0.100
+HG    PNN      0.100
+HG    PNN      0.100
+HD    PNN      0.100
+HD    PNN      0.100
+
+
+N     HDN      0.154
+CA    HDN      0.096
+C     HDN      0.612
+O     HDN     -0.571
+CB    HDN      0.025
+CG    HDN     -0.040
+ND1   HDN     -0.382
+CD2   HDN      0.105
+CE1   HDN      0.213
+NE2   HDN     -0.571
+H     HDN      0.197
+H     HDN      0.197
+H     HDN      0.197
+HA    HDN      0.096
+HB    HDN      0.020
+HB    HDN      0.020
+HD1   HDN      0.363
+HD2   HDN      0.130
+HE1   HDN      0.139
+
+
+N     HEN      0.147
+CA    HEN      0.024
+C     HEN      0.612
+O     HEN     -0.571
+CB    HEN      0.049
+CG    HEN      0.174
+ND1   HEN     -0.558
+CD2   HEN     -0.235
+CE1   HEN      0.180
+NE2   HEN     -0.278
+H     HEN      0.202
+H     HEN      0.202
+H     HEN      0.202
+HA    HEN      0.138
+HB    HEN      0.022
+HB    HEN      0.022
+HD2   HEN      0.196
+HE1   HEN      0.140
+HE2   HEN      0.332
+
+
+N     HPN      0.256
+CA    HPN      0.058
+C     HPN      0.721
+O     HPN     -0.601
+CB    HPN      0.048
+CG    HPN     -0.024
+ND1   HPN     -0.151
+CD2   HPN     -0.143
+CE1   HPN     -0.001
+NE2   HPN     -0.174
+H     HPN      0.170
+H     HPN      0.170
+H     HPN      0.170
+HA    HPN      0.105
+HB    HPN      0.053
+HB    HPN      0.053
+HD1   HPN      0.382
+HD2   HPN      0.251
+HE1   HPN      0.265
+HE2   HPN      0.392
+
+
+!Cterminal
+
+
+N     GCC     -0.382
+CA    GCC     -0.249
+C     GCC      0.723
+O     GCC     -0.786
+OXT   GCC     -0.786
+H     GCC      0.268
+HA    GCC      0.106
+HA    GCC      0.106
+
+
+N     ACC     -0.382
+CA    ACC     -0.175
+C     ACC      0.773
+O     ACC     -0.805
+OXT   ACC     -0.805
+CB    ACC     -0.209
+H     ACC      0.268
+HA    ACC      0.107
+HB    ACC      0.076
+HB    ACC      0.076
+HB    ACC      0.076
+
+
+N     VCC     -0.382
+CA    VCC     -0.344
+C     VCC      0.835
+O     VCC     -0.818
+OXT   VCC     -0.818
+CB    VCC      0.194
+CG1   VCC     -0.307
+CG2   VCC     -0.307
+H     VCC      0.268
+HA    VCC      0.144
+HB    VCC      0.031
+HG1   VCC      0.084
+HG1   VCC      0.084
+HG1   VCC      0.084
+HG2   VCC      0.084
+HG2   VCC      0.084
+HG2   VCC      0.084
+
+
+N     LCC     -0.382
+CA    LCC     -0.285
+C     LCC      0.832
+O     LCC     -0.820
+OXT   LCC     -0.820
+CB    LCC     -0.247
+CG    LCC      0.371
+CD1   LCC     -0.416
+CD2   LCC     -0.416
+H     LCC      0.268
+HA    LCC      0.134
+HB    LCC      0.097
+HB    LCC      0.097
+HG    LCC     -0.037
+HD1   LCC      0.104
+HD1   LCC      0.104
+HD1   LCC      0.104
+HD2   LCC      0.104
+HD2   LCC      0.104
+HD2   LCC      0.104
+
+
+N     ICC     -0.382
+CA    ICC     -0.310
+C     ICC      0.834
+O     ICC     -0.819
+OXT   ICC     -0.819
+CB    ICC      0.036
+CG1   ICC     -0.032
+CG2   ICC     -0.350
+CD1   ICC     -0.071
+H     ICC      0.268
+HA    ICC      0.138
+HB    ICC      0.077
+HG1   ICC      0.032
+HG1   ICC      0.032
+HG2   ICC      0.102
+HG2   ICC      0.102
+HG2   ICC      0.102
+HD1   ICC      0.020
+HD1   ICC      0.020
+HD1   ICC      0.020
+
+
+N     FCC     -0.382
+CA    FCC     -0.183
+C     FCC      0.766
+O     FCC     -0.802
+OXT   FCC     -0.802
+CB    FCC     -0.096
+CG    FCC      0.056
+CD1   FCC     -0.130
+CD2   FCC     -0.130
+CE1   FCC     -0.185
+CE2   FCC     -0.185
+CZ    FCC     -0.095
+H     FCC      0.268
+HA    FCC      0.110
+HB    FCC      0.044
+HB    FCC      0.044
+HD1   FCC      0.141
+HD2   FCC      0.141
+HE1   FCC      0.146
+HE2   FCC      0.146
+HZ    FCC      0.128
+
+
+N     YCC     -0.382
+CA    YCC     -0.202
+C     YCC      0.782
+O     YCC     -0.807
+OXT   YCC     -0.807
+CB    YCC     -0.075
+CG    YCC      0.024
+CD1   YCC     -0.192
+CD2   YCC     -0.192
+CE1   YCC     -0.246
+CE2   YCC     -0.246
+CZ    YCC      0.340
+OH    YCC     -0.564
+H     YCC      0.268
+HA    YCC      0.109
+HB    YCC      0.049
+HB    YCC      0.049
+HD1   YCC      0.178
+HD2   YCC      0.178
+HE1   YCC      0.167
+HE2   YCC      0.167
+HH    YCC      0.402
+
+
+N     WCC     -0.382
+CA    WCC     -0.208
+C     WCC      0.766
+O     WCC     -0.801
+OXT   WCC     -0.801
+CB    WCC     -0.074
+CG    WCC     -0.080
+CD1   WCC     -0.181
+CD2   WCC      0.108
+NE1   WCC     -0.332
+CE2   WCC      0.122
+CE3   WCC     -0.184
+CZ2   WCC     -0.259
+CZ3   WCC     -0.229
+CH2   WCC     -0.102
+H     WCC      0.268
+HA    WCC      0.127
+HB    WCC      0.050
+HB    WCC      0.050
+HD1   WCC      0.204
+HE1   WCC      0.341
+HE3   WCC      0.149
+HZ2   WCC      0.157
+HZ3   WCC      0.151
+HH2   WCC      0.140
+
+
+N     SCC     -0.382
+CA    SCC     -0.272
+C     SCC      0.811
+O     SCC     -0.813
+OXT   SCC     -0.813
+CB    SCC      0.112
+OG    SCC     -0.651
+H     SCC      0.268
+HA    SCC      0.130
+HB    SCC      0.081
+HB    SCC      0.081
+HG    SCC      0.448
+
+
+N     TCC     -0.382
+CA    TCC     -0.242
+C     TCC      0.781
+O     TCC     -0.804
+OXT   TCC     -0.804
+CB    TCC      0.303
+OG1   TCC     -0.650
+CG2   TCC     -0.186
+H     TCC      0.268
+HA    TCC      0.120
+HB    TCC      0.008
+HG1   TCC      0.411
+HG2   TCC      0.059
+HG2   TCC      0.059
+HG2   TCC      0.059
+
+
+N     CSC     -0.382
+CA    CSC     -0.163
+C     CSC      0.749
+O     CSC     -0.798
+OXT   CSC     -0.798
+CB    CSC     -0.199
+SG    CSC     -0.311
+H     CSC      0.268
+HA    CSC      0.139
+HB    CSC      0.144
+HB    CSC      0.144
+HG    CSC      0.207
+
+
+N     CXC     -0.382
+CA    CXC     -0.132
+C     CXC      0.762
+O     CXC     -0.804
+OXT   CXC     -0.804
+CB    CXC     -0.194
+SG    CXC     -0.054
+H     CXC      0.268
+HA    CXC      0.094
+HB    CXC      0.123
+HB    CXC      0.123
+
+
+N     MCC     -0.382
+CA    MCC     -0.260
+C     MCC      0.801
+O     MCC     -0.811
+OXT   MCC     -0.811
+CB    MCC     -0.024
+CG    MCC      0.049
+SD    MCC     -0.269
+CE    MCC     -0.038
+H     MCC      0.268
+HA    MCC      0.128
+HB    MCC      0.048
+HB    MCC      0.048
+HG    MCC      0.032
+HG    MCC      0.032
+HE    MCC      0.063
+HE    MCC      0.063
+HE    MCC      0.063
+
+
+N     DCC     -0.519
+CA    DCC     -0.182
+C     DCC      0.726
+O     DCC     -0.789
+OXT   DCC     -0.789
+CB    DCC     -0.069
+CG    DCC      0.885
+OD1   DCC     -0.816
+OD2   DCC     -0.816
+H     DCC      0.306
+HA    DCC      0.105
+HB    DCC     -0.021
+HB    DCC     -0.021
+
+
+N     ECC     -0.519
+CA    ECC     -0.206
+C     ECC      0.742
+O     ECC     -0.793
+OXT   ECC     -0.793
+CB    ECC      0.007
+CG    ECC      0.067
+CD    ECC      0.818
+OE1   ECC     -0.822
+OE2   ECC     -0.822
+H     ECC      0.305
+HA    ECC      0.140
+HB    ECC     -0.007
+HB    ECC     -0.007
+HG    ECC     -0.055
+HG    ECC     -0.055
+
+
+N     NCC     -0.382
+CA    NCC     -0.208
+C     NCC      0.805
+O     NCC     -0.815
+OXT   NCC     -0.815
+CB    NCC     -0.229
+CG    NCC      0.715
+OD1   NCC     -0.601
+ND2   NCC     -0.908
+H     NCC      0.268
+HA    NCC      0.136
+HB    NCC      0.102
+HB    NCC      0.102
+HD2   NCC      0.415
+HD2   NCC      0.415
+
+
+N     QCC     -0.382
+CA    QCC     -0.225
+C     QCC      0.778
+O     QCC     -0.804
+OXT   QCC     -0.804
+CB    QCC     -0.066
+CG    QCC     -0.020
+CD    QCC      0.709
+OE1   QCC     -0.610
+NE2   QCC     -0.957
+H     QCC      0.268
+HA    QCC      0.123
+HB    QCC      0.045
+HB    QCC      0.045
+HG    QCC      0.020
+HG    QCC      0.020
+HE2   QCC      0.430
+HE2   QCC      0.430
+
+
+N     KCC     -0.348
+CA    KCC     -0.290
+C     KCC      0.849
+O     KCC     -0.825
+OXT   KCC     -0.825
+CB    KCC     -0.054
+CG    KCC      0.023
+CD    KCC     -0.039
+CE    KCC     -0.018
+NZ    KCC     -0.374
+H     KCC      0.276
+HA    KCC      0.144
+HB    KCC      0.048
+HB    KCC      0.048
+HG    KCC      0.013
+HG    KCC      0.013
+HD    KCC      0.061
+HD    KCC      0.061
+HE    KCC      0.113
+HE    KCC      0.113
+HZ    KCC      0.337
+HZ    KCC      0.337
+HZ    KCC      0.337
+
+
+N     RCC     -0.348
+CA    RCC     -0.307
+C     RCC      0.856
+O     RCC     -0.826
+OXT   RCC     -0.826
+CB    RCC     -0.037
+CG    RCC      0.074
+CD    RCC      0.111
+NE    RCC     -0.556
+CZ    RCC      0.837
+NH1   RCC     -0.874
+NH2   RCC     -0.874
+H     RCC      0.276
+HA    RCC      0.144
+HB    RCC      0.037
+HB    RCC      0.037
+HG    RCC      0.019
+HG    RCC      0.019
+HD    RCC      0.047
+HD    RCC      0.047
+HE    RCC      0.348
+HH1   RCC      0.449
+HH1   RCC      0.449
+HH2   RCC      0.449
+HH2   RCC      0.449
+
+
+N     PCC     -0.280
+CA    PCC     -0.134
+C     PCC      0.663
+O     PCC     -0.769
+OXT   PCC     -0.769
+CB    PCC     -0.055
+CG    PCC      0.047
+CD    PCC      0.043
+HA    PCC      0.078
+HB    PCC      0.038
+HB    PCC      0.038
+HG    PCC      0.017
+HG    PCC      0.017
+HD    PCC      0.033
+HD    PCC      0.033
+
+
+N     HDC     -0.382
+CA    HDC     -0.174
+C     HDC      0.762
+O     HDC     -0.802
+OXT   HDC     -0.802
+CB    HDC     -0.105
+CG    HDC      0.029
+ND1   HDC     -0.389
+CD2   HDC      0.100
+CE1   HDC      0.193
+NE2   HDC     -0.564
+H     HDC      0.268
+HA    HDC      0.110
+HB    HDC      0.057
+HB    HDC      0.057
+HD1   HDC      0.376
+HD2   HDC      0.124
+HE1   HDC      0.142
+
+
+N     HEC     -0.382
+CA    HEC     -0.270
+C     HEC      0.792
+O     HEC     -0.807
+OXT   HEC     -0.807
+CB    HEC     -0.108
+CG    HEC      0.272
+ND1   HEC     -0.552
+CD2   HEC     -0.259
+CE1   HEC      0.158
+NE2   HEC     -0.267
+H     HEC      0.268
+HA    HEC      0.165
+HB    HEC      0.062
+HB    HEC      0.062
+HD2   HEC      0.196
+HE1   HEC      0.145
+HE2   HEC      0.332
+
+
+N     HPC     -0.348
+CA    HPC     -0.145
+C     HPC      0.803
+O     HPC     -0.818
+OXT   HPC     -0.818
+CB    HPC     -0.080
+CG    HPC      0.030
+ND1   HPC     -0.150
+CD2   HPC     -0.126
+CE1   HPC     -0.025
+NE2   HPC     -0.168
+H     HPC      0.276
+HA    HPC      0.113
+HB    HPC      0.087
+HB    HPC      0.087
+HD1   HPC      0.388
+HD2   HPC      0.234
+HE1   HPC      0.269
+HE2   HPC      0.391
+
+
+NA1   SOD      1.000
+MG2   MAG      2.000
+AL3   ALM      3.000
+K_1   POT      1.000
+CA2   CAL      2.000
+CR2   CRM      2.000
+CR3   CRM      3.000
+MN2   MNG      2.000
+MN3   MNG      3.000
+FE2   IRN      2.000
+FE3   IRN      3.000
+CO2   COB      2.000
+CO3   COB      3.000
+NI2   NIC      2.000
+NI3   NIC      3.000
+CU1   COP      1.000
+CU2   COP      2.000
+ZN2   ZNC      2.000
+AG1   SLV      1.000
+AG2   SLV      2.000
+AG3   SLV      3.000
+CD2   CDM      2.000
+PT2   PLT      2.000
+AU1   GLD      1.000
+AU3   GLD      3.000
+HG1   MRC      1.000
+HG2   MRC      2.000
+

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+test -d /tmp/x_sabas || mkdir /tmp/x_sabas
+
+pdb=$1
+echo $pdb
+
+chain1=$2
+echo $chain1
+
+chain2=$3
+echo $chain2
+
+sc_path=$4
+echo $sc_path
+
+#sc XYZIN $pdb SURFIN1 A.grasp_surf SURFIN2 B.grasp_surf \
+#   SURFOUT1 A.sc_surf SURFOUT2 B.sc_surf <<eof 
+$sc_path/sc XYZIN $pdb <<eof 
+MOLECULE 1
+CHAIN $chain1
+MOLECULE 2
+CHAIN $chain2
+END
+eof
