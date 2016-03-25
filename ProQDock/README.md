@@ -86,3 +86,32 @@ ProQ= 0.845
    0.85360
 
 =======================================================
+ProQDock: A Protein-Protein Docking Scoring Function using high level coordinate driven features and Machine Learning
+
+usage: $exec_path/ProQDock.bash $pdbpath/input.pdb -g (0/1)
+-g is an optional argument which determines the Delphi mode to be executed (0: Single-Dielectric / 1: Multi-Dielectric) [Default: 0] 
+
+======================================================================================================================================================================
+Feature   Range      Favorable Directions       Description                                                   Feature_Type    Stability*     Native_values (DB3)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+EC:       [-1,1]     Higher the Better       Electrostatic balance at the interface                             Interface      Variable      0.20 (+/-0.38)
+Sc:       [-1,1]     Higher the Better       Geometric / Steric fit at the interface                            Interface       Stable	     0.68 (+/-0.17)
+rGb:      [-1,1]     Higher the Better       Distribution of hydrophobicity with respect to burial              All_Atom        Stable	     0.06 (+/-0.02)
+Ld:       [0, 1]         Ambiguous           Link (packing) densely at the interface                            Interface       Stable	     0.15 (+/-0.17)
+nBSA:     [0, 1]         Ambiguous           Size of the interface relative to the whole complex                Interface      Variable      0.07 (+/-0.05)
+Fintres:  [0, 1]         Ambiguous           Size of the interface relative to the whole complex                Interface      Variable      0.19 (+/-0.13)
+CPscore:  [0, 1]     Higher the Better       Preference of different inter-residue contacts at the interface    Interface      Variable	     0.35 (+/-0.17)
+CPM:      [0, 1]     Higher the Better       Likelyhood of (Sc,EC) as a function of nBSA compared to native     Interface      Variable	     0.80 (+/-0.18)
+rTs:      [0, 1]     Lower the Better        Energetic Stability of the whole molecule                          All_Atom        Stable	     0.22 (+/-0.21)
+Isc:      [0, 1]     Lower the Better        Binding energy                                                     Interface      Variable	     0.20 (+/-0.33)
+Erep:     [0, 1]     Lower the Better        Unfavourable Energy due to atomic Clashes                          All_Atom        Stable	     0.41 (+/-0.15)
+Etmr:     [0, 1]     Lower the Better        Energetic Stability without condiderating clashes                  All_Atom        Stable	     0.28 (+/-0.16)
+ProQ:     [0, 1]     Higher the Better       Overall Structural Quality                                         All_Atom       Variable	     0.80 (+/-0.12)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* In Correct Models 
+======================================================================================================================================================================
+
+ProQDock is trained over these features using Support Vectore Machines and tries to predict the DockQ score which is a continious quality measure consistant with the CAPRI evaluation protocol.
+
+
+
