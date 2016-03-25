@@ -32,14 +32,15 @@ proqscorepath=/proj/wallner/apps/rosetta/current/main/source/bin
 nseqflag=1
 
 Run with
-`./ProQDock.bash <model.PDB>`  # The input pdb file should have an extension .pdb / .PDB 
-# Run from any Directory with the short / full path of the ProQDock/ProQDock.bash
-`optional arguments: -g (0/1)` # delphi_mode: 0: single_dielectric; 1: multidielctric mode
+`./ProQDock.bash <model.PDB>`  The input pdb file should have an extension .pdb / .PDB 
+Run from any Directory with the short / full path of the ProQDock/ProQDock.bash
+`optional arguments: -g (0/1)` delphi_mode: 0: single_dielectric; 1: multidielctric mode
 
 Example
 
 bash$ `./ProQDock.bash ./TESTPDBS/1u07.pdb`
 
+==============================================================================================
 Your Input: 1u07.pdb
 The file has a Proper extension (.pdb / .PDB)
 /proj/wallner/users/x_sabas/BACKUP/RUNproqdock/PDBS/1u07.pdb
