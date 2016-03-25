@@ -20,7 +20,7 @@ Installation
 
 open ProQDock.bash in any editor and change the paths for the following fields according to your preference
 
-user=x_sabas
+`user=x_sabas
 sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
 delphi_path=/home/x_sabas/bin
 rosetta_path=/proj/wallner/users/x_bjowa/github/Rosetta/main/source/bin
@@ -29,7 +29,7 @@ svm_path=/home/x_sabas/proj/svm_light
 ESpath=/home/x_sabas/proj/EDTSurf
 proqpath=/home/x_sabas/proj/BACKUP/ProQ_scripts/bin
 proqscorepath=/proj/wallner/apps/rosetta/current/main/source/bin
-nseqflag=1
+nseqflag=1`
 
 Run with
 `./ProQDock.bash <model.PDB>`  The input pdb file should have an extension .pdb / .PDB 
