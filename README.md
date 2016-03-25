@@ -4,11 +4,11 @@
 Requires PERL (v.5.8 or higher), and a fortran90 compiler (prefered: ifort) 
 and five additional packages to be pre-installed 
 
-1. sc from ccp4 () [executable name: sc] 
-2. delphi v.4 or higher () [executable name: delphi_static / delphi95] 
-3. EDTSurf ()
-4. Rosetta () 
-5. ProQ2 ()
+1. sc from ccp4 (http://www.ccp4.ac.uk/) [executable_name: sc] 
+2. delphi v.4 or higher (http://compbio.clemson.edu/delphi/) [executable_name: delphi_static / delphi95] 
+3. EDTSurf (http://zhanglab.ccmb.med.umich.edu/EDTSurf/) [executable_name: EDTSurf]
+4. Rosetta (https://www.rosettacommons.org/software/)  
+5. ProQ2 (https://github.com/bjornwallner/ProQ_scripts/)
 
 Installation
 
