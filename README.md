@@ -68,33 +68,7 @@ Erep=0.27537
 Etmr=0.21025
 ProQ= 0.845
 ================The ProQDock Score ====================
+
    0.85360
 
 =======================================================
-total 260
--rw-rw-r-- 1 x_sabas x_sabas    130 Mar 24 17:07 1u07.Rterms
--rw-rw-r-- 1 x_sabas x_sabas    189 Mar 24 17:07 1u07.pdb.fasta
--rw-rw-r-- 1 x_sabas x_sabas    272 Mar 24 17:09 1u07.SVMfeatures
--rw-rw-r-- 1 x_sabas x_sabas     53 Mar 24 17:09 1u07.SVMfeatures.pred5
--rw-rw-r-- 1 x_sabas x_sabas     11 Mar 24 17:09 1u07.ProQDock
-drwx------ 3 x_sabas x_sabas   4096 Mar 24 17:09 ..
--rw-rw-r-- 1 x_sabas x_sabas 234150 Mar 24 17:09 1u07.pdb
-drwxrwxr-x 2 x_sabas x_sabas   4096 Mar 24 17:09 .
--rw-rw-r-- 1 x_sabas pg_wallner 11 Mar 24 17:09 OUT1u07/1u07.ProQDock
-   0.85360
-OUTPUT Directory OUT1u07
-Features:  OUT1u07/1u07.SVMfeatures
-ProQDock score:  OUT1u07/1u07.ProQDock
-total 64
-drwxrwsr-x 18 x_sabas pg_wallner  32768 Mar 24 16:59 ..
--rw-rw-r--  1 x_sabas pg_wallner    272 Mar 24 17:09 1u07.SVMfeatures
--rw-rw-r--  1 x_sabas pg_wallner     53 Mar 24 17:09 1u07.SVMfeatures.pred5
--rw-rw-r--  1 x_sabas pg_wallner    189 Mar 24 17:09 1u07.pdb.fasta
--rw-rw-r--  1 x_sabas pg_wallner     11 Mar 24 17:09 1u07.ProQDock
--rw-rw-r--  1 x_sabas pg_wallner    130 Mar 24 17:09 1u07.Rterms
-drwxrwsr-x  2 x_sabas pg_wallner   4096 Mar 24 17:09 .
--rw-rw-r--  1 x_sabas pg_wallner 234150 Mar 24 17:09 1u07.pdb
-
-=======
-# ProQDock
->>>>>>> 014d763b1107b208f5ee92f154ea34b1df717313
