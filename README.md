@@ -21,12 +21,19 @@ Installation
 open ProQDock.bash in any editor and change the paths for the following fields according to your preference
 
 `sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin`
+
 `delphi_path=/home/x_sabas/bin`
+
 `rosetta_path=/proj/wallner/users/x_bjowa/github/Rosetta/main/source/bin`
+
 `rosetta_db=/proj/wallner/users/x_bjowa/github/Rosetta/main/database`
+
 `svm_path=/home/x_sabas/proj/svm_light`
+
 `ESpath=/home/x_sabas/proj/EDTSurf`
+
 `proqpath=/home/x_sabas/proj/BACKUP/ProQ_scripts/bin`
+
 `proqscorepath=/proj/wallner/apps/rosetta/current/main/source/bin`
 
 Run with
