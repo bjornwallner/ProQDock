@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ProQDock
 
 Requires PERL, a fortran90 compiler (prefered: ifort) 
@@ -108,3 +109,6 @@ drwxrwsr-x 18 x_sabas pg_wallner  32768 Mar 24 16:59 ..
 -rw-rw-r--  1 x_sabas pg_wallner    130 Mar 24 17:09 1u07.Rterms
 drwxrwsr-x  2 x_sabas pg_wallner   4096 Mar 24 17:09 .
 -rw-rw-r--  1 x_sabas pg_wallner 234150 Mar 24 17:09 1u07.pdb
+=======
+# ProQDock
+>>>>>>> 014d763b1107b208f5ee92f154ea34b1df717313

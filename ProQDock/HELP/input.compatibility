@@ -1,0 +1,20 @@
+#====================================================================================
+#  Compatibility of the input file
+#  The program will reject input files upon satisfaction of either of the following:
+#====================================================================================
+#  (1) If it does not contain two and exactly two polypeptide chains
+#  or
+#  (2) Presence of a non-natural amino acid (Check for MSE with record ID HETATM)
+#  or
+#  (3) Absence of any hydrogen atoms
+#  or
+#  (4) Incompatable format of Hydrogen atoms (i.e., inconsistent with REDUCE version 2)
+#  or 
+#  (5) If multiple occupancies are found for atoms
+#  or
+#  (6) If only main-chain (backbone) atoms are provided
+#  or
+#  (7) If redundant amino-acid identities are found at the same residue position
+#  or
+#  (8) The complex PDB file exceeds 2500 residues 
+#====================================================================================
