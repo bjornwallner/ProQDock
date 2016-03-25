@@ -55,18 +55,31 @@ Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed
 ===========================================================
 Total number of residues in the Complex: 178
 EC=0.11
+
 Sc=0.767
+
 rGb=0.07170
+
 Ld= 0.14815
+
 nBSA=0.11534
+
 Fintres=0.28652
+
 CPscore= 0.48131
+
 CPM= 0.89454
+
 rTs=0.08808
+
 Isc=0.00002
+
 Erep=0.27537
+
 Etmr=0.21025
+
 ProQ= 0.845
+
 ================The ProQDock Score ====================
 
    0.85360
