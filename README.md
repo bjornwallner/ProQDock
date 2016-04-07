@@ -46,7 +46,12 @@ You can generate the fasta sequence by using:
 ./ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
 
 Run with
-`./ProQDock.bash <model.PDB> <fulllength.fasta>`  model.pdb: The input pdb file fulllength.fasta: The fulllength fasta sequence
+`./ProQDock.bash <model.PDB> <fulllength.fasta>`  
+
+where,
+model.pdb: The input pdb file 
+fulllength.fasta: The fulllength fasta sequence
+
 Run from any Directory with the short / full path of the ProQDock/ProQDock.bash
 `optional arguments: -g (0/1)` delphi_mode: 0: single_dielectric; 1: multidielctric mode
 
