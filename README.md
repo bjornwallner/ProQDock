@@ -49,7 +49,9 @@ Run with
 `./ProQDock.bash <model.PDB> <fulllength.fasta>`  
 
 where,
+
 model.pdb: The input pdb file 
+
 fulllength.fasta: The fulllength fasta sequence
 
 Run from any Directory with the short / full path of the ProQDock/ProQDock.bash
