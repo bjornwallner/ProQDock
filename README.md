@@ -118,8 +118,8 @@ usage: $exec_path/ProQDock.bash $pdbpath/input.pdb -g (0/1)
 -g is an optional argument which determines the Delphi mode to be executed (0: Single-Dielectric / 1: Multi-Dielectric) [Default: 0] 
 
 `======================================================================================================================================================================`
-Feature   Range      Favorable Directions       Description                                                   Feature_Type    Stability*     Native_values (DB3)
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+`Feature   Range      Favorable Directions       Description                                                   Feature_Type    Stability*     Native_values (DB3)`
+`-----------------------------------------------------------------------------------------------------------------------------------------------------------------------`
 EC:       [-1,1]     Higher the Better       Electrostatic balance at the interface                             Interface      Variable      0.20 (+/-0.38)
 Sc:       [-1,1]     Higher the Better       Geometric / Steric fit at the interface                            Interface       Stable	     0.68 (+/-0.17)
 rGb:      [-1,1]     Higher the Better       Distribution of hydrophobicity with respect to burial              All_Atom        Stable	     0.06 (+/-0.02)
