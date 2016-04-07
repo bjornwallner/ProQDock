@@ -81,17 +81,17 @@ done
 `          D1OYV-a62c      0.707      3.991      1.628        Medium    0.66168    0.55795`
 `          D1OYV-a82d      0.707      4.347      1.593        Medium    0.65639    0.48664`
 
-=============================================================================================
-Example: 
-=============================================================================================
+`=============================================================================================`
+`Example: `
+`=============================================================================================`
 
-bash$ `./ProQDock.bash ./TESTPDBS/1u07.pdb ./EXAMPLE/1u07.pdb.fasta`
-==============================================================================================
-Your Input: 1u07.pdb
-The file has a Proper extension (.pdb / .PDB)
-Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed
-===========================================================
-Total number of residues in the Complex: 178
+`bash$ `./ProQDock.bash ./TESTPDBS/1u07.pdb ./EXAMPLE/1u07.pdb.fasta`
+`==============================================================================================`
+`Your Input: 1u07.pdb`
+`The file has a Proper extension (.pdb / .PDB)`
+`Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed`
+`===========================================================`
+`Total number of residues in the Complex: 178`
 
 EC=0.11
 Sc=0.767
