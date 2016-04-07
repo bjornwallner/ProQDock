@@ -1,0 +1,33 @@
+#!/bin/bash
+
+upath=`echo ${0/\/MAINEXEC\/run.rosettaE}`
+echo $upath
+
+path=`readlink -f $upath`
+echo $path
+
+
+pdb=$1
+rosetta_path=$2
+rosetta_db=$3
+rsf=`echo ${pdb/.pdb/}`.rosetta_repacked
+rtrm=`echo ${pdb/.pdb/}`.Rterms
+rtrm_scaled=`echo ${pdb/.pdb/}`.Rterms_scaled
+
+cat $rtrm
+
+rm $rsf
+$path/EXEC/repack1.bash $pdb $rosetta_path
+repack=repack.`echo ${pdb/.pdb/_0001.pdb}`
+echo $repack
+ls $repack
+
+$path/EXEC/rosettascore.sh $repack $pdb $rosetta_path $rosetta_db
+$path/EXEC/extAllTerms.bash $rsf
+$path/EXEC/scaleRterms.pl $rtrm
+
+cat $rtrm_scaled
+
+#less -S $rsf
+
+

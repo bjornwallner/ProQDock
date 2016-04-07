@@ -42,7 +42,9 @@ foreach $a (@dat)
 chomp $a;
 }
 
-if ($dat[0] eq "#       RIsc          Rts         Fatr         Frep         Ftmr")
+@header = split(/\s+/,$dat[0]);
+
+if (($header[1] eq "RIsc") && ($header[2] eq "Rts") && ($header[3] eq "Fatr") && ($header[4] eq "Frep") && ($header[5] eq "Ftmr"))
 {
 @hold = split(/\s+/,$dat[1]);
 $Isc = $hold[1];
@@ -69,9 +71,13 @@ $sFatr = 1/(1+(exp(-$k_Fatr*($nFatr-$x0_Fatr))));
 $sFrep = 1/(1+(exp(-$k_Frep*($nFrep-$x0_Frep))));
 $sFtmr = 1/(1+(exp(-$k_Ftmr*($nFtmr-$x0_Ftmr))));
 }
+else 
+{
+print "Length file not found: $res\n";
+}
 
 printf OUT "%10s  %10s  %10s  %10s  %10s\n",'Isc','rTs','Eatr','Erep','Etmr';
-#printf OUT "%10.3f  %10.3f  %10.3f  %10.3f  %10.3f\n",$Isc,$nrTs,$nFatr,$nFrep,$nFtmr;
+printf "%10.3f  %10.3f  %10.3f  %10.3f  %10.3f\n",$Isc,$nrTs,$nFatr,$nFrep,$nFtmr;
 printf OUT "%10.5f  %10.5f  %10.5f  %10.5f  %10.5f\n",$sIsc,$srTs,$sFatr,$sFrep,$sFtmr;
 
 

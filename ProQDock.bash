@@ -20,25 +20,40 @@ rosetta_db=/proj/wallner/users/x_bjowa/github/Rosetta/main/database
 svm_path=/home/x_sabas/proj/svm_light
 ESpath=/home/x_sabas/proj/EDTSurf
 proqpath=/home/x_sabas/proj/BACKUP/ProQ_scripts/bin
-proqscorepath=/proj/wallner/apps/rosetta/current/main/source/bin
-nseqflag=1
+proqscorepath=$rosetta_path
 
 #==============================================================================================================
 
 tmpdir=`mktemp -d`
-#echo $tmpdir
 
 upath=`echo ${0/\/ProQDock.bash/}`
-path=`readlink -f $upath`
 
 pdbpath=$1
+fulllength_fasta=$2
+diel=$3
+gauss=$4
+
+#echo $#
+
+if [ "$#" -lt "2" ]; then
+echo "================================================================================="
+path=`readlink -f $upath`
+echo "Usage: $path/ProQDock.bash <PDB_filename.pdb> <fasta_file_for_full_lengtht_sequence>"
+echo "Optional Argument(s): "
+echo "-d (Delphi_mode) : 0 / 1 (0: Single Dielctric; 1: Multidielctric) "
+echo "================================================================================="
+exit;
+fi
+
+path=`readlink -f $upath`
 pdbpath=`readlink -f $pdbpath`
+fulllength_fasta=`readlink -f $fulllength_fasta`
 pdb=`basename $pdbpath`
+pdbdir=`dirname $pdbpath`
 echo $pdb
-
 Nchar=`echo ${#pdb}`
-
 #echo $Nchar
+
 
 startE=`echo ${Nchar}-3 | bc -l`
 stopE=`echo $Nchar`
@@ -47,17 +62,25 @@ stopE=`echo $Nchar`
 
 extn=`echo $pdb | cut -c$startE-$stopE`
 
-echo $extn
+#echo $extn
 
 if [ "$extn" == ".pdb" ] || [ "$extn" == ".PDB" ]; then
 echo "The file has a Proper extension (.pdb / .PDB)"
 else
-echo "The Input filename MUST have an extension .pdb / .PDB"
-exit;
+echo "Renaming The Input file (filename) to filename.pdb"
+ls $pdbpath
+echo $pdb
+cp $pdbpath $pdbpath.pdb
+pdbpath=$pdbpath.pdb
+pdb=`basename $pdbpath`
+pdbdir=`dirname $pdbpath`
 fi
 
-echo $pdb
-echo $pdbpath
+#echo $pdb
+#echo $pdbpath
+#echo $pdbdir
+
+#exit;
 
 atoms=`awk '$1=="ATOM"' $pdbpath | wc -l`
 
@@ -66,34 +89,24 @@ echo "The input pdb file does not have a Brookhaven format"
 exit;
 fi
 
-diel=$2
-gauss=$3
 
-echo "============================================================="
-echo "EXEC PATH:" $path
+#echo "============================================================="
+#echo "EXEC PATH:" $path
 echo "============================================================="
 
-if [ "$#" -lt "1" ]; then
-echo "================================================================================="
-echo "Usage: $path/ProQDock.bash <PDB_filename.pdb>"
-echo "Optional Argument(s): "
-echo "-d (Delphi_mode) : 0 / 1 (0: Single Dielctric; 1: Multidielctric) "
-echo "================================================================================="
-exit;
-fi
 
-if [ "$#" -lt "2" ]; then
-echo "The Multidielectric Gaussian flag is set to 'off' mode"
-echo "No user-input provided for this parameter"
+if [ "$#" -lt "3" ]; then
+#echo "The Multidielectric Gaussian flag is set to 'off' mode"
+#echo "No user-input provided for this parameter"
 echo "Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed"
 gauss=0
-elif [ "$#" -ge "3" ]; then
+elif [ "$#" -ge "4" ]; then
         if [ "$diel" == "-d" ]; then
             if [ "$gauss" == "1" ]; then
-		echo "The Multidielectric Gaussian flag is 'up'"
-		echo "Delphi will commense with its Multidielctric Gaussian feature"
+#		echo "The Multidielectric Gaussian flag is 'up'"
+		echo "Delphi: Multidielctric Gaussian mode will run"
             elif [ "$gauss" == "0" ]; then
-		echo "The Multidielectric Gaussian flag is 'down'"
+#		echo "The Multidielectric Gaussian flag is 'down'"
 		echo "Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed"
             fi
 	else
@@ -109,7 +122,6 @@ fi
 
 basename=`echo ${pdb/\.pdb/}`
 basename=`echo ${basename/\.PDB/}`
-outdir=OUT$basename
 
 outf=`echo $basename`.SVMfeatures
 
@@ -140,7 +152,6 @@ ln -s $path/LIBR/amber_dummy.siz .
 
 loc=`pwd`
 #echo "Currently I am at:" $loc "which is supposed to be" $tmpdir
-mkdir $outdir
 echo "==========================================================="
 
 rm -f formch.out &> /dev/null
@@ -209,7 +220,6 @@ ls -lart check.Nint
     $path/intfiles.clean $basename
     mv temp2 $basename.log
     mv temp $pdb
-    rm -rf $outdir
     mv $pdb $cloc
     mv $basename.log $cloc
     exit;
@@ -219,34 +229,34 @@ fi
 cat $path/HELP/features.description
 
 #======================== EC ================================
-EC=`cat $basename.EC`
+EC=`cat $basename.EC | sed s/'\s*'/''/g`
 echo "EC="$EC
 #============================================================
 #========================= Sc ===============================
-awk '$1=="ATOM"' $pdb > temp
-mv temp $pdb
+awk '$1=="ATOM"' $pdb > $basename.pdb.temp
+mv $basename.pdb.temp $pdb
 c2=`$path/MAINEXEC/runSc.bash $pdb $sc_path  &> /dev/null`
-Sc=`cat $basename.Sc`
+Sc=`cat $basename.Sc | sed s/'\s*'/''/g`
 echo "Sc="$Sc
 #========================= rGb ==============================
 c3=`$path/MAINEXEC/calrGb.bash $pdb  &> /dev/null`
-rGb=`cat $basename.rGb`
+rGb=`cat $basename.rGb | sed s/'\s*'/''/g`
 echo "rGb="$rGb
 #========================== Ld =============================
 c4=`$path/MAINEXEC/ldN.exe $pdb  &> /dev/null`
 mv fort.130 $basename.Ld
-Ld=`cat $basename.Ld`
+Ld=`cat $basename.Ld | sed s/'\s*'/''/g`
 echo "Ld="$Ld
 #==================== nBSA & Fintres =======================
 c5=`$path/MAINEXEC/nBSAFintres.bash $pdb &> /dev/null`
 nBf=`cat $basename.nBSAFintres`
-nBSA=`awk '{print $1}' <<< $nBf`
-Fintres=`awk '{print $2}' <<< $nBf`
+nBSA=`awk '{print $1}' <<< $nBf | sed s/'\s*'/''/g`
+Fintres=`awk '{print $2}' <<< $nBf | sed s/'\s*'/''/g`
 echo "nBSA="$nBSA
 echo "Fintres="$Fintres
 #======================= CPscore ===========================
 c6=`$path/MAINEXEC/run.CPscore $pdb &> /dev/null`
-CPS=`cat $basename-C0.CPS`
+CPS=`cat $basename-C0.CPS | sed s/'\s*'/''/g`
 
 one=1.00
 zero=0.00
@@ -265,21 +275,23 @@ fi
 echo "CPscore="$CPS   
 
 #=========================== CPM ===========================
-CPM=`$path/MAINEXEC/CPMgScEC.pl $path $Sc $EC $nBSA`
+CPM=`$path/MAINEXEC/CPMgScEC.pl $path $Sc $EC $nBSA | sed s/'\s*'/''/g`
 echo $CPM > $basename.CPM
 echo "CPM="$CPM
 #echo $nres
 
 if [ "$nres" > "0" ]; then
 #==================== Rosetta terms ========================
-c7=`$path/MAINEXEC/run.rossettaE $pdb $rosetta_path $rosetta_db &> /dev/null`
+c7=`$path/MAINEXEC/run.rosettaE $pdb $rosetta_path $rosetta_db &> /dev/null`
+#echo "$path/MAINEXEC/run.rosettaE $pdb $rosetta_path $rosetta_db &> /dev/null"
+#cat $basename.Rterms
 #cat $basename.Rterms_scaled
 strR=`tail -n1 $basename.Rterms_scaled`
-Isc=`awk '{print $1}' <<< $strR`
-rTs=`awk '{print $2}' <<< $strR`
-Eatr=`awk '{print $3}' <<< $strR`
-Erep=`awk '{print $4}' <<< $strR`
-Etmr=`awk '{print $5}' <<< $strR`
+Isc=`awk '{print $1}' <<< $strR | sed s/'\s*'/''/g`
+rTs=`awk '{print $2}' <<< $strR | sed s/'\s*'/''/g`
+Eatr=`awk '{print $3}' <<< $strR | sed s/'\s*'/''/g`
+Erep=`awk '{print $4}' <<< $strR | sed s/'\s*'/''/g`
+Etmr=`awk '{print $5}' <<< $strR | sed s/'\s*'/''/g`
 echo "rTs="$rTs
 echo "Isc="$Isc
 echo "Erep="$Erep
@@ -291,39 +303,29 @@ echo "Something wrong with the " $basename.res "file"
 echo "========================================================="
 fi
 
-#echo "==========================================================="
-#/home/x_sabas/proj/BACKUP/ProQ_scripts/bin/run_all_external.pl -pdb $pdb -cpu 4
-
-$path/MAINEXEC/runProQ.bash $pdb $proqpath $proqscorepath $nseqflag &> /dev/null
+$path/MAINEXEC/runProQ.bash $pdb $proqpath $proqscorepath $fulllength_fasta &> /dev/null
 
 if [ -e "$pdb.ProQ2" ]; then
 prq=`tail -n1 $pdb.ProQ2 | grep "SCORE:" | cut -c7-16`
 fi
 
 ProQ=`echo ${prq}/${nres} | bc -l`
-echo $ProQ > temp
-ProQ=`awk '{printf "%10.3f\n",$1}' temp`
+#echo $ProQ > temp
+ProQ=`awk '{printf "%10.3f\n",$1}' <<< $ProQ | sed s/'\s*'/''/g`
 echo "ProQ="$ProQ       
 
-#ProQ=0.90719   # To be calculated (2djz)
-#ProQ=0.80419   # To be calculated (2boj)
+h2="SCORE  rGb nBSA Fintres Sc EC ProQ Isc rTs Erep Etmr CPM Ld CPscore Description"
+out="SCORE $rGb $nBSA $Fintres $Sc $EC $ProQ $Isc $rTs $Erep $Etmr $CPM $Ld $CPS $basename" 
 
-echo "SCORE  rGb nBSA Fintres Sc EC ProQ Isc rTs Erep Etmr CPM Ld CPscore" > h2
-echo "SCORE" $rGb $nBSA $Fintres $Sc $EC $ProQ $Isc $rTs $Erep $Etmr $CPM $Ld $CPS  > out
+echo $h2 | awk '{printf "%5s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s %20s\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15}' > $outf
+echo $out | awk '{printf "%5s  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f %20s\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15}' >> $outf
 
-#awk '{printf "%5s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14}' h2
-#awk '{printf "%5s  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14}' out
-#echo "==========================================================="
-
-rm -f $out &> /dev/null
-
-awk '{printf "%5s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s  %8s\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14}' h2 >> $outf
-awk '{printf "%5s  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f  %8.5f\n",$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14}' out >> $outf
-
-$path/MAINEXEC/features2svm.pl $outf &> /dev/null
+#================ Generate svm input =========================================================
 
 svmtest=$outf.svm
-#ls -lart $svmtest
+echo "0.0 1:$rGb 2:$nBSA 3:$Fintres 4:$Sc 5:$EC 6:$ProQ 7:$Isc 8:$rTs 9:$Erep 10:$Etmr 11:$CPM 12:$Ld 13:$CPS" | sed s/':\s*'/':'/g > $svmtest
+
+#=============================================================================================
 
 cnt=0
 sumpred=0.00
@@ -334,15 +336,12 @@ for model in `echo $path/SVMmodels/*.model`
 do
 let cnt=cnt+1
 pred=`echo ${svmtest/\.svm/\-$cnt.pred}`
-#echo $cnt $pred
 $svm_path/svm_classify  $svmtest  $model  $pred &> /dev/null
 cat $pred >> $pred5
 rm -f $pred
 done
 
 sumpred=`cat $pred5 | awk 'BEGIN{sum=0}{sum=sum+$1}END{print sum}'`
-
-#echo $sumpred
 ProQDock=`echo ${sumpred}/${cnt} | bc -l`
 
 #===============================================================
@@ -350,68 +349,48 @@ ProQDock=`echo ${sumpred}/${cnt} | bc -l`
 #======= forcefully readjust pqd > 1 to 1 and pqd < 0 to 0 =====
 #===============================================================
 #===============================================================
-
-one=1.00
-zero=0.00
-
+#
+#one=1.00
+#zero=0.00
+#
 # Readjust outliers based on a True(1)-False(0) Logic
-
-gto=`echo $ProQDock '>' $one | bc -l`
-ltz=`echo $ProQDock '<' $zero | bc -l`
-
-rscl=0
-
-if [ "$gto" -eq "1" ]; then 
-echo "Raw ProQDock:" $ProQDock
-ProQDock=1.00
-rscl=1
-elif [ "$ltz" -eq "1" ]; then 
-echo "Raw ProQDock:" $ProQDock
-ProQDock=0.00
-rscl=1
-fi
-
+#
+#gto=`echo $ProQDock '>' $one | bc -l`
+#ltz=`echo $ProQDock '<' $zero | bc -l`
+#
+#rscl=0
+#
+#if [ "$gto" -eq "1" ]; then 
+#echo "Raw ProQDock:" $ProQDock
+#ProQDock=1.00
+#rscl=1
+#elif [ "$ltz" -eq "1" ]; then 
+#echo "Raw ProQDock:" $ProQDock
+#ProQDock=0.00
+#rscl=1
+#fi
+#
 #===============================================================
 #===============================================================
 #===============================================================
 
 outp=$basename.ProQDock
 echo "================The ProQDock Score ===================="
-if [ "$rscl" == "0" ]; then
-echo $ProQDock > temp
-awk '{printf "%10.5f\n",$1}' temp 
-elif [ "$rscl" == "1" ]; then
-echo $ProQDock "(readjusted)" > temp
-awk '{printf "%10.5f %15s\n",$1,$2}' temp 
-fi
-echo "======================================================="
-awk '{printf "%10.5f\n",$1}' temp > $outp
+awk '{printf "%10.5f\n",$1}' <<< $ProQDock > $outp
+cat $outp
 
-mv $basename* $outdir/
 
-cd $outdir/
-$path/intfiles.clean $basename
-cp $pdbpath .
-cd $tmpdir/
-ls -lart $outdir
-
-$path/clean.bash  &> /dev/null 
-cp -r $outdir $cloc/
+for ext in ProQDock SVMfeatures SVMfeatures.pred5 Rterms
+do
+    mv $basename.$ext $pdbdir/
+done
 
 cd $cloc
-
-ls -lart $outdir/$outp
-cat $outdir/$outp
-
-#echo "I am now back to $cloc"
-
-echo "OUTPUT Directory" $outdir
-echo "Features: " $outdir/$outf
-echo "ProQDock score: " $outdir/$outp
-
-#ls -lart
-#ls -lart $tmpdir
 rm -rf $tmpdir
-ls -lart $outdir
+
+echo "Features: " $pdbdir/$outf
+echo "ProQDock score: " $pdbdir/$outp
+echo "Raw Rosetta terms: " $pdbdir/$basename.Rterms
+
 
 

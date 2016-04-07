@@ -358,7 +358,7 @@ $resc=~s/\s//g;
 if ($nH == 0)
 {
 print "=======================================================================================================\n";
-print "\nThe input pdb file does not contain any Hydrogen atom\n\n";
+print "\nThe input pdb file does not contain any Hydrogen atom \n\n(Use: Reduce v.2: http://kinemage.biochem.duke.edu/downloads/software/reduce/ to geometrically fit Hydrogens)\n\n";
 print "\nThe program will exit\n\n";
 print "=======================================================================================================\n";
 open (OUTF,">formch.out");
@@ -380,7 +380,7 @@ exit;
 if ($niH >= 1)
 {
 print "=======================================================================================================\n";
-print "\nThe input pdb file contains $niH Hydrogen(s) inconsistent with REDUCE (v.2) format\n\n";
+print "\nThe input pdb file contains $niH Hydrogen(s) inconsistent with REDUCE (v.2) format: http://kinemage.biochem.duke.edu/downloads/software/reduce/\n\n";
 	foreach $ih (@ilfH)
 	{
 	print $ih,"\n";
