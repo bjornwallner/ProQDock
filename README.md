@@ -57,7 +57,7 @@ then SKIP repeating the profile generation step more than once, by providing a c
 Launch the `./runex.bash` script which runs on a set of (example) models kept at EXAMPLE_CASE_STUDY/
 
 =============================================================================================
-#!/bin/bash
+`#!/bin/bash`
 
 for i in `ls ../ProQDock/EXAMPLE_CASE_STUDY/D1OYV*-delpatch.pdb`
 do
