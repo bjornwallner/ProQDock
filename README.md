@@ -65,9 +65,9 @@ echo "./ProQDock.bash $i ./EXAMPLE_CASE_STUDY/1OYV.pdb.fasta"
 ./ProQDock.bash $i ./EXAMPLE_CASE_STUDY/1OYV.pdb.fasta
 done
 
-===================================== OUTPUT ================================================
+`===================================== OUTPUT ================================================`
 `cat EXAMPLE_CASE_STUDY/D1OYV-models.status.results`
-=============================================================================================
+`=============================================================================================`
 
 `#           Model         fnat       LRMS       iRMS     CAPRI_class    DockQ    ProQDock`
 `         D1OYV-a102a      0.000     35.348     15.846     Incorrect    0.02118    0.05908`
