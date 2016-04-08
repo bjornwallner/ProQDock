@@ -36,7 +36,8 @@ open `ProQDock.bash` in any text editor and change the fullpaths for the followi
 - The model must be a perfect or imperfect subset of the target sequence 
 - i.e., Any and all sub-sequence present in the model must be present in the tareget
 - PDB file MUST contain corrdinates of geometrically fixed Hydrogen atoms 
-- preferably fixed by REDUCE v.2 or atleast compatible with the REDUCE format (http://kinemage.biochem.duke.edu/downloads/software/reduce/)
+- preferably fixed by REDUCE v.2 or atleast compatible with the REDUCE format 
+  (http://kinemage.biochem.duke.edu/downloads/software/reduce/)
 
 
 ##### Preparatory Step: 
