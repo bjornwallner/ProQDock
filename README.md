@@ -1,7 +1,7 @@
 # ProQDock
 
 Requires PERL (v.5.8 or higher), and a fortran90 compiler (prefered: ifort)
-and five additional packages to be pre-installed
+and six additional packages to be pre-installed
 
 1. sc from ccp4 (http://www.ccp4.ac.uk/) [executable_name: sc]
 2. delphi v.6.2 (http://compbio.clemson.edu/delphi/) [executable_name: delphi95]
