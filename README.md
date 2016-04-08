@@ -119,7 +119,7 @@ $ ./ProQDock ./TESTPDBS/1u07.pdb ./EXAMPLE/1u07.pdb.fasta
 > 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 >
-         Feature   Range      Favorable Directions    Description                                                        Feature_Type   Stability*   Native_values (DB3) 
+         Feature   Range      Favorable Directions    Description                                                        Feature_Type   Stability**   Native_values (DB3) 
          EC:       [-1,1]     Higher the Better       Electrostatic balance at the interface                             Interface      Variable     0.20 (+/-0.38)
          Sc:       [-1,1]     Higher the Better       Geometric / Steric fit at the interface                            Interface       Stable	     0.68 (+/-0.17)
          rGb:      [-1,1]     Higher the Better       Distribution of hydrophobicity with respect to burial              All_Atom        Stable	     0.06 (+/-0.02)
@@ -134,7 +134,7 @@ $ ./ProQDock ./TESTPDBS/1u07.pdb ./EXAMPLE/1u07.pdb.fasta
          Etmr:     [0, 1]     Lower the Better        Energetic Stability without condiderating clashes                  All_Atom        Stable	     0.28 (+/-0.16)
          ProQ:     [0, 1]     Higher the Better       Overall Structural Quality                                         All_Atom       Variable     0.80 (+/-0.12)
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-* In Correct Models 
+** In Correct Models 
 
 
 
