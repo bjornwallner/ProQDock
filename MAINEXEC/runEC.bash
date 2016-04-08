@@ -444,10 +444,10 @@ echo "delphi is running now from $delphi_path"
 #exit;
 
 if [ "$gauss" == "0" ]; then
-    echo "$delphi_path/delphi_static script1.prm > log11"
-	$delphi_path/delphi_static script1.prm > log11
-#exit;
-	$delphi_path/delphi_static script2.prm > log21
+	rm ARCDAT
+	$delphi_path/delphi95 script1.prm > log11
+	rm ARCDAT
+	$delphi_path/delphi95 script2.prm > log21
 elif [ "$gauss" == "1" ]; then
 	rm ARCDAT
 	$delphi_path/delphi95 script1.prm > log11
@@ -466,8 +466,10 @@ echo "$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf2.pdb outmod2pdb ou
 mv script.prm script2.prm 
 
 if [ "$gauss" == "0" ]; then
-	$delphi_path/delphi_static script1.prm > log12
-	$delphi_path/delphi_static script2.prm > log22
+	rm ARCDAT
+	$delphi_path/delphi95 script1.prm > log12
+	rm ARCDAT
+	$delphi_path/delphi95 script2.prm > log22
 elif [ "$gauss" == "1" ]; then
 	rm ARCDAT
 	$delphi_path/delphi95 script1.prm > log12

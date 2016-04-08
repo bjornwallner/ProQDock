@@ -1,6 +1,6 @@
 #!/bin/bash
 
-upath=`echo ${0/compileF.bash/}`
+upath=`echo ${0/compileF/}`
 path=`readlink -f $upath`
 
 fortcomp=$1
@@ -11,15 +11,20 @@ echo "Default fortran 90 compiler: ifort"
 fortcomp=ifort
 fi
 
-chs=`which $fortcomp`
-echo $chs
+chmod +x $path/ProQDock
 
-if [[ $chs == *"$fortcomp"* ]]; then
+#chs=`which $fortcomp`
+#echo $chs 
+
+#if [[ $chs == *"$fortcomp"* ]]; then
+
+if hash $fortcomp 2>/dev/null; then
 echo "$fortcomp FOUND"
 else
 echo "$fortcomp NOT FOUND to be installed"
 exit;
 fi
+
 
 $fortcomp $path/EXEC/globuleN.f -o $path/EXEC/glbN.exe &> /dev/null
 $fortcomp $path/EXEC/metsph.f -o $path/EXEC/msph.exe &> /dev/null

@@ -26,7 +26,7 @@ proqscorepath=$rosetta_path
 
 tmpdir=`mktemp -d`
 
-upath=`echo ${0/\/ProQDock.bash/}`
+upath=`echo ${0/ProQDock/}`
 
 pdbpath=$1
 fulllength_fasta=$2
@@ -391,6 +391,7 @@ rm -rf $tmpdir
 echo "Features: " $pdbdir/$outf
 echo "ProQDock score: " $pdbdir/$outp
 echo "Raw Rosetta terms: " $pdbdir/$basename.Rterms
+
 
 
 
