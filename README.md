@@ -18,7 +18,7 @@ $ cd ProQDock
 $ chmod +x compileF
 $ ./compileF <fortran90-compiler>  (Default: ifort)
 ```
-open `ProQDock.bash` in any text editor and change the fullpaths for the following fields according to your system: 
+open `ProQDock` in any text editor and change the fullpaths for the following fields according to your system: 
 
 - sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
 - delphi_path=/home/x_sabas/bin
