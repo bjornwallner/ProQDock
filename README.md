@@ -89,7 +89,7 @@ $ cat EXAMPLE_CASE_STUDY/D1OYV-models.status.results
 > Example Output for a single PDB file: 
 
 ```sh
-$ ./ProQDock ./TESTPDBS/1u07.pdb ./EXAMPLE/1u07.pdb.fasta
+$ ./ProQDock ./TESTPDBS/1u07.pdb ./TEMP/1u07.pdb.fasta
 ```
 
 > 
