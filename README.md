@@ -50,7 +50,7 @@ $ ./ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
 
 ##### Run Step: 
 ```sh
-$ ./ProQDock.bash <model.PDB> <fulllength.fasta>
+$ ./ProQDock <model.PDB> <fulllength.fasta>
 ```
 where,
 - model.pdb: The input pdb (coordinate file in Brrokheaven format; http://www.ccp4.ac.uk/html/procheck_man/manappb.html) file
