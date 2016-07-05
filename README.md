@@ -143,7 +143,7 @@ $ ./ProQDock ./TESTPDBS/1u07.pdb ./TEMP/1u07.pdb.fasta
       Bioinformatics (2016) 32 (12): i262-i270. 
       doi: 10.1093/bioinformatics/btw257
 
-The article is avialable here: http://bioinformatics.oxfordjournals.org/content/32/12/i262.abstract
+The article is avialable online here: http://bioinformatics.oxfordjournals.org/content/32/12/i262.abstract
 
 
 
