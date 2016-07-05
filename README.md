@@ -136,7 +136,7 @@ $ ./ProQDock ./TESTPDBS/1u07.pdb ./TEMP/1u07.pdb.fasta
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ** In Correct Models 
 
-# Reference
+### Reference
 
       Finding correct protein–protein docking models using ProQDock
       Sankar Basu and Björn Wallner* 
