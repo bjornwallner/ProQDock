@@ -10,8 +10,9 @@ close INP1;
 foreach $a (@dat1)
 {
 chomp $a;
-$atom = substr($a,13,1);
-	if ($atom ne "H")
+$atom1 = substr($a,12,1);
+$atom2 = substr($a,13,1);
+	if ($atom1 ne "H" && $atom2 ne "H")
 	{
 	print $a,"\n";
 	}
