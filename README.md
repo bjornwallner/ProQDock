@@ -28,7 +28,7 @@ open `ProQDock` in any text editor and change the fullpaths for the following fi
 - ESpath=/home/x_sabas/proj/EDTSurf
 - proqpath=/home/x_sabas/proj/BACKUP/ProQ_scripts/bin
 
-## The program has two mandetory inputs :
+## The program has two mandatory inputs :
 
         1. The coordinate (PDB) file for the model
         2. The full-length target sequence
