@@ -13,7 +13,7 @@ and six additional packages to be pre-installed
 ### Installation
 
 ```sh
-$ git clone https://github.com/nemo8130/ProQDock
+$ git clone https://github.com/bjornwallner/ProQDock
 $ cd ProQDock
 $ chmod +x compileF
 $ ./compileF <fortran90-compiler>  (Default: ifort)
