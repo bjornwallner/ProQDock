@@ -12,14 +12,17 @@
 # Please set the following paths according to the compilation on your own machine
 #==============================================================================================================
 
+#module add ccp4/6.5.0-module
 user=x_sabas
 sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
-delphi_path=/home/x_sabas/bin
+delphi_path=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/
+#delphi_path=/proj/wallner/users/x_bjowa/local/bin/
 rosetta_path=/proj/wallner/users/x_bjowa/github/Rosetta/main/source/bin
 rosetta_db=/proj/wallner/users/x_bjowa/github/Rosetta/main/database
-svm_path=/home/x_sabas/proj/svm_light
-ESpath=/home/x_sabas/proj/EDTSurf
-proqpath=/home/x_sabas/proj/BACKUP/ProQ_scripts/bin
+svm_path=/proj/wallner/users/x_sabas/svm_light
+#svm_path=/proj/wallner/users/x_bjowa/local/svm_light
+ESpath=/proj/wallner/users/x_bjowa/local/EDTSurf
+proqpath=/proj/wallner/users/x_bjowa/github/ProQ_scripts/bin/
 proqscorepath=$rosetta_path
 
 #==============================================================================================================
@@ -27,7 +30,6 @@ proqscorepath=$rosetta_path
 tmpdir=`mktemp -d`
 
 upath=`echo ${0/ProQDock/}`
-
 pdbpath=$1
 fulllength_fasta=$2
 diel=$3
@@ -50,7 +52,7 @@ pdbpath=`readlink -f $pdbpath`
 fulllength_fasta=`readlink -f $fulllength_fasta`
 pdb=`basename $pdbpath`
 pdbdir=`dirname $pdbpath`
-echo $pdb
+#echo $pdb
 Nchar=`echo ${#pdb}`
 #echo $Nchar
 
@@ -135,7 +137,7 @@ cloc=`pwd`
 #echo "My starting Location is: $cloc"
 
 #ls -lart $tmpdir
-
+#echo $tmpdir
 cp $pdbpath $tmpdir/ &> /dev/null
 cd $tmpdir/
 
@@ -303,6 +305,8 @@ echo "Something wrong with the " $basename.res "file"
 echo "========================================================="
 fi
 
+#echo $path/MAINEXEC/runProQ.bash $pdb $proqpath $proqscorepath $fulllength_fasta
+#exit
 $path/MAINEXEC/runProQ.bash $pdb $proqpath $proqscorepath $fulllength_fasta &> /dev/null
 
 if [ -e "$pdb.ProQ2" ]; then
@@ -376,7 +380,7 @@ ProQDock=`echo ${sumpred}/${cnt} | bc -l`
 
 outp=$basename.ProQDock
 echo "================The ProQDock Score ===================="
-awk '{printf "%10.5f\n",$1}' <<< $ProQDock > $outp
+awk '{printf "ProQDock: %10.5f\n",$1}' <<< $ProQDock > $outp
 cat $outp
 
 

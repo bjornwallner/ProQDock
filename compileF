@@ -2,6 +2,14 @@
 
 upath=`echo ${0/compileF/}`
 path=`readlink -f $upath`
+echo $path
+
+cp $path/EXEC/resGbur.f.install $path/EXEC/resGbur.f
+cp $path/EXEC/contpref20CB.f.install  $path/EXEC/contpref20CB.f
+
+
+sed -i "s%INSTALL_PATH%$path%" $path/EXEC/resGbur.f
+sed -i "s%INSTALL_PATH%$path%" $path/EXEC/contpref20CB.f
 
 fortcomp=$1
 

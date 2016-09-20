@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x 
 
 upath=`echo ${0/\/MAINEXEC\/calrGb.bash/}`
 echo $upath
@@ -97,10 +97,10 @@ $path/EXEC/naccess.bash $pdb1	# A.pdb (original)
 $path/EXEC/naccess.bash $pdb2	# B.pdb (original)
 $path/EXEC/naccess.bash $pdb12	# AB.pdb (original)
 
-$path/EXEC/delasa.exe $asa1 $asa2 $asa12 > temp
-Nint=`awk '{print $1}' temp`
-
+$path/EXEC/delasa.exe $asa1 $asa2 $asa12 > temp.$$
+Nint=`awk '{print $1}' temp.$$`
 echo $Nint
+#exit
 
 zero=0;
 
@@ -130,12 +130,13 @@ echo "=============================================================="
 #=========================================================================
 
 echo "==============================================================="
-echo "CALCULATING BURIAL OF RESIDUES AS IN THE WHOLE (COMPLEX) MOLECULE"
+ echo "CALCULATING BURIAL OF RESIDUES AS IN THE WHOLE (COMPLEX) MOLECULE"
 echo "==============================================================="
 
 rm bury.out
 rm bury.scrt
 $path/EXEC/buryasa.exe $asa12
+echo $path/EXEC/buryasa.exe $asa12
 ls bury.out
 cp bury.out $bur12
 

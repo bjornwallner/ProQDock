@@ -13,7 +13,7 @@ and six additional packages to be pre-installed
 ### Installation
 
 ```sh
-$ git clone https://github.com/nemo8130/ProQDock
+$ git clone https://github.com/bjornwallner/ProQDock
 $ cd ProQDock
 $ chmod +x compileF
 $ ./compileF <fortran90-compiler>  (Default: ifort)
@@ -28,7 +28,7 @@ open `ProQDock` in any text editor and change the fullpaths for the following fi
 - ESpath=/home/x_sabas/proj/EDTSurf
 - proqpath=/home/x_sabas/proj/BACKUP/ProQ_scripts/bin
 
-## The program has two mandetory inputs :
+## The program has two mandatory inputs :
 
         1. The coordinate (PDB) file for the model
         2. The full-length target sequence
@@ -41,16 +41,16 @@ open `ProQDock` in any text editor and change the fullpaths for the following fi
 
 
 ##### Preparatory Step: 
-The fulllength (FASTA) target sequence (one letter amino acid code followed by a header starting with >) should be prepared and provided alongside the coordinate (PDB) file for the model.
+The full length (FASTA) target sequence (one letter amino acid code followed by a header starting with >) should be prepared and provided alongside the coordinate (PDB) file for the model.
 
 You can generate the fasta sequence by using:
 ```sh
-$ ./ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
+$ ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
 ```
 
 ##### Run Step: 
 ```sh
-$ ./ProQDock <model.PDB> <fulllength.fasta>
+$ ProQDock/ProQDock <model.PDB> <fulllength.fasta>
 ```
 where,
 - model.pdb: The input pdb (coordinate file in Brrokheaven format; http://www.ccp4.ac.uk/html/procheck_man/manappb.html) file
