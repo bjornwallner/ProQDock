@@ -13,7 +13,7 @@ rTs:      [0, 1]     Lower the Better        Energetic Stability of the whole mo
 Isc:      [0, 1]     Lower the Better        Binding energy                                                     Interface      Variable	     0.20 (+/-0.33)
 Erep:     [0, 1]     Lower the Better        Unfavourable Energy due to atomic Clashes                          All_Atom        Stable	     0.41 (+/-0.15)
 Etmr:     [0, 1]     Lower the Better        Energetic Stability without condiderating clashes                  All_Atom        Stable	     0.28 (+/-0.16)
-ProQ:     [0, 1]     Higher the Better       Overall Structural Quality                                         All_Atom       Variable	     0.80 (+/-0.12)
+ProQ2:    [0, 1]     Higher the Better       Overall Structural Quality                                         All_Atom       Variable	     0.80 (+/-0.12)
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 * In Correct Models 
 ======================================================================================================================================================================
