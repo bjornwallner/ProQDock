@@ -18,7 +18,7 @@ c     --  nucleic acids, separable chains, polar/non-polar summing
 c     
 c     --  AUTHOR: S. Hubbard 3/92. EMBL.
 c     
-      include './SRC/accall.pars'
+      include 'accall.pars'
 c
 c     -- functions
 c
@@ -151,7 +151,7 @@ c
       endif
       open ( 
      -     unit = 4,                                                 
-     -     file = fname(k:i)//'.asalog',
+     -     file = fname(k:i)//'.log',
      -     status = 'unknown'
      -     )
 c

@@ -207,7 +207,7 @@ cat $path/HELP/input.compatibility
 exit;
 fi
 
-#echo "$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null"
+echo "$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null"
 rm -f check.Nint &> /dev/null
 c1=`$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null`
 if [ -e "check.Nint" ]; then
