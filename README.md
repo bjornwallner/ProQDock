@@ -41,16 +41,16 @@ open `ProQDock` in any text editor and change the fullpaths for the following fi
 
 
 ##### Preparatory Step: 
-The fulllength (FASTA) target sequence (one letter amino acid code followed by a header starting with >) should be prepared and provided alongside the coordinate (PDB) file for the model.
+The full length (FASTA) target sequence (one letter amino acid code followed by a header starting with >) should be prepared and provided alongside the coordinate (PDB) file for the model.
 
 You can generate the fasta sequence by using:
 ```sh
-$ ./ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
+$ ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
 ```
 
 ##### Run Step: 
 ```sh
-$ ./ProQDock <model.PDB> <fulllength.fasta>
+$ ProQDock/ProQDock <model.PDB> <fulllength.fasta>
 ```
 where,
 - model.pdb: The input pdb (coordinate file in Brrokheaven format; http://www.ccp4.ac.uk/html/procheck_man/manappb.html) file

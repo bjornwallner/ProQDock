@@ -25,6 +25,6 @@ outfile=${pdbinp/\.pdb/\.Sc};
 echo $Sc > $outfile;
 rm -f pdbWH.pdb
 
-find /home/x_sabas/ccp4_scr/ -cmin +1 | xargs rm -f
+rm $CCP4_SCR/sc*
 
 

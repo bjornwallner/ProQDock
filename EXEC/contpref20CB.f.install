@@ -27,7 +27,7 @@
       call getarg(3,intf2)	! Interface 2
       call system('rm fort.*')
 
-      lib='/proj/wallner/users/x_bjowa/local/ProQDock/LIBR/contpref.mat'
+      lib='INSTALL_PATH/LIBR/contpref.mat'
  
       open (1,file=pdb,status='old')
       open (2,file=intf1,status='old')
