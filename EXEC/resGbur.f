@@ -15,7 +15,7 @@
 !    READ resGbur LIBRARY
 !===========================
 
-      open (unit=1,file='/proj/wallner/users/x_bjowa/local/ProQDock
+      open (unit=1,file='/proj/wallner/users/x_sabas/BACKUP/ProQDock
      &/LIBR/resGbur.libr',status='old')
 
       do i = 1,2

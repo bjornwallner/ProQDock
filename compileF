@@ -54,8 +54,11 @@ $fortcomp $path/EXEC/dsl.f -o $path/EXEC/dsl.exe &> /dev/null
 
 Nfort=`ls $path/EXEC/*.f | wc -l`
 Nfort=`echo ${Nfort}-1 | bc -l` 
+echo $Nfort
 
-Nexec=`ls $path/EXEC/*.exe | wc -l`
+Nexec1=`ls $path/EXEC/*.exe | wc -l`
+Nexec2=`ls $path/MAINEXEC/*.exe | wc -l`
+Nexec=`echo $Nexec1+$Nexec2 | bc -l`
 echo $Nexec
 
 if [ "$Nexec" == "$Nfort" ] && [ -e "$path/MAINEXEC/ldN.exe" ]; then
