@@ -12,7 +12,7 @@
 # Please set the following paths according to the compilation on your own machine
 #==============================================================================================================
 
-module add ccp4/6.5.0-module
+#module add ccp4/6.5.0-module
 user=x_sabas
 sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
 delphi_path=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/
@@ -140,6 +140,7 @@ cloc=`pwd`
 #echo $tmpdir
 cp $pdbpath $tmpdir/ &> /dev/null
 cd $tmpdir/
+module add ccp4/6.5.0-module
 
 #=======================================================================
 #========== delphi parameter files should be in ~/lib ==================
