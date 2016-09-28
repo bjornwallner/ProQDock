@@ -280,6 +280,7 @@ fi
 echo "CPscore="$CPS   
 
 #=========================== CPM ===========================
+echo $path/MAINEXEC/CPMgScEC.pl $path $Sc $EC $nBSA
 CPM=`$path/MAINEXEC/CPMgScEC.pl $path $Sc $EC $nBSA | sed s/'\s*'/''/g`
 echo $CPM > $basename.CPM
 echo "CPM="$CPM
