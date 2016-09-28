@@ -53,7 +53,7 @@ nbsa=`echo ${bsa}/${sumasa} | bc -l`
 echo $nbsa
 
 	cp $pdbinp orig.pdb
-	$path/MAINEXEC/pdb2resWMchain.pl orig.pdb
+	$path/EXEC/pdb2resWMchain.pl orig.pdb
 	cp orig.res inp12map.res
 
 	$path/EXEC/crmap.pl

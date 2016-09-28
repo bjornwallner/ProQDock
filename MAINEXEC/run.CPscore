@@ -6,6 +6,8 @@ path=`readlink -f $upath`
 echo $path
 
 pdbinp=$1
+svm_path=$2
+
 $path/EXEC/compint_fileonly.bash $pdbinp
 CP20=`echo $pdbinp | cut -f1 -d'.'`.contpref20
 C0svm=`echo $pdbinp | cut -f1 -d'.'`-C0.svm1
@@ -13,7 +15,7 @@ CPS=`echo $pdbinp | cut -f1 -d'.'`-C0.CPS
 echo $CP20 $C0svm
 $path/EXEC/contpref20svm.pl $CP20
 cat $C0svm
-$path/EXEC/cal.svmCPS $C0svm
+$path/EXEC/cal.svmCPS $C0svm $svm_path
 
 cat $CPS
 

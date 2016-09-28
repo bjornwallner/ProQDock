@@ -12,7 +12,7 @@
 # Please set the following paths according to the compilation on your own machine
 #==============================================================================================================
 
-#module add ccp4/6.5.0-module
+module add ccp4/6.5.0-module
 user=x_sabas
 sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
 delphi_path=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/
@@ -183,7 +183,7 @@ fi
 rm -f redun.out &> /dev/null
 rm -f rdn.log &> /dev/null
 
-nres=`$path/MAINEXEC/pdb2resWMchain.pl $pdb`
+nres=`$path/EXEC/pdb2resWMchain.pl $pdb`
 echo "Total number of residues in the Complex: $nres"
 
 if [ "$nres" -gt "2500" ]; then 
@@ -257,7 +257,7 @@ Fintres=`awk '{print $2}' <<< $nBf | sed s/'\s*'/''/g`
 echo "nBSA="$nBSA
 echo "Fintres="$Fintres
 #======================= CPscore ===========================
-c6=`$path/MAINEXEC/run.CPscore $pdb &> /dev/null`
+c6=`$path/MAINEXEC/run.CPscore $pdb $svm_path &> /dev/null`
 CPS=`cat $basename-C0.CPS | sed s/'\s*'/''/g`
 
 one=1.00
