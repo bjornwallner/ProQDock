@@ -44,7 +44,7 @@ $fortcomp $path/EXEC/fetchintsurf.f -o $path/EXEC/fetchds.exe &>> compile.log
 $fortcomp $path/EXEC/corrcoefPsplw.f -o $path/EXEC/ccpsw.exe &>> compile.log
 $fortcomp $path/EXEC/metcoord.f -o $path/EXEC/mcoord.exe &>> compile.log
 $fortcomp $path/EXEC/contpref20CB.f -o $path/EXEC/contpref20CB.exe &>> compile.log
-$fortcomp $path/EXEC/linkdenN.f -o $path/MAINEXEC/ldN.exe &>> compile.log
+gfortran  $path/EXEC/linkdenN.f -o $path/MAINEXEC/ldN.exe &>> compile.log
 $fortcomp $path/EXEC/resGbur.f -o $path/EXEC/rGb.exe &>> compile.log
 $fortcomp $path/EXEC/intf2surf.f -o $path/EXEC/isurf.exe &>> compile.log
 $fortcomp $path/EXEC/dsl.f -o $path/EXEC/dsl.exe &>> compile.log

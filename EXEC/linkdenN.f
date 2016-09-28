@@ -34,7 +34,7 @@
       read(1,24,end=20)string
           if (string(1:4).eq.'ATOM')then
           read(string,34)atom(i),res(i),chain(i),ires(i),x(i),y(i),z(i)
-!          write(*,34)atom(i),res(i),chain(i),ires(i),x(i),y(i),z(i)
+          write(*,34)atom(i),res(i),chain(i),ires(i),x(i),y(i),z(i)
           ic = ic + 1
           endif
       enddo
