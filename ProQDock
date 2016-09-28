@@ -247,8 +247,8 @@ rGb=`cat $basename.rGb | sed s/'\s*'/''/g`
 echo "rGb="$rGb
 #========================== Ld =============================
 #echo $path/MAINEXEC/ldN.exe $pdb
-`grep ^ATOM $pdb > $pdb.clean`;
-c4=`$path/MAINEXEC/ldN.exe $pdb.clean  &> /dev/null`
+#`grep ^ATOM $pdb > $pdb.clean`;
+c4=`$path/MAINEXEC/ldN.exe $pdb &> /dev/null`
 mv fort.130 $basename.Ld
 Ld=`cat $basename.Ld | sed s/'\s*'/''/g`
 echo "Ld="$Ld
