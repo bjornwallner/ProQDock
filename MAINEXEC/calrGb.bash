@@ -26,14 +26,14 @@ echo $code
 
 if [ -e "inp1.pdb" ] && [ -e "inp2.pdb" ]; then
 echo "Both inp1.pdb and inp2.pdb found to be present"
-ls inp1.pdb
-ls inp2.pdb
+#ls inp1.pdb
+#ls inp2.pdb
 $path/EXEC/mappdb.pl $path inp1.pdb inp2.pdb
 else
 echo "At least one of the two files: inp1.pdb and inp2.pdb is not found"
 exit;
 fi
-
+#exit
 #=======================================================================================================
 #=======================================================================================================
 #=======================================================================================================
@@ -147,5 +147,5 @@ echo $hydbur > $rGbout
 rm inp*
 rm fort.*
 rm int*
-rm temp*
+rm temp.$$
 

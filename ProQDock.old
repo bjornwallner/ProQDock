@@ -12,6 +12,7 @@
 # Please set the following paths according to the compilation on your own machine
 #==============================================================================================================
 
+#module add ccp4/6.5.0-module
 user=x_sabas
 sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
 delphi_path=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/
@@ -28,7 +29,7 @@ proqscorepath=$rosetta_path
 
 tmpdir=`mktemp -d`
 
-upath=`echo ${0/ProQDock.fast/}`
+upath=`echo ${0/ProQDock/}`
 pdbpath=$1
 fulllength_fasta=$2
 diel=$3
@@ -138,10 +139,7 @@ cloc=`pwd`
 #echo $tmpdir
 cp $pdbpath $tmpdir/ &> /dev/null
 cd $tmpdir/
-#module will create a temp folder where it is added.
-
 module add ccp4/6.5.0-module
-
 
 #=======================================================================
 #========== delphi parameter files should be in ~/lib ==================
@@ -161,7 +159,7 @@ echo "==========================================================="
 rm -f formch.out &> /dev/null
 rm -f error.log &> /dev/null
 
-$path/MAINEXEC/formcheck.fast.pl $pdb > error.log 
+$path/MAINEXEC/formcheck.pl $pdb > error.log 
 
 if [ -e "formch.out" ]; then
   ls -lart formch.out
@@ -185,7 +183,7 @@ fi
 rm -f redun.out &> /dev/null
 rm -f rdn.log &> /dev/null
 
-nres=`$path/EXEC/pdb2resWMchain.fast.pl $pdb`
+nres=`$path/EXEC/pdb2resWMchain.pl $pdb`
 echo "Total number of residues in the Complex: $nres"
 
 if [ "$nres" -gt "2500" ]; then 
@@ -211,9 +209,8 @@ fi
 
 #echo "$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null"
 #exit
-START_TIME=$SECONDS
 rm -f check.Nint &> /dev/null
-c1=`$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null`
+#c1=`$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null`
 if [ -e "check.Nint" ]; then
 ls -lart check.Nint
   if [ `cat check.Nint` == "NO_Nint" ]; then
@@ -231,8 +228,6 @@ ls -lart check.Nint
     exit;
   fi
 fi
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-#echo "EC took $ELAPSED_TIME"
 
 cat $path/HELP/features.description
 
@@ -240,31 +235,16 @@ cat $path/HELP/features.description
 EC=`cat $basename.EC | sed s/'\s*'/''/g`
 echo "EC="$EC
 #============================================================
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
 #========================= Sc ===============================
 awk '$1=="ATOM"' $pdb > $basename.pdb.temp
 mv $basename.pdb.temp $pdb
-#$path/MAINEXEC/runSc.bash $pdb $sc_path
-#exit
 c2=`$path/MAINEXEC/runSc.bash $pdb $sc_path  &> /dev/null`
 Sc=`cat $basename.Sc | sed s/'\s*'/''/g`
 echo "Sc="$Sc
-
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
 #========================= rGb ==============================
-#echo $path/MAINEXEC/calrGb.bash $pdb
 c3=`$path/MAINEXEC/calrGb.bash $pdb  &> /dev/null`
 rGb=`cat $basename.rGb | sed s/'\s*'/''/g`
 echo "rGb="$rGb
-
-#exit
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
 #========================== Ld =============================
 #echo $path/MAINEXEC/ldN.exe $pdb
 #`grep ^ATOM $pdb > $pdb.clean`;
@@ -272,10 +252,6 @@ c4=`$path/MAINEXEC/ldN.exe $pdb &> /dev/null`
 mv fort.130 $basename.Ld
 Ld=`cat $basename.Ld | sed s/'\s*'/''/g`
 echo "Ld="$Ld
-
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
 #==================== nBSA & Fintres =======================
 c5=`$path/MAINEXEC/nBSAFintres.bash $pdb &> /dev/null`
 nBf=`cat $basename.nBSAFintres`
@@ -283,10 +259,6 @@ nBSA=`awk '{print $1}' <<< $nBf | sed s/'\s*'/''/g`
 Fintres=`awk '{print $2}' <<< $nBf | sed s/'\s*'/''/g`
 echo "nBSA="$nBSA
 echo "Fintres="$Fintres
-
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
 #======================= CPscore ===========================
 #echo $path/MAINEXEC/run.CPscore $pdb $svm_path 
 c6=`$path/MAINEXEC/run.CPscore $pdb $svm_path &> /dev/null`
@@ -308,22 +280,15 @@ fi
 
 echo "CPscore="$CPS   
 #exit
-
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
 #=========================== CPM ===========================
 #echo $path/MAINEXEC/CPMgScEC.pl $path $Sc $EC $nBSA
 CPM=`$path/MAINEXEC/CPMgScEC.pl $path $Sc $EC $nBSA | sed s/'\s*'/''/g`
 echo $CPM > $basename.CPM
 echo "CPM="$CPM
 #echo $nres
-#exit 
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
-#==================== Rosetta terms ========================
+
 if [ "$nres" > "0" ]; then
+#==================== Rosetta terms ========================
 c7=`$path/MAINEXEC/run.rosettaE $pdb $rosetta_path $rosetta_db &> /dev/null`
 #echo "$path/MAINEXEC/run.rosettaE $pdb $rosetta_path $rosetta_db &> /dev/null"
 #cat $basename.Rterms
@@ -345,11 +310,6 @@ echo "Something wrong with the " $basename.res "file"
 echo "========================================================="
 fi
 
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
-
-#==================== ProQ2 ========================
 #echo $path/MAINEXEC/runProQ.bash $pdb $proqpath $proqscorepath $fulllength_fasta
 #exit
 $path/MAINEXEC/runProQ.bash $pdb $proqpath $proqscorepath $fulllength_fasta &> /dev/null
@@ -362,11 +322,6 @@ ProQ=`echo ${prq}/${nres} | bc -l`
 #echo $ProQ > temp
 ProQ=`awk '{printf "%10.3f\n",$1}' <<< $ProQ | sed s/'\s*'/''/g`
 echo "ProQ="$ProQ       
-
-
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
-START_TIME=$SECONDS
 
 h2="SCORE  rGb nBSA Fintres Sc EC ProQ Isc rTs Erep Etmr CPM Ld CPscore Description"
 out="SCORE $rGb $nBSA $Fintres $Sc $EC $ProQ $Isc $rTs $Erep $Etmr $CPM $Ld $CPS $basename" 
@@ -397,9 +352,6 @@ done
 
 sumpred=`cat $pred5 | awk 'BEGIN{sum=0}{sum=sum+$1}END{print sum}'`
 ProQDock=`echo ${sumpred}/${cnt} | bc -l`
-
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
-# echo "TIME: $ELAPSED_TIME"
 
 #===============================================================
 #================= Readjust ProQDock outliers ==================

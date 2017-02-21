@@ -36,8 +36,8 @@ $resf1 =~ s/\.pdb/\.res/;
 $resf2 = $pdb2;
 $resf2 =~ s/\.pdb/\.res/;
 
-`$path/EXEC/pdb2resWMchain.pl $pdb1`; 
-`$path/EXEC/pdb2resWMchain.pl $pdb2`; 
+`$path/EXEC/pdb2resWMchain.fast.pl $pdb1`; 
+`$path/EXEC/pdb2resWMchain.fast.pl $pdb2`; 
 
 open (RES1,"<$resf1");
 open (RES2,"<$resf2");
@@ -49,44 +49,44 @@ open (RES2,"<$resf2");
 
 for $a (0..scalar(@restog)-1)
 {
-chomp $restog[$a];
-$rid = substr($restog[$a],5,5);
-$ires = substr($restog[$a],0,4);
-$res = substr($restog[$a],5,3);
-$chain = substr($restog[$a],9,1);
-$rn = sprintf("%4d",$a+1);
-$rnew = $rn.'-'.$rid;
+    chomp $restog[$a];
+    $rid = substr($restog[$a],5,5);
+    $ires = substr($restog[$a],0,4);
+    $res = substr($restog[$a],5,3);
+    $chain = substr($restog[$a],9,1);
+    $rn = sprintf("%4d",$a+1);
+    $rnew = $rn.'-'.$rid;
 #print $rnew,"\n";
-printf MAP "%10s %2s %10s\n",$restog[$a],'->',$rnew;
+    printf MAP "%10s %2s %10s\n",$restog[$a],'->',$rnew;
 #print $rid,"\n";
-        foreach $b (@atoms12)
-        {
-        chomp $b;
+    foreach $b (@atoms12)
+    {
+	chomp $b;
 #	print $b,"\n";
-        $res1 = substr($b,17,3);
-        $chain1 = substr($b,21,1);
-        $ires1 = substr($b,22,4);
-        $len = length($b)-26;
-        $frag1 = substr($b,0,22);
-        $frag2 = substr($b,26,$len);
-                if ($ires == $ires1 && $res eq $res1 && $chain eq $chain1)
-                {
-                print PDB12 $frag1,$rn,$frag2,"\n";
-			if ($chain eq $ch1)
-			{
-			print OUTPDB1 $frag1,$rn,$frag2,"\n";
-			}
-			elsif ($chain eq $ch2)
-			{
-			print OUTPDB2 $frag1,$rn,$frag2,"\n";
-			}
-                }
-        }
+	$res1 = substr($b,17,3);
+	$chain1 = substr($b,21,1);
+	$ires1 = substr($b,22,4);
+	$len = length($b)-26;
+	$frag1 = substr($b,0,22);
+	$frag2 = substr($b,26,$len);
+	if ($ires == $ires1 && $res eq $res1 && $chain eq $chain1)
+	{
+	    print PDB12 $frag1,$rn,$frag2,"\n";
+	    if ($chain eq $ch1)
+	    {
+		print OUTPDB1 $frag1,$rn,$frag2,"\n";
+	    }
+	    elsif ($chain eq $ch2)
+	    {
+		print OUTPDB2 $frag1,$rn,$frag2,"\n";
+	    }
+	}
+    }
 }
 
-`$path/EXEC/pdb2resWMchain.pl inp12map.pdb`;
-`$path/EXEC/pdb2resWMchain.pl inp1map.pdb`;
-`$path/EXEC/pdb2resWMchain.pl inp2map.pdb`;
+`$path/EXEC/pdb2resWMchain.fast.pl inp12map.pdb`;
+`$path/EXEC/pdb2resWMchain.fast.pl inp1map.pdb`;
+`$path/EXEC/pdb2resWMchain.fast.pl inp2map.pdb`;
 
 print "MAP FILE: reso2n.map\n";
 print "MAPPED PDB1  : inp1map.pdb & CORRESPONDING RESFILE: inp1map.res\n";

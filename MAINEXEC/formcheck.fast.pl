@@ -44,8 +44,8 @@ $side_chain_atoms = 0;
 foreach $k (@pcoords)
 {
     chomp $k;
-    @ch = (@ch,substr($k,21,1));
-#    push(@ch,substr($k,21,1));
+#    @ch = (@ch,substr($k,21,1));
+    push(@ch,substr($k,21,1));
 #    next if($side_chain_atoms>0);
     $atom = substr($k,13,3);
 #print $k."\n";
@@ -246,7 +246,7 @@ print "\n\n";
 #=================================================================
 #  Multiple occupancies  (Only consider heavy (non-hydrogen) atoms
 #=================================================================
-#exit; #Skip check who cares?
+exit; #Skip check who cares?
 
 @nhatoms = ();
 

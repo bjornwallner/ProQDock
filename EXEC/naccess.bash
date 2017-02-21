@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 EXE_PATH=`echo ${0/\/EXEC\/naccess.bash/}`
-echo $EXE_PATH
+#echo $EXE_PATH
 #exit;
 PDBFILE=$1
 VDWFILE="$EXE_PATH/LIBR/vdw.radii"

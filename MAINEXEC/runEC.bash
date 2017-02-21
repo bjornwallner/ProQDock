@@ -137,7 +137,7 @@ rm -f redun.out
 rm -f rdn.log
 
 cp $pdbinp orig.pdb
-NO=`$path/EXEC/pdb2resWMchain.pl orig.pdb`
+NO=`$path/EXEC/pdb2resWMchain.fast.pl orig.pdb`
 #wc -l orig.res
 
 $path/EXEC/mapresno1to1.pl $pdbinp > mapped.pdb
@@ -171,13 +171,13 @@ cp $pdbinp $pdb12
 echo "==============================================================="
 
 cp $pdb1 inp1map.pdb
-N1=`$path/EXEC/pdb2resWMchain.pl inp1map.pdb`
+N1=`$path/EXEC/pdb2resWMchain.fast.pl inp1map.pdb`
 echo "$pdb1 CONTAINS $N1 RESIDUES"
 cp $pdb2 inp2map.pdb
-N2=`$path/EXEC/pdb2resWMchain.pl inp2map.pdb`
+N2=`$path/EXEC/pdb2resWMchain.fast.pl inp2map.pdb`
 echo "$pdb2 CONTAINS $N2 RESIDUES"
 cp $pdb12 inp12map.pdb
-N3=`$path/EXEC/pdb2resWMchain.pl inp12map.pdb`
+N3=`$path/EXEC/pdb2resWMchain.fast.pl inp12map.pdb`
 echo "$pdb12 CONTAINS $N3 RESIDUES"
 
 echo "==============================================================="
@@ -385,8 +385,8 @@ mv fort.38 outms2-surf.pdb
 #inp1=$1
 #inp2=$2
 
-$path/EXEC/pdb2resWMchain.pl $pdb1
-$path/EXEC/pdb2resWMchain.pl $pdb2
+$path/EXEC/pdb2resWMchain.fast.pl $pdb1
+$path/EXEC/pdb2resWMchain.fast.pl $pdb2
 
 rm dsl.num
 rm dsl.out

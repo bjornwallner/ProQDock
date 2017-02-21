@@ -28,7 +28,8 @@ foreach (@h)
 {
 	if ($_ eq ".")
 	{
-	$cntdot++;
+	    $cntdot++;
+	    #print $_
 	}
 }
 
@@ -39,7 +40,7 @@ if ($cntdot == 1)
 $f3 = 1;
 }
 
-#print "$f1  $f2 $f3\n";
+#print "$f1  $f2 $f3 $cntdot\n";
 
 if ($f1 == 1 && $f2 == 1 && $f3 == 1)
 {

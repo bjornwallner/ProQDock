@@ -1,6 +1,6 @@
 #!/bin/bash
 
-test -d /tmp/x_sabas || mkdir /tmp/x_sabas
+#test -d /tmp/x_sabas || mkdir /tmp/x_sabas
 
 pdb=$1
 echo $pdb

@@ -1,6 +1,10 @@
 #!/usr/bin/perl
 
 $pdb = $ARGV[0];
+$chain_only=0;
+if(defined($ARGV[1])) {
+    $chain_only=1;
+}
 chomp $pdb;
 open (INP,"<$pdb");
 @dat = <INP>;
@@ -17,7 +21,7 @@ $chain1 = substr($atoms[0],21,1);
 $chain2 = substr($atoms[scalar(@atoms)-1],21,1);
 
 print "$chain1~$chain2\n";
-
+exit if($chain_only);
 open (OUT1,">inp1.pdb");
 open (OUT2,">inp2.pdb");
 
