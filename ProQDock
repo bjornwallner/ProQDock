@@ -28,7 +28,7 @@ proqscorepath=$rosetta_path
 
 tmpdir=`mktemp -d`
 
-upath=`echo ${0/ProQDock.fast/}`
+upath=`echo ${0/ProQDock/}`
 pdbpath=$1
 fulllength_fasta=$2
 diel=$3
@@ -267,8 +267,8 @@ ELAPSED_TIME=$(($SECONDS - $START_TIME))
 START_TIME=$SECONDS
 #========================== Ld =============================
 #echo $path/MAINEXEC/ldN.exe $pdb
-#`grep ^ATOM $pdb > $pdb.clean`;
-c4=`$path/MAINEXEC/ldN.exe $pdb &> /dev/null`
+`grep ^ATOM $pdb > $pdb.clean`;
+c4=`$path/MAINEXEC/ldN.exe $pdb.clean &> /dev/null`
 mv fort.130 $basename.Ld
 Ld=`cat $basename.Ld | sed s/'\s*'/''/g`
 echo "Ld="$Ld
