@@ -8,7 +8,7 @@ echo $path
 pdbinp=$1
 svm_path=$2
 
-$path/EXEC/compint_fileonly.bash $pdbinp
+$path/EXEC/compint_fileonly.bash.fast $pdbinp
 CP20=`echo $pdbinp | cut -f1 -d'.'`.contpref20
 C0svm=`echo $pdbinp | cut -f1 -d'.'`-C0.svm1
 CPS=`echo $pdbinp | cut -f1 -d'.'`-C0.CPS

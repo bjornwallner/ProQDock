@@ -66,15 +66,15 @@ extn=`echo $pdb | cut -c$startE-$stopE`
 #echo $extn
 
 if [ "$extn" == ".pdb" ] || [ "$extn" == ".PDB" ]; then
-echo "The file has a Proper extension (.pdb / .PDB)"
+    echo "The file has a Proper extension (.pdb / .PDB)"
 else
-echo "Renaming The Input file (filename) to filename.pdb"
-ls $pdbpath
-echo $pdb
-cp $pdbpath $pdbpath.pdb
-pdbpath=$pdbpath.pdb
-pdb=`basename $pdbpath`
-pdbdir=`dirname $pdbpath`
+    echo "Renaming The Input file (filename) to filename.pdb"
+    ls $pdbpath
+    echo $pdb
+    cp $pdbpath $pdbpath.pdb
+    pdbpath=$pdbpath.pdb
+    pdb=`basename $pdbpath`
+    pdbdir=`dirname $pdbpath`
 fi
 
 #echo $pdb
