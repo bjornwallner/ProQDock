@@ -432,12 +432,12 @@ fi
 echo "GRID SIZE FOR DELPHI: " $gsz
 
 
-$path/EXEC/generateprm26.pl $path real1dum2.pdb intsurf1.pdb outmod1.pdb outsurf11.pdb $gsz $gauss
-echo "$path/EXEC/generateprm26.pl $path real1dum2.pdb intsurf1.pdb outmod1.pdb outsurf11.pdb $gsz $gauss"
-mv script.prm script1.prm 
-$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf1.pdb outmod2pdb outsurf21.pdb $gsz $gauss
-echo "$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf1.pdb outmod2pdb outsurf21.pdb $gsz $gauss"
-mv script.prm script2.prm 
+$path/EXEC/generateprm26.pl $path real1dum2.pdb intsurf1.pdb outmod1.pdb outsurf11.pot $gsz $gauss
+echo "$path/EXEC/generateprm26.pl $path real1dum2.pdb intsurf1.pdb outmod1.pdb outsurf11.pot $gsz $gauss"
+mv script.prm script11.prm 
+$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf1.pdb outmod2pdb outsurf21.pot $gsz $gauss
+echo "$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf1.pdb outmod2pdb outsurf21.pot $gsz $gauss"
+mv script.prm script21.prm 
 
 echo "delphi is running now from $delphi_path"
 
@@ -445,40 +445,40 @@ echo "delphi is running now from $delphi_path"
 
 if [ "$gauss" == "0" ]; then
 	rm ARCDAT
-	$delphi_path/delphi95 script1.prm > log11
+	$delphi_path/delphi95 script11.prm > log11
 	rm ARCDAT
-	$delphi_path/delphi95 script2.prm > log21
+	$delphi_path/delphi95 script21.prm > log21
 elif [ "$gauss" == "1" ]; then
 	rm ARCDAT
-	$delphi_path/delphi95 script1.prm > log11
+	$delphi_path/delphi95 script11.prm > log11
 	rm ARCDAT
-	$delphi_path/delphi95 script2.prm > log21
+	$delphi_path/delphi95 script21.prm > log21
 fi
 
-$path/EXEC/extpot.pl outsurf11.pdb > temp11.pot
-$path/EXEC/extpot.pl outsurf21.pdb > temp21.pot
+$path/EXEC/extpot.pl outsurf11.pot > temp11.pot
+$path/EXEC/extpot.pl outsurf21.pot > temp21.pot
 
-$path/EXEC/generateprm26.pl $path real1dum2.pdb intsurf2.pdb outmod1.pdb outsurf12.pdb $gsz $gauss
-echo "$path/EXEC/generateprm26.pl $path real1dum2.pdb intsurf2.pdb outmod1.pdb outsurf12.pdb $gsz $gauss"
-mv script.prm script1.prm 
-$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf2.pdb outmod2pdb outsurf22.pdb $gsz $gauss
-echo "$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf2.pdb outmod2pdb outsurf22.pdb $gsz $gauss"
-mv script.prm script2.prm 
+$path/EXEC/generateprm26.pl $path real1dum2.pdb intsurf2.pdb outmod1.pdb outsurf12.pot $gsz $gauss
+echo "$path/EXEC/generateprm26.pl $path real1dum2.pdb intsurf2.pdb outmod1.pdb outsurf12.pot $gsz $gauss"
+mv script.prm script12.prm 
+$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf2.pdb outmod2pdb outsurf22.pot $gsz $gauss
+echo "$path/EXEC/generateprm26.pl $path real2dum1.pdb intsurf2.pdb outmod2pdb outsurf22.pot $gsz $gauss"
+mv script.prm script22.prm 
 
 if [ "$gauss" == "0" ]; then
 	rm ARCDAT
-	$delphi_path/delphi95 script1.prm > log12
+	$delphi_path/delphi95 script12.prm > log12
 	rm ARCDAT
-	$delphi_path/delphi95 script2.prm > log22
+	$delphi_path/delphi95 script22.prm > log22
 elif [ "$gauss" == "1" ]; then
 	rm ARCDAT
-	$delphi_path/delphi95 script1.prm > log12
+	$delphi_path/delphi95 script12.prm > log12
 	rm ARCDAT
-	$delphi_path/delphi95 script2.prm > log22
+	$delphi_path/delphi95 script22.prm > log22
 fi
 
-$path/EXEC/extpot.pl outsurf12.pdb > temp12.pot
-$path/EXEC/extpot.pl outsurf22.pdb > temp22.pot
+$path/EXEC/extpot.pl outsurf12.pot > temp12.pot
+$path/EXEC/extpot.pl outsurf22.pot > temp22.pot
 
 i1=`$path/EXEC/ccpsw.exe temp11.pot temp21.pot`
 echo $i1
@@ -556,19 +556,21 @@ rm -f inp2m.pdb
 rm -f real1dum2.pdb
 rm -f real2dum1.pdb
 rm -f ARCDAT
-rm -f outsurf11.pdb
+rm -f outsurf11.pot
 rm -f log11
-rm -f outsurf21.pdb
+rm -f outsurf21.pot
 rm -f log21
 rm -f temp11.pot
 rm -f temp21.pot
-rm -f script1.prm
-rm -f script2.prm
+rm -f script11.prm
+rm -f script21.prm
+rm -f script12.prm
+rm -f script22.prm
 rm -f outmod1.pdb
-rm -f outsurf12.pdb
+rm -f outsurf12.pot
 rm -f log12
 rm -f outmod2pdb
-rm -f outsurf22.pdb
+rm -f outsurf22.pot
 rm -f log22
 rm -f temp12.pot
 rm -f temp22.pot
