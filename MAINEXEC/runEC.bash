@@ -125,8 +125,10 @@ rm -f res1.out
 rm -f temp*
 rm -f target.res
 rm -f res.replace
-rm -f script1.prm
-rm -f script2.prm
+rm -f script11.prm
+rm -f script12.prm
+rm -f script21.prm
+rm -f script22.prm
 rm -f chfn.inp
 rm -f sres.res
 rm -f smres.res
