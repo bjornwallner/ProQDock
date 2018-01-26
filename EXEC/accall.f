@@ -251,7 +251,7 @@ c
                last = card(18:27)
                num_res = num_res + 1
                if( num_res.gt.maxx) then
-                  write(4,'(a,i)')
+                  write(4,'(a,i6)')
      -                 ' ERROR - Maximum number of residues exceeded ',
      -                 maxx
                   write(4,'(a)')
@@ -320,8 +320,8 @@ c
             polstats(nats) = ip
             label(nats) = card(1:30)
             if ( fullo ) then
-               read(card(55:60),'(f)')occup(nats)
-               read(card(61:66),'(f)')bfact(nats)
+               read(card(55:60),'(f6.2)')occup(nats)
+               read(card(61:66),'(f6.2)')bfact(nats)
             endif
             resindex(nats)= num_res
             read(card,'(30x,3f8.3)')(xyz(nats,k),k=1,3)
