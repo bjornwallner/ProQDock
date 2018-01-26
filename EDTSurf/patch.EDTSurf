@@ -1,0 +1,160 @@
+diff -Naur orig/ParsePDB.cpp EDTSurf/ParsePDB.cpp
+--- orig/ParsePDB.cpp	2011-03-02 23:10:55.000000000 +0100
++++ EDTSurf/ParsePDB.cpp	2018-01-26 15:47:48.592047475 +0100
+@@ -1107,7 +1107,7 @@
+ 		{
+ 			proseq[numproseq].detailtype[j]=' ';
+ 		}
+-		//start none empty	
++			//start none empty	
+ 		for(i=12;i<16;i++)
+ 		{
+ 			if(string[i]!=' ')
+@@ -1115,7 +1115,8 @@
+ 				break;
+ 			}
+ 		}
+-		proseq[numproseq].detailtype[4]=i-12;
++		//proseq[numproseq].detailtype[4]=i-12;
++		proseq[numproseq].detailtype[4]='\0';
+ 		i=12;j=0;
+ 		while(i<16)
+ 		{
+diff -Naur orig/ProteinSurface.cpp EDTSurf/ProteinSurface.cpp
+--- orig/ProteinSurface.cpp	2012-08-09 03:15:07.000000000 +0200
++++ EDTSurf/ProteinSurface.cpp	2018-01-26 15:33:44.000000000 +0100
+@@ -879,12 +879,18 @@
+ 	int i;
+ 	unsigned char chaincolor[256];
+ 	int tchain,indcolor2=1;
++	char filename2[256];
++	char filename3[256];
++	sprintf(filename2,"%s.surf",filename);
++	sprintf(filename3,"%s.pdb",filename);
+ 	for(i=0;i<256;i++)
+ 	{
+ 		chaincolor[i]=0;
+ 	}
+-	FILE *file;
++	FILE *file,*file42,*file43;
+ 	file=fopen(filename,"wt");
++	file42=fopen(filename2,"wt");
++	file43=fopen(filename3,"wt");
+ 	if(file==NULL)
+ 	{
+ 		printf("wrong to output ply file %s\n",filename);
+@@ -997,8 +1003,29 @@
+ 			tcolor[1]=mycolor[chaincolor[proseq[verts[i].atomid].chainid]][1];
+ 			tcolor[2]=mycolor[chaincolor[proseq[verts[i].atomid].chainid]][2];
+ 		}
+-		fprintf(file,"%.3f %.3f %.3f %3d %3d %3d\n", verts[i].x/scalefactor-ptran.x,verts[i].y/scalefactor-ptran.y,
+-			verts[i].z/scalefactor-ptran.z,tcolor[0],tcolor[1],tcolor[2]);	
++		//proseq[verts[i].atomid].detailtype[4]='\0';
++		fprintf(file,"%.3f %.3f %.3f %3d %3d %3d\n", 
++			verts[i].x/scalefactor-ptran.x,verts[i].y/scalefactor-ptran.y,
++			verts[i].z/scalefactor-ptran.z,tcolor[0],tcolor[1],tcolor[2]);
++		fprintf(file42,"%s %c%c%c %4d %c %8.3f %8.3f %8.3f %3d %3d %3d\n", 
++			proseq[verts[i].atomid].detailtype,
++			proseq[verts[i].atomid].residue[0],
++			proseq[verts[i].atomid].residue[1],
++			proseq[verts[i].atomid].residue[2],
++			proseq[verts[i].atomid].resno,
++			proseq[verts[i].atomid].chainid,
++			verts[i].x/scalefactor-ptran.x,verts[i].y/scalefactor-ptran.y,
++			verts[i].z/scalefactor-ptran.z,tcolor[0],tcolor[1],tcolor[2]);
++		fprintf(file43,"%s         %s %c%c%c %c   %3d    %8.3f%8.3f%8.3f\n",
++                        "ATOM", 
++			proseq[verts[i].atomid].detailtype,
++			proseq[verts[i].atomid].residue[0],
++			proseq[verts[i].atomid].residue[1],
++			proseq[verts[i].atomid].residue[2],
++			proseq[verts[i].atomid].chainid,
++			proseq[verts[i].atomid].resno,
++			verts[i].x/scalefactor-ptran.x,verts[i].y/scalefactor-ptran.y,
++			verts[i].z/scalefactor-ptran.z,tcolor[0],tcolor[1],tcolor[2]);
+ 	}
+ 	for(i=0;i<facenumber;i++) if(flagface[i])
+ 	{ 
+diff -Naur orig/patch.EDTsurf EDTSurf/patch.EDTsurf
+--- orig/patch.EDTsurf	1970-01-01 01:00:00.000000000 +0100
++++ EDTSurf/patch.EDTsurf	2018-01-26 15:33:23.000000000 +0100
+@@ -0,0 +1,54 @@
++--- tmp/ProteinSurface.cpp	2012-08-09 03:15:07.000000000 +0200
+++++ ProteinSurface.cpp	2015-02-06 14:00:13.000000000 +0100
++@@ -879,12 +879,18 @@
++ 	int i;
++ 	unsigned char chaincolor[256];
++ 	int tchain,indcolor2=1;
+++	char filename2[256];
+++	char filename3[256];
+++	sprintf(filename2,"%s.surf",filename);
+++	sprintf(filename3,"%s.pdb",filename);
++ 	for(i=0;i<256;i++)
++ 	{
++ 		chaincolor[i]=0;
++ 	}
++-	FILE *file;
+++	FILE *file,*file42,*file43;
++ 	file=fopen(filename,"wt");
+++	file42=fopen(filename2,"wt");
+++	file43=fopen(filename3,"wt");
++ 	if(file==NULL)
++ 	{
++ 		printf("wrong to output ply file %s\n",filename);
++@@ -997,8 +1003,29 @@
++ 			tcolor[1]=mycolor[chaincolor[proseq[verts[i].atomid].chainid]][1];
++ 			tcolor[2]=mycolor[chaincolor[proseq[verts[i].atomid].chainid]][2];
++ 		}
++-		fprintf(file,"%.3f %.3f %.3f %3d %3d %3d\n", verts[i].x/scalefactor-ptran.x,verts[i].y/scalefactor-ptran.y,
++-			verts[i].z/scalefactor-ptran.z,tcolor[0],tcolor[1],tcolor[2]);	
+++		//proseq[verts[i].atomid].detailtype[4]='\0';
+++		fprintf(file,"%.3f %.3f %.3f %3d %3d %3d\n", 
+++			verts[i].x/scalefactor-ptran.x,verts[i].y/scalefactor-ptran.y,
+++			verts[i].z/scalefactor-ptran.z,tcolor[0],tcolor[1],tcolor[2]);
+++		fprintf(file42,"%s %c%c%c %4d %c %8.3f %8.3f %8.3f %3d %3d %3d\n", 
+++			proseq[verts[i].atomid].detailtype,
+++			proseq[verts[i].atomid].residue[0],
+++			proseq[verts[i].atomid].residue[1],
+++			proseq[verts[i].atomid].residue[2],
+++			proseq[verts[i].atomid].resno,
+++			proseq[verts[i].atomid].chainid,
+++			verts[i].x/scalefactor-ptran.x,verts[i].y/scalefactor-ptran.y,
+++			verts[i].z/scalefactor-ptran.z,tcolor[0],tcolor[1],tcolor[2]);
+++		fprintf(file43,"%s         %s %c%c%c %c   %3d    %8.3f%8.3f%8.3f\n",
+++                        "ATOM", 
+++			proseq[verts[i].atomid].detailtype,
+++			proseq[verts[i].atomid].residue[0],
+++			proseq[verts[i].atomid].residue[1],
+++			proseq[verts[i].atomid].residue[2],
+++			proseq[verts[i].atomid].chainid,
+++			proseq[verts[i].atomid].resno,
+++			verts[i].x/scalefactor-ptran.x,verts[i].y/scalefactor-ptran.y,
+++			verts[i].z/scalefactor-ptran.z,tcolor[0],tcolor[1],tcolor[2]);
++ 	}
++ 	for(i=0;i<facenumber;i++) if(flagface[i])
++ 	{ 
+diff -Naur orig/patch.ParsePDB EDTSurf/patch.ParsePDB
+--- orig/patch.ParsePDB	1970-01-01 01:00:00.000000000 +0100
++++ EDTSurf/patch.ParsePDB	2018-01-26 15:47:45.648902115 +0100
+@@ -0,0 +1,21 @@
++--- ParsePDB.cpp	2011-03-02 23:10:55.000000000 +0100
+++++ /home/x_bjowa/local/EDTSurf/ParsePDB.cpp	2015-02-06 10:59:31.000000000 +0100
++@@ -1107,7 +1107,7 @@
++ 		{
++ 			proseq[numproseq].detailtype[j]=' ';
++ 		}
++-		//start none empty	
+++			//start none empty	
++ 		for(i=12;i<16;i++)
++ 		{
++ 			if(string[i]!=' ')
++@@ -1115,7 +1115,8 @@
++ 				break;
++ 			}
++ 		}
++-		proseq[numproseq].detailtype[4]=i-12;
+++		//proseq[numproseq].detailtype[4]=i-12;
+++		proseq[numproseq].detailtype[4]='\0';
++ 		i=12;j=0;
++ 		while(i<16)
++ 		{

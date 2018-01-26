@@ -11,24 +11,18 @@
 # Currently there are three external programs used in the course of calculating the features
 # Please set the following paths according to the compilation on your own machine
 #==============================================================================================================
-
-user=x_sabas
+tmpdir=`mktemp -d`
+upath=`echo ${0/ProQDock/}`
+path=`readlink -f $upath`
 sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
 delphi_path=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/
-#delphi_path=/proj/wallner/users/x_bjowa/local/bin/
 rosetta_path=/proj/wallner/users/x_bjowa/github/Rosetta/main/source/bin
 rosetta_db=/proj/wallner/users/x_bjowa/github/Rosetta/main/database
-#svm_path=/proj/wallner/apps/svm_light
+ESpath=$path/EDTSurf
 svm_path=/proj/wallner/users/x_bjowa/local/svm_light
-ESpath=/proj/wallner/users/x_bjowa/local/EDTSurf
 proqpath=/proj/wallner/users/x_bjowa/github/ProQ_scripts/bin/
 proqscorepath=$rosetta_path
-
 #==============================================================================================================
-
-tmpdir=`mktemp -d`
-
-upath=`echo ${0/ProQDock/}`
 pdbpath=$1
 fulllength_fasta=$2
 diel=$3
@@ -38,7 +32,7 @@ gauss=$4
 
 if [ "$#" -lt "2" ]; then
 echo "================================================================================="
-path=`readlink -f $upath`
+
 echo "Usage: $path/ProQDock.bash <PDB_filename.pdb> <fasta_file_for_full_lengtht_sequence>"
 echo "Optional Argument(s): "
 echo "-d (Delphi_mode) : 0 / 1 (0: Single Dielctric; 1: Multidielctric) "
@@ -209,8 +203,8 @@ cat $path/HELP/input.compatibility
 exit;
 fi
 
-#echo "$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null"
-#exit
+echo "$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null"
+exit
 START_TIME=$SECONDS
 rm -f check.Nint &> /dev/null
 c1=`$path/MAINEXEC/runEC.bash $pdb $delphi_path $ESpath $gauss &> /dev/null`

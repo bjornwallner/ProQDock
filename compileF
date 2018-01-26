@@ -1,4 +1,4 @@
-#!/bin/bash -x 
+#!/bin/bash 
 
 upath=`echo ${0/compileF/}`
 path=`readlink -f $upath`
@@ -64,3 +64,7 @@ then
 echo "Compilation Successful"
 fi
 
+echo "Compiling EDTsurf"
+cd EDTSurf
+make
+cd ..

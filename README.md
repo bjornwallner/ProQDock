@@ -5,10 +5,9 @@ and six additional packages to be pre-installed
 
 1. sc from ccp4 (http://www.ccp4.ac.uk/) [executable_name: sc]
 2. delphi v.6.2 (http://compbio.clemson.edu/delphi) [executable_name: delphi95]
-3. EDTSurf (http://zhanglab.ccmb.med.umich.edu/EDTSurf/) [executable_name: EDTSurf]
-4. Rosetta (https://www.rosettacommons.org/software/)
-5. ProQ2 (https://github.com/bjornwallner/ProQ_scripts/)
-6. needle from EMBOS (http://emboss.sourceforge.net/download/)
+3. Rosetta (https://www.rosettacommons.org/software/)
+4. ProQ2 (https://github.com/bjornwallner/ProQ_scripts/)
+5. needle from EMBOS (http://emboss.sourceforge.net/download/)
 
 ### Installation
 
