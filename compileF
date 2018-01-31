@@ -1,13 +1,13 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 upath=`echo ${0/compileF/}`
 path=`readlink -f $upath`
 echo $path
 
 
-
-sed "s%INSTALL_PATH%$path%" $path/EXEC/resGbur.f.install  > $path/EXEC/resGbur.f 
-sed "s%INSTALL_PATH%$path%" $path/EXEC/contpref20CB.f.install >  $path/EXEC/contpref20CB.f
+#cp $path/EXEC/resGbur.f.install $path/EXEC/resGbur.f 
+#sed "s%INSTALL_PATH%$path%" $path/EXEC/resGbur.f.install  > $path/EXEC/resGbur.f 
+#sed "s%INSTALL_PATH%$path%" $path/EXEC/contpref20CB.f.install >  $path/EXEC/contpref20CB.f
 
 fortcomp=$1
 
@@ -31,6 +31,7 @@ echo "$fortcomp NOT FOUND to be installed"
 exit;
 fi
 
+rm -f $path/EXEC/*.exe
 
 $fortcomp $path/EXEC/globuleN.f -o $path/EXEC/glbN.exe &> compile.log
 $fortcomp $path/EXEC/metsph.f -o $path/EXEC/msph.exe &>> compile.log

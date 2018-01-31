@@ -7,16 +7,15 @@
       character(19)::res(19),rt
       real::pr(19,4)
       character(80)::bfile
-
+      character(256)::library_file
       call getarg(1,bfile)
+      call getarg(2,library_file)
 
 
 !===========================
 !    READ resGbur LIBRARY
 !===========================
-
-      open (unit=1,file='INSTALL_PATH
-     &/LIBR/resGbur.libr',status='old')
+      open (unit=1,file=library_file,status='old')
 
       do i = 1,2
       read(1,45,end=30)
@@ -27,8 +26,8 @@
 45    format(/)
 
       do i = 1,19
-      read(1,46,end=40)res(i),pr(i,1),pr(i,2),pr(i,3),pr(i,4)
-!      write(*,46)res(i),pr(i,1),pr(i,2),pr(i,3),pr(i,4) 
+       read(1,46,end=40)res(i),pr(i,1),pr(i,2),pr(i,3),pr(i,4)
+!       write(*,46)res(i),pr(i,1),pr(i,2),pr(i,3),pr(i,4) 
       enddo
 40    continue
 

@@ -5,7 +5,7 @@ echo $upath
 
 path=`readlink -f $upath`
 echo $path
-
+library_path=$path/LIBR/resGbur.libr
 #exit;
 
 pdbinp=$1            # original AB.pdb (full of coordinates with two chains)
@@ -140,10 +140,10 @@ echo $path/EXEC/buryasa.exe $asa12
 ls bury.out
 cp bury.out $bur12
 
-hydbur=`$path/EXEC/rGb.exe $bur12`
+hydbur=`$path/EXEC/rGb.exe $bur12 $library_path`
 echo $hydbur 
 echo $hydbur > $rGbout
-
+exit
 rm inp*
 rm fort.*
 rm int*

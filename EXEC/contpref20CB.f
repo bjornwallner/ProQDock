@@ -7,7 +7,7 @@
 !=============================================================================
 
 
-      character(80)::pdb,intf1,intf2
+      character(256)::pdb,intf1,intf2,lib
       integer::ires1(500),ires2(500)
       character(3)::res1(500),res2(500),atest(20)
       character(1)::ch1(500),ch2(500)
@@ -20,14 +20,14 @@
       integer::icontmat(20,20),icontmat6(6,6)
       real::contmatf(20,20),contmatf6(6,6)
       real::contpref(20,20),cscore(20,20)
-      character(200)::lib
 
       call getarg(1,pdb)	! The PDB file contating two chains
       call getarg(2,intf1)	! Interface 1
       call getarg(3,intf2)	! Interface 2
+      call getarg(4,lib)
       call system('rm fort.*')
 
-      lib='INSTALL_PATH/LIBR/contpref.mat'
+!      lib='/tmp/x_bjowa/ProQDock/LIBR/contpref.mat'
  
       open (1,file=pdb,status='old')
       open (2,file=intf1,status='old')

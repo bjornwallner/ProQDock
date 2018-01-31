@@ -3,6 +3,7 @@
 
 path=`echo ${0/\/EXEC\/compint_fileonly.bash/}`
 echo $path
+lib=$path/LIBR/contpref.mat
 pdbinp=$1
 echo $pdbinp
 
@@ -262,8 +263,8 @@ echo $intfres
 mv intf1.res $intf1
 mv intf2.res $intf2
 
-echo $path/EXEC/contpref20CB.exe $pdb12 $intf1 $intf2
-$path/EXEC/contpref20CB.exe $pdb12 $intf1 $intf2
+echo $path/EXEC/contpref20CB.exe $pdb12 $intf1 $intf2 $lib
+$path/EXEC/contpref20CB.exe $pdb12 $intf1 $intf2 $lib
 #exit
 
 mv fort.35 $code.iconmat20
