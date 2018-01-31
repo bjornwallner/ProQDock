@@ -13,7 +13,6 @@ if [ ! -e "$fulllength_fasta.acc" ]; then
     $proqpath/run_all_external.pl -cpu 4 -fasta $fulllength_fasta;
 fi
 
-
 if hash needle 2>/dev/null; then
     echo "FOUND: needle..."
     $proqpath/copy_features_from_master.pl $pdb $fulllength_fasta 

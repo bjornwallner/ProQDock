@@ -92,48 +92,54 @@ $ ./ProQDock ./TESTPDBS/1u07.pdb ./TEMP/1u07.pdb.fasta
 ```
 
 > 
-        ===========================================================================================
-        Your Input: 1u07.pdb
-        The file has a Proper extension (.pdb / .PDB)
-        Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed
-        ===========================================================================================
-        
-        Total number of residues in the Complex: 178
-        EC=0.11
-        Sc=0.767
-        rGb=0.07170
-        Ld= 0.14815
-        nBSA=0.11534
-        Fintres=0.28652
-        CPscore= 0.48131
-        CPM= 0.89454
-        rTs=0.08767
-        Isc=0.00002
-        Erep=0.27086
-        Etmr=0.21257
-        ProQ= 0.845
-        ======================== The ProQDock Score ====================
-        0.85573
-        ================================================================
-> 
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
->
-         Feature   Range      Favorable Directions    Description                                                        Feature_Type   Stability**   Native_values (DB3) 
-         EC:       [-1,1]     Higher the Better       Electrostatic balance at the interface                             Interface      Variable     0.20 (+/-0.38)
-         Sc:       [-1,1]     Higher the Better       Geometric / Steric fit at the interface                            Interface       Stable	     0.68 (+/-0.17)
-         rGb:      [-1,1]     Higher the Better       Distribution of hydrophobicity with respect to burial              All_Atom        Stable	     0.06 (+/-0.02)
-         Ld:       [0, 1]         Ambiguous           Link (packing) densely at the interface                            Interface       Stable	     0.15 (+/-0.17)
-         nBSA:     [0, 1]         Ambiguous           Size of the interface relative to the whole complex                Interface      Variable     0.07 (+/-0.05)
-         Fintres:  [0, 1]         Ambiguous           Size of the interface relative to the whole complex                Interface      Variable     0.19 (+/-0.13)
-         CPscore:  [0, 1]     Higher the Better       Preference of different inter-residue contacts at the interface    Interface      Variable     0.35 (+/-0.17)
-         CPM:      [0, 1]     Higher the Better       Likelyhood of (Sc,EC) as a function of nBSA compared to native     Interface      Variable     0.80 (+/-0.18)
-         rTs:      [0, 1]     Lower the Better        Energetic Stability of the whole molecule                          All_Atom        Stable	     0.22 (+/-0.21)
-         Isc:      [0, 1]     Lower the Better        Binding energy                                                     Interface      Variable     0.20 (+/-0.33)
-         Erep:     [0, 1]     Lower the Better        Unfavourable Energy due to atomic Clashes                          All_Atom        Stable	     0.41 (+/-0.15)
-         Etmr:     [0, 1]     Lower the Better        Energetic Stability without condiderating clashes                  All_Atom        Stable	     0.28 (+/-0.16)
-         ProQ:     [0, 1]     Higher the Better       Overall Structural Quality                                         All_Atom       Variable     0.80 (+/-0.12)
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-** In Correct Models 
+The file has a Proper extension (.pdb / .PDB)
+=============================================================
+Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed
+
+Setting CCP4_SCR to /tmp/tmp.hAw2aARLGb/ccp4_scr!
+Cleaning of the temp files in this
+directory is not done automatically.
+
+===========================================================
+Total number of residues in the Complex: 178
+=================================================================================================================================
+Feature   Range  Direction  Description                                            Feature_Type   Stability* Native_values (DB3)
+---------------------------------------------------------------------------------------------------------------------------------
+EC:       [-1,1] Positive   Electrostatic balance at the interface                 Interface      Variable    0.20 (+/-0.38)
+Sc:       [-1,1] Positive   Geometric / Steric fit at the interface                Interface       Stable     0.68 (+/-0.17)
+rGb:      [-1,1] Positive   Distribution of hydrophobicity with respect to burial  All_Atom        Stable     0.06 (+/-0.02)
+Ld:       [0, 1] Ambiguous  Link (packing) densely at the interface                Interface       Stable     0.15 (+/-0.17)
+nBSA:     [0, 1] Ambiguous  Size of the interface relative to the whole complex    Interface      Variable    0.07 (+/-0.05)
+Fintres:  [0, 1] Ambiguous  Size of the interface relative to the whole complex    Interface      Variable    0.19 (+/-0.13)
+CPscore:  [0, 1] Positive   inter-residue contacts preference                      Interface      Variable    0.35 (+/-0.17)
+CPM:      [0, 1] Positive   Likelihood of (Sc,EC) given nBSA compared to native    Interface      Variable    0.80 (+/-0.18)
+rTs:      [0, 1] Negative   Energetic Stability of the whole molecule              All_Atom        Stable     0.22 (+/-0.21)
+Isc:      [0, 1] Negative   Binding energy                                         Interface      Variable    0.20 (+/-0.33)
+Erep:     [0, 1] Negative   Unfavourable Energy due to atomic Clashes              All_Atom        Stable     0.41 (+/-0.15)
+Etmr:     [0, 1] Negative   Energetic Stability without condiderating clashes      All_Atom        Stable     0.28 (+/-0.16)
+ProQ2:    [0, 1] Positive   Overall Structural Quality                             All_Atom       Variable    0.80 (+/-0.12)
+---------------------------------------------------------------------------------------------------------------------------------
+* In Correct Models 
+=================================================================================================================================
+EC=0.443
+Sc=0.767
+rGb=0.07170
+Ld=0.14815
+nBSA=0.115345
+Fintres=0.286517
+CPscore=0.490153
+CPM=0.94593
+rTs=0.04831
+Isc=0.00000
+Erep=0.34970
+Etmr=0.09889
+ProQ=0.845
+================The ProQDock Score ====================
+ProQDock:    1.10501
+Features:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.SVMfeatures
+ProQDock score:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.ProQDock
+Raw Rosetta terms:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.Rterms
+
 
 ### Reference
 

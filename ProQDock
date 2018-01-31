@@ -17,7 +17,7 @@ path=`readlink -f $upath`
 sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
 delphi_path=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/
 rosetta_path=/proj/wallner/apps/rosetta/Rosetta/main/source/bin
-rosetta_db=/proj/wallner/users/x_bjowa/github/Rosetta/main/database
+rosetta_db=/proj/wallner/apps/rosetta/Rosetta/main/database
 ESpath=$path/EDTSurf
 svm_path=/proj/wallner/users/x_bjowa/local/svm_light
 proqpath=/proj/wallner/users/x_bjowa/github/ProQ_scripts/bin/
@@ -133,7 +133,6 @@ cloc=`pwd`
 cp $pdbpath $tmpdir/ &> /dev/null
 cd $tmpdir/
 #module will create a temp folder where it is added.
-
 module add ccp4/6.5.0-module
 
 
@@ -313,7 +312,7 @@ echo $CPM > $basename.CPM
 echo "CPM="$CPM
 #echo $nres
 #exit 
-ELAPSED_TIME=$(($SECONDS - $START_TIME))
+ELAPSED_TIME=$(($SECONDS - $START_TIME)) 
 # echo "TIME: $ELAPSED_TIME"
 START_TIME=$SECONDS
 #==================== Rosetta terms ========================
