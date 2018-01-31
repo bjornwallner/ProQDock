@@ -91,6 +91,7 @@ $ cat EXAMPLE_CASE_STUDY/D1OYV-models.status.results
 $ ./ProQDock ./TESTPDBS/1u07.pdb ./TEMP/1u07.pdb.fasta
 ```
 
+```
 > 
 The file has a Proper extension (.pdb / .PDB)
 =============================================================
@@ -140,7 +141,8 @@ Features:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.SVMfeatures
 ProQDock score:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.ProQDock
 Raw Rosetta terms:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.Rterms
 
->
+``` 
+
 
 ### Reference
 
