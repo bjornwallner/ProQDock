@@ -15,9 +15,10 @@
 #Erep:   3.65    0.79        3.95    0.62      3.98    0.60
 #Etmr:   2.78   -1.24        3.46   -1.25      3.27   -1.24
 
-$rosetta_score_file=$ARGV[0];
-$Rterms = $ARGV[1];
-$outfile=$ARGV[2];
+$pdb=$ARGV[0];
+$rosetta_score_file=$ARGV[1];
+$Rterms = $ARGV[2];
+$outfile=$ARGV[3];
 
 $k_Isc  = 0.30;  $x0_Isc  = -8.26;
 $k_rTs  = 3.50;  $x0_rTs  = -0.62;
@@ -31,6 +32,8 @@ $k_Ftmr = 3.27;  $x0_Ftmr = -1.24;
 #$outfile = $Rterms;
 #$outfile =~ s/\.Rterms/\.Rterms_scaled/;
 
+$len=`grep -c 'CA' $pdb`;
+chomp($len);
 %scores=read_rosetta_score($rosetta_score_file);
 
 foreach $decoy(keys(%scores)) {
@@ -41,10 +44,7 @@ foreach $decoy(keys(%scores)) {
     $Fatr = $scores{$decoy}{'fa_atr'};
     $Frep = $scores{$decoy}{'fa_rep'};
     $Ftmr = $rTs - $Frep;
-    $pdb=$decoy;
-    $pdb=~s/_0001$/.pdb/;
-    $len=`grep -c 'CA' $pdb`;
-    chomp($len);
+
 #    print $pdb
 	
 }

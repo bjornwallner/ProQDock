@@ -1,25 +1,28 @@
 #!/bin/bash
 
 upath=`echo ${0/\/MAINEXEC\/run.rosettaE}`
-path=`readlink -f $upath`
-echo $path
-
+path=`dirname $0`
+install_path=`dirname $path`
+#path=`readlink -f $upath`
+#echo $path
+#echo $upath
+#echo $install_path
 
 pdb=$1
 rosetta_path=$2
 rosetta_db=$3
-rsf=`echo ${pdb/.pdb/}`.rosetta_repacked
+score_file=`echo ${pdb/.pdb/}`.rosetta_repacked
 rtrm=`echo ${pdb/.pdb/}`.Rterms
 rtrm_scaled=`echo ${pdb/.pdb/}`.Rterms_scaled
-echo  $rtrm
-echo  $rtrm_scaled
-cat $rtrm
-rm -f $rsf
+#echo  $rtrm
+#echo  $rtrm_scaled
+#cat $rtrm
+rm -f $score_file
 #$path/EXEC/repack1.bash $pdb $rosetta_path
 # rebuild side-chain, backbone unchanged.
 #$rosetta_path/relax.linuxgccrelease -in:file:s $pdb -out:prefix repack. -relax:script $path/MAINEXEC/repack.script -nstruct 1 -corrections::restore_talaris_behavior  -overwrite -run:constant_seed 
 
-$rosetta_path/relax.linuxgccrelease -in:file:s $pdb -out:prefix repack. -relax:script $path/MAINEXEC/repack.script -nstruct 1  -overwrite -run:constant_seed 
+$rosetta_path/relax.linuxgccrelease -in:file:s $pdb -out:prefix repack. -relax:script $install_path/MAINEXEC/repack.script -nstruct 1  -overwrite -run:constant_seed 
 
 
 # rebuild side-chain - 1 round minimize without constraints
@@ -34,10 +37,10 @@ $rosetta_path/relax.linuxgccrelease -in:file:s $pdb -out:prefix repack. -relax:s
 repack=repack.`echo ${pdb/.pdb/_0001.pdb}` 
 echo $repack
 #$path/EXEC/rosettascore.sh $repack $pdb $rosetta_path $rosetta_db
-score=`echo $pdb | cut -f1 -d'.'`.rosetta_repacked
-$rosetta_path/score_jd2.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $pdb -out:file:scorefile $score -evaluation:DockMetrics --run:constant_seed  
+#score=`echo $pdb | cut -f1 -d'.'`.rosetta_repacked
+$rosetta_path/score_jd2.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $pdb -out:file:scorefile $score_file -evaluation:DockMetrics --run:constant_seed  
 #$path/EXEC/extAllTerms.bash $rsf
-$path/EXEC/scaleRterms.pl $rsf $rtrm $rtrm_scaled
+$install_path/EXEC/scaleRterms.pl $pdb $score_file $rtrm $rtrm_scaled
 
 cat $rtrm_scaled
 
