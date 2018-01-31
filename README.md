@@ -85,14 +85,13 @@ $ cat EXAMPLE_CASE_STUDY/D1OYV-models.status.results
           D1OYV-a82d      0.707      4.347      1.593        Medium    0.65639    0.48664
 > 
 
-> Example Output for a single PDB file: 
+Example Output for a single PDB file: 
 
 ```sh
 $ ./ProQDock ./TESTPDBS/1u07.pdb ./TEMP/1u07.pdb.fasta
 ```
 
 ```
-> 
 The file has a Proper extension (.pdb / .PDB)
 =============================================================
 Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed
@@ -120,7 +119,12 @@ Erep:     [0, 1] Negative   Unfavourable Energy due to atomic Clashes           
 Etmr:     [0, 1] Negative   Energetic Stability without condiderating clashes      All_Atom        Stable     0.28 (+/-0.16)
 ProQ2:    [0, 1] Positive   Overall Structural Quality                             All_Atom       Variable    0.80 (+/-0.12)
 ---------------------------------------------------------------------------------------------------------------------------------
-* In Correct Models 
+ProQDock  [0, 1] Positive   The predicted DockQ score, Basu and Wallner, 2016, https://doi.org/10.1371/journal.pone.0161879
+   DockQ Statistics on CAPRI data:  
+    0    <  DockQ <  0.23 - Incorrect
+    0.23 <= DockQ <  0.49 - Acceptable quality
+    0.49 <= DockQ <  0.80 - Medium quality
+            DockQ >= 0.80 - High quality
 =================================================================================================================================
 EC=0.443
 Sc=0.767
@@ -137,9 +141,9 @@ Etmr=0.09889
 ProQ=0.845
 ================The ProQDock Score ====================
 ProQDock:    1.10501
-Features:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.SVMfeatures
-ProQDock score:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.ProQDock
-Raw Rosetta terms:  /tmp/x_bjowa/leffe/ProQDock/TESTPDB/1u07.Rterms
+Features:  /tmp/x_bjowa/ProQDock/TESTPDB/1u07.SVMfeatures
+ProQDock score:  /tmp/x_bjowa/lProQDock/TESTPDB/1u07.ProQDock
+Raw Rosetta terms:  /tmp/x_bjowa/ProQDock/TESTPDB/1u07.Rterms
 
 ``` 
 
