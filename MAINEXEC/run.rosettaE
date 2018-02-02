@@ -22,6 +22,8 @@ rm -f $score_file
 # rebuild side-chain, backbone unchanged.
 #$rosetta_path/relax.linuxgccrelease -in:file:s $pdb -out:prefix repack. -relax:script $path/MAINEXEC/repack.script -nstruct 1 -corrections::restore_talaris_behavior  -overwrite -run:constant_seed 
 
+
+#rebuild side-chains
 $rosetta_path/relax.linuxgccrelease -in:file:s $pdb -out:prefix repack. -relax:script $install_path/MAINEXEC/repack.script -nstruct 1  -overwrite -run:constant_seed 
 
 
@@ -38,13 +40,34 @@ repack=repack.`echo ${pdb/.pdb/_0001.pdb}`
 echo $repack
 #$path/EXEC/rosettascore.sh $repack $pdb $rosetta_path $rosetta_db
 #score=`echo $pdb | cut -f1 -d'.'`.rosetta_repacked
-$rosetta_path/score_jd2.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $pdb -out:file:scorefile $score_file -evaluation:DockMetrics --run:constant_seed  
+
+#We like to do this, but options only available for DockMetrics options in only available for developers.
+#$rosetta_path/score_jd2.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $repack -out:file:scorefile $score_file.docking -evaluation:DockMetrics --run:constant_seed  -score:weights docking
+
+#$rosetta_path/score_jd2.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $repack -out:file:scorefile $score_file.talaris -evaluation:DockMetrics --run:constant_seed  -corrections::restore_talaris_behavior
+
+#$rosetta_path/score_jd2.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $repack -out:file:scorefile $score_file.talaris_docking_score -evaluation:DockMetrics --run:constant_seed  -corrections::restore_talaris_behavior -score:weights docking
+
+#Instead we run a short minimization which will also generate the scores we want.
+
+$rosetta_path/docking_protocol.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $pdb -out:file:scorefile $score_file --run:constant_seed -use_input_sc -dock_min -docking_centroid_outer_cycles 0 -docking_centroid_inner_cycles 0 -overwrite  -corrections::restore_talaris_behavior 
+
+#rm $score_file
+if [ ! -e $score_file ] 
+then
+    $rosetta_path/docking_protocol.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $pdb -out:file:scorefile $score_file --run:constant_seed -use_input_sc -dock_min -docking_centroid_outer_cycles 0 -docking_centroid_inner_cycles 0 -overwrite 
+fi
+
+
+#$rosetta_path/docking_protocol.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $pdb -out:file:scorefile $score_file.docking_min --run:constant_seed -use_input_sc -dock_min -docking_centroid_outer_cycles 0 -docking_centroid_inner_cycles 0 -overwrite -score:weights docking
+
+#$rosetta_path/docking_protocol.linuxgccrelease -database $rosetta_db -in:file:s $repack -in:file:native $pdb -out:file:scorefile $score_file.ref2015_docking_min --run:constant_seed -use_input_sc -dock_min -docking_centroid_outer_cycles 0 -docking_centroid_inner_cycles 0 -overwrite
 #$path/EXEC/extAllTerms.bash $rsf
 $install_path/EXEC/scaleRterms.pl $pdb $score_file $rtrm $rtrm_scaled
 
 cat $rtrm_scaled
 
-#less -S $rsf
+#less -S $rsf 
 
 
 
