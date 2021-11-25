@@ -163,17 +163,17 @@ if [ -e "formch.out" ]; then
 fi
 
 if [ -e "formch.out" ]; then
-echo "The input file does not meet all necessary conditions for the program to run"
-cat $path/HELP/input.compatibility
-echo "Check: error.log"
-echo "============================================================="
-mv error.log $cloc
-mv formch.out $cloc
-cd $cloc
-rm -rf $tmpdir
-ls -lart error.log
-ls -lart formch.out
-exit;
+    echo "The input file does not meet all necessary conditions for the program to run"
+    cat $path/HELP/input.compatibility
+    echo "Check: error.log"
+    echo "============================================================="
+    mv error.log $cloc
+    mv formch.out $cloc
+    cd $cloc
+    rm -rf $tmpdir
+    ls -lart error.log
+    ls -lart formch.out
+    exit;
 fi
 
 rm -f redun.out &> /dev/null
