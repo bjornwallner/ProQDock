@@ -8,14 +8,14 @@ chomp $fn;
 
 $f1 = 0;
 
-if ($fn =~ m/.pdb/)
+if ($fn =~ m/\.pdb/)
 {
-$f1 = 1;
+    $f1 = 1;
 }
 
 $f2 = 1;
 
-if ($fn =~ m/.PDB/)
+if ($fn =~ m/\.PDB/)
 {
 $f2 = 0;
 }
@@ -26,7 +26,7 @@ $cntdot = 0;
 
 foreach (@h)
 {
-	if ($_ eq ".")
+	if ($_ eq ".") 
 	{
 	    $cntdot++;
 	    #print $_

@@ -45,15 +45,16 @@ elif [ "$#" == "4" ]; then
 	fi
 fi
 
-        rm -f chfn.inp
-        echo $pdbinp > chfn.inp
-        fnch=`$path/EXEC/chfn.pl`
-	echo $fnch
-	if [ `echo $fnch` == "OK" ]; then 
-	echo "You can proceed"
-	else
-	exit;
-	fi
+rm -f chfn.inp
+echo $pdbinp > chfn.inp
+fnch=`$path/EXEC/chfn.pl`
+echo $fnch
+if [[ $fnch == "OK" ]]; then 
+    echo "You can proceed"
+else
+    
+    exit;
+fi
 
 #	echo "Here I am"
 

@@ -134,7 +134,7 @@ cp $pdbpath $tmpdir/ &> /dev/null
 cd $tmpdir/
 #module will create a temp folder where it is added.
 # The module is specific to run it the ccp4 version installed on our cluster
-module add ccp4/6.5.0-module
+#module add ccp4/6.5.0-module
 
 
 #=======================================================================
