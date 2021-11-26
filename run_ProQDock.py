@@ -105,7 +105,7 @@ def read_pdb(pdb):
                     else:
                         #print('Hello',line)
                         pass
-                line=line[0:12] + ' ' + line[13:]
+                line=line[0:12] + ' ' + line[13:] #remove numbers before hydrogens, Delphi does not seem to like them
             chains[chain].append(line)
             fixed_pdb.append(line)
             
