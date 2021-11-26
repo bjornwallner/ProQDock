@@ -314,7 +314,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     maxdist=os.path.join(PATH,'EXEC','hdist.exe')
     gsz=subprocess.check_output(f'{maxdist} input.pdb', shell=True).decode('UTF-8').strip()
 
-    gsz=int(float(gsz)
+    gsz=int(float(gsz))
     # print(float(gsz)))
     gauss=0
     if gauss_delphi:
