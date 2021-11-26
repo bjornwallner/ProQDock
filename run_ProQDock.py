@@ -370,7 +370,7 @@ def remove_hydrogen(pdb_str):
     for line in pdb_str.split('\n')[:-1]:
         atom=line[12:16]
         if 'H' not in atom:
-            pdb_lines.append(line)
+            pdb_lines.append(line+'\n')
     return "".join(pdb_lines)
         
     
@@ -380,6 +380,8 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     
     
     with open('input.pdb','w') as f:
+        f.write(remove_hydrogen(pdb_str))
+    with open(pdb,'w') as f:
         f.write(remove_hydrogen(pdb_str))
     
     chains=sorted(pdb_chains.keys())
@@ -393,7 +395,8 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
         f.write(f'END\n')
         f.write(f'eof\n')
 
-   # os.system(f'cp {run_sc} .')
+    os.system(f'cp {run_sc} .')
+    
     Sc=subprocess.check_output(f'source {run_sc}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
 #    os.sy
     print(Sc)
