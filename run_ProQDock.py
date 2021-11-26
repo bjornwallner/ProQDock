@@ -315,6 +315,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
 
     os.symlink(amber_crg,os.path.basename(amber_crg))
     os.symlink(amber_dummy,os.path.basename(amber_dummy))
+    logging.info(f'Running Delphi {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {int(float(gsz))} {gauss}'
     cmd2=f'{delphi_path} script.prm > log11'
     os.system(cmd)
@@ -333,7 +334,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     cmd2=f'{delphi_path} script.prm > log22'
     os.system(cmd)
     os.system(cmd2)
-    os.system('cp outsurf*pot /home/x_bjowa/proj/local/ProQDock/foo100/')
+    os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
 
     
    # print(gridA)
