@@ -397,7 +397,7 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
 
     os.system(f'cp {run_sc} .')
     
-    Sc=subprocess.check_output(f'source {run_sc}|grep Sc', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+    Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
 #    os.sy
     print(Sc)
 
