@@ -60,7 +60,8 @@
            do j = 1,ic3
                 if ((atom1(i).eq.atom3(j)).and.(ires1(i)==ires3(j)).and.
      &(res1(i).eq.res3(j)).and.(chain1(i).eq.chain3(j)))then
-                 dsaa = abs(saa1(i)-saa3(j))
+                   dsaa = abs(saa1(i)-saa3(j))
+!                   print*,dsaa
                       if (dsaa > 0.00)then
                       int1 = int1 + 1
                       atom_int1(int1) = atom1(i)
@@ -68,7 +69,7 @@
                       ires_int1(int1) = ires1(i)
                       chain_int1(int1) = chain1(i)
                       dls1(int1) = dsaa
-!                     print*,dls1(int1)
+ !                    print*,dls1(int1)
                       endif 
                 endif
            enddo
@@ -80,7 +81,8 @@
            do j = 1,ic3
                 if ((atom2(i).eq.atom3(j)).and.(ires2(i)==ires3(j)).and.
      &(res2(i).eq.res3(j)).and.(chain2(i).eq.chain3(j)))then
-                 dsaa = abs(saa2(i)-saa3(j))
+                   dsaa = abs(saa2(i)-saa3(j))
+ !                  print*,dsaa
                       if (dsaa > 0.00)then
                       int2 = int2 + 1
                       atom_int2(int2) = atom2(i)
@@ -88,7 +90,7 @@
                       ires_int2(int2) = ires2(i)
                       chain_int2(int2) = chain2(i)
                       dls2(int2) = dsaa
-!                     print*,dls2(int2)
+ !                     print*,dls2(int2)
                       endif 
                 endif
            enddo

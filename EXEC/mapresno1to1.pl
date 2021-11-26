@@ -17,10 +17,10 @@ printf RES1 "%3d\n",$rn1;
 
 for $i (0..$l-1)
 {
-chomp $atoms[$i];
-$fp = substr($atoms[$i],0,22);
-$rn = int(substr($atoms[$i],22,4));
-$sp = substr($atoms[$i],26, );
-$rn = $rn - ($rn1-1);
-printf "%22s%4d%28s\n",$fp,$rn,$sp;
+    chomp $atoms[$i];
+    $fp = substr($atoms[$i],0,22);
+    $rn = int(substr($atoms[$i],22,4));
+    $sp = substr($atoms[$i],26, );
+    $rn = $rn - ($rn1-1);
+    printf "%22s%4d%28s\n",$fp,$rn,$sp;
 }

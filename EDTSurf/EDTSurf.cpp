@@ -376,7 +376,7 @@ int main(int argc, char** argv)
 			fprintf(file,"%4d %4d %c %7.3f\n",i+1,pp.bb[i].resind,pp.bb[i].resid,tsum);
 		}
 		fclose(file);
-		return 1;
+		return 0;
 	}
 	//additional functions below
 	pps.checkEuler();
@@ -413,6 +413,6 @@ int main(int argc, char** argv)
 		sprintf(filename,"%s.asa",tpname);
 		pps.outsas(pp.numbb,pp.bb,pp.proseq,filename);
 	}
-	return 1;
+	return 0;
 } 
 
