@@ -372,7 +372,7 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     
     
     with open('input.pdb','w') as f:
-        f.write("".join(input_pdb))
+        f.write("".join(pdb_str))
     
     chains=sorted(pdb_chains.keys())
 
@@ -385,9 +385,9 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
         f.write('END\n')
         f.write('eof\n')
 
-    #os.system(f'cp {run_sc} .')
-    #Sc=subprocess.check_output(f'source {run_sc}', shell=True).decode('UTF-8').strip()
-    #print(Sc)
+    os.system(f'cp {run_sc} .')
+    Sc=subprocess.check_output(f'source {run_sc}', shell=True).decode('UTF-8').strip()
+    print(Sc)
 
 def main(argv):
     if len(argv) != 3:
