@@ -306,6 +306,10 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     with open('input.pdb','w') as f:
         f.write("".join(pdb_str))
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
+    extpot=os.path.join(PATH,'EXEC','extpot.pl')
+    ccpsw=os.path.join(PATH,'EXEC','ccpsw.exe')
+
+    
     maxdist=os.path.join(PATH,'EXEC','hdist.exe')
     gsz=subprocess.check_output(f'{maxdist} input.pdb', shell=True).decode('UTF-8').strip()
     
@@ -316,28 +320,37 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     os.symlink(amber_crg,os.path.basename(amber_crg))
     os.symlink(amber_dummy,os.path.basename(amber_dummy))
     logging.info(f'Running Delphi for gridA {delphi_path}')
-    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {int(float(gsz))} {gauss};mv script.prm scrip11.prm'
-    cmd2=f'{delphi_path} script11.prm > log11;rm -f ARCDAT'
+    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {int(float(gsz))} {gauss}'
+    cmd2=f'{delphi_path} script.prm > log11;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
-    cmd2=f'{delphi_script} {tmpdir} maskedA_B.pdb gridA.pdb outmod2.pdb outsurf21.pot {int(float(gsz))} {gauss};mv script.prm scrip21.prm'
-    cmd2=f'{delphi_path} script21.prm > log21;rm -f ARCDAT'
+    cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridA.pdb outmod2.pdb outsurf21.pot {int(float(gsz))} {gauss}'
+    cmd2=f'{delphi_path} script.prm > log21;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
 
     logging.info(f'Running Delphi for gridB {delphi_path}')
-    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {int(float(gsz))} {gauss};mv script.prm script12.prm'
-    cmd2=f'{delphi_path} script12.prm > log12;rm -f ARCDAT'
+    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {int(float(gsz))} {gauss}'
+    cmd2=f'{delphi_path} script.prm > log12;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
     logging.info(f'Running Delphi for gridB {delphi_path}')
-    cmd2=f'{delphi_script} {tmpdir} maskedA_B.pdb gridB.pdb outmod2.pdb outsurf22.pot {int(float(gsz))} {gauss};mv script.prm script22.prm'
-    cmd2=f'{delphi_path} script22.prm > log22;rm -f ARCDAT'
+    cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridB.pdb outmod2.pdb outsurf22.pot {int(float(gsz))} {gauss}'
+    cmd2=f'{delphi_path} script.prm > log22;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
-    os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
 
     
+    os.system(f'{extpot} outsurf11.pot > temp11.pot')
+    os.system(f'{extpot} outsurf21.pot > temp21.pot')
+
+    os.system(f'{extpot} outsurf12.pot > temp12.pot')
+    os.system(f'{extpot} outsurf22.pot > temp22.pot')
+
+    os.system(f'{ccpsw} temp11.pot temp21.pot > c1')
+    os.system(f'{ccpsw} temp12.pot temp22.pot > c2')
+    
+    os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
    # print(gridA)
    # print(interface_A)
 
