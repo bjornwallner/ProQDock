@@ -317,21 +317,22 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     os.symlink(amber_dummy,os.path.basename(amber_dummy))
     logging.info(f'Running Delphi for gridA {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {int(float(gsz))} {gauss};mv script.prm scrip11.prm'
-    cmd2=f'{delphi_path} script11.prm > log11;rm ARCDAT'
+    cmd2=f'{delphi_path} script11.prm > log11;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
     cmd2=f'{delphi_script} {tmpdir} maskedA_B.pdb gridA.pdb outmod2.pdb outsurf21.pot {int(float(gsz))} {gauss};mv script.prm scrip21.prm'
-    cmd2=f'{delphi_path} script21.prm > log21;rm ARCDAT'
+    cmd2=f'{delphi_path} script21.prm > log21;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
 
     logging.info(f'Running Delphi for gridB {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {int(float(gsz))} {gauss};mv script.prm script12.prm'
-    cmd2=f'{delphi_path} script12.prm > log12;rm ARCDAT'
+    cmd2=f'{delphi_path} script12.prm > log12;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
+    logging.info(f'Running Delphi for gridB {delphi_path}')
     cmd2=f'{delphi_script} {tmpdir} maskedA_B.pdb gridB.pdb outmod2.pdb outsurf22.pot {int(float(gsz))} {gauss};mv script.prm script22.prm'
-    cmd2=f'{delphi_path} script22.prm > log22;rm ARCDAT'
+    cmd2=f'{delphi_path} script22.prm > log22;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
     os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
