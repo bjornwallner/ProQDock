@@ -320,7 +320,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
 
     os.symlink(amber_crg,os.path.basename(amber_crg))
     os.symlink(amber_dummy,os.path.basename(amber_dummy))
-    logging.info(f'Running Delphi for gridA {delphi_path}')
+    logging.info(f'Running Delphi for gridA using {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {int(float(gsz))} {gauss}'
     cmd2=f'{delphi_path} script.prm > log11;rm -f ARCDAT'
     os.system(cmd)
@@ -330,18 +330,17 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     os.system(cmd)
     os.system(cmd2)
 
-    logging.info(f'Running Delphi for gridB {delphi_path}')
+    logging.info(f'Running Delphi for gridB using {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {int(float(gsz))} {gauss}'
     cmd2=f'{delphi_path} script.prm > log12;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
-    logging.info(f'Running Delphi for gridB {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridB.pdb outmod2.pdb outsurf22.pot {int(float(gsz))} {gauss}'
     cmd2=f'{delphi_path} script.prm > log22;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
 
-    
+    logging.info('Calculating EC')
     os.system(f'{extpot} outsurf11.pot > temp11.pot')
     os.system(f'{extpot} outsurf21.pot > temp21.pot')
 
