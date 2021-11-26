@@ -372,7 +372,7 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     
     
     with open('input.pdb','w') as f:
-        f.write("".join(input_pdb)
+        f.write("".join(input_pdb))
     
     chains=sorted(pdb_chains.keys())
 
