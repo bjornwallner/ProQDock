@@ -365,6 +365,14 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
 
     
 
+def remove_hydrogen(pdb_str):
+    pdb_lines=[]
+    for line in pdb_str.split('\n')[:-1]:
+        atom=line[12:16]
+        if 'H' not in atom:
+            pdb_lines.append(line)
+    return "".join(pdb_lines)
+        
     
 def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     run_sc=os.path.join(tmpdir,'run_sc')
@@ -372,7 +380,7 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     
     
     with open('input.pdb','w') as f:
-        f.write("".join(pdb_str))
+        f.write(remove_hydrogen(pdb_str))
     
     chains=sorted(pdb_chains.keys())
 
@@ -387,7 +395,7 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
 
    # os.system(f'cp {run_sc} .')
     Sc=subprocess.check_output(f'source {run_sc}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
-    os.sy
+#    os.sy
     print(Sc)
 
 def main(argv):
