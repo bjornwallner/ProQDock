@@ -377,10 +377,6 @@ def remove_hydrogen(pdb_str):
 def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     run_sc=os.path.join(tmpdir,'run_sc')
     pdb=os.path.join(tmpdir,'input.pdb')
-    
-    
-    with open('input.pdb','w') as f:
-        f.write(remove_hydrogen(pdb_str))
     with open(pdb,'w') as f:
         f.write(remove_hydrogen(pdb_str))
     
@@ -395,12 +391,9 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
         f.write(f'END\n')
         f.write(f'eof\n')
 
-    os.system(f'cp {run_sc} .')
-    
     Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
     Sc=float(Sc.split()[-1])
-#    os.sy
-    print(Sc)
+    return(Sc)
 
 def main(argv):
     if len(argv) != 3:
@@ -428,9 +421,10 @@ def main(argv):
     #pdb=input_pdb
     with tempfile.TemporaryDirectory() as tmpdir:
         logging.info('Starting EC calculation')
-        #EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
-        #print(f"EC={EC}")
+        EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
+        print(f"EC={EC}")
         Sc=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
+        print(f"Sc={Sc}")
     #print(dir(tempfile))
     
 
