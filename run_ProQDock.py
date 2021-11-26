@@ -261,7 +261,7 @@ def dummy_pdb(pdb_str):
     return "".join(new_pdb)
 
 def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
-    #cwd=os.getcwd()
+    cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
     amber_crg=os.path.join(PATH,'LIBR','amber.crg')
     amber_dummy=os.path.join(PATH,'LIBR','amber_dummy.siz')
