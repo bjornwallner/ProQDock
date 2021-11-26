@@ -105,6 +105,7 @@ def read_pdb(pdb):
                     else:
                         #print('Hello',line)
                         pass
+                line=line[0:12] + ' ' + line[13:]
             chains[chain].append(line)
             fixed_pdb.append(line)
             
