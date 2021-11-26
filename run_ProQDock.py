@@ -366,7 +366,27 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     
 
     
+def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
+    run_sc=os.path.join(tmpdir,'run_sc')
+    pdb=os.path.join(tmpdir,'input.pdb')
     
+    
+    with open('input.pdb','w') as f:
+        f.write("".join(input_pdb)
+    
+    chains=sorted(pdb_chains.keys())
+
+    with open(run_sc,'w') as f:
+        f.write(f'''{sc_path} XYZIN {pdb} <<eof 
+        MOLECULE 1
+        CHAIN {chains[0]}
+        MOLECULE 2
+        CHAIN {chains[1]}
+        END
+        eof'''
+
+    Sc=subprocess.check_output(f'source {run_sc}', shell=True).decode('UTF-8').strip()
+    print(Sc)
 
 def main(argv):
     if len(argv) != 3:
@@ -378,7 +398,8 @@ def main(argv):
     rosetta_path=os.path.join(FLAGS.rosetta,'source','bin')
     proqscorepath=rosetta_path
     rosetta_db=os.path.join(FLAGS.rosetta,'database')
-
+    sc_path=
+    
     logging.info(f'Reading pdb: {input_pdb}')
     (pdb_str,pdb_chains)=read_pdb(input_pdb)
 
@@ -395,6 +416,7 @@ def main(argv):
         logging.info('Starting EC calculation')
         EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         print(f"EC={EC}")
+        Sc=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
     #print(dir(tempfile))
     
 
