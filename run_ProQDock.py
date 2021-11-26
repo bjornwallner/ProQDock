@@ -284,6 +284,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
     gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
+    os.chdir(tmpdir)
     with open('gridA.pdb','w') as f:
         f.write("".join(gridA))
     with open('gridB.pdb','w') as f:
@@ -310,18 +311,34 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     
    # print(float(gsz)))
     gauss=0
-    
-    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf12.pot {int(float(gsz))} {gauss}'
-    print(cmd)
-    os.system(cmd)
+
+
+    os.symlink(amber_crg,os.path.basename(amber_crg))
+    os.symlink(amber_dummy,os.path.basename(amber_dummy))
+    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {int(float(gsz))} {gauss}'
     cmd2=f'{delphi_path} script.prm > log11'
-    print(cmd2)
+    os.system(cmd)
+    os.system(cmd2)
+    cmd2=f'{delphi_script} {tmpdir} maskedA_B.pdb gridA.pdb outmod2.pdb outsurf21.pot {int(float(gsz))} {gauss}'
+    cmd2=f'{delphi_path} script.prm > log21'
+    os.system(cmd)
+    os.system(cmd2)
+
+
+    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {int(float(gsz))} {gauss}'
+    cmd2=f'{delphi_path} script.prm > log12'
+    os.system(cmd)
+    os.system(cmd2)
+    cmd2=f'{delphi_script} {tmpdir} maskedA_B.pdb gridB.pdb outmod2.pdb outsurf22.pot {int(float(gsz))} {gauss}'
+    cmd2=f'{delphi_path} script.prm > log22'
+    os.system(cmd)
+    os.system(cmd2)
+    os.system('cp outsurf*pot /home/x_bjowa/proj/local/ProQDock/foo100/')
+
     
    # print(gridA)
    # print(interface_A)
-    os.chdir(tmpdir)
-    os.symlink(amber_crg,os.path.basename(amber_crg))
-    os.symlink(amber_dummy,os.path.basename(amber_dummy))
+
    # os.system('pwd;ls -lrt')
 
     
