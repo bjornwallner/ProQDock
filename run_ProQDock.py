@@ -393,7 +393,7 @@ def main(argv):
     #pdb=input_pdb
     with tempfile.TemporaryDirectory() as tmpdir:
         logging.info('Starting EC calculation')
-        EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss=FLAGS.gauss)
+        EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         print(f"EC={EC:.2f}")
     #print(dir(tempfile))
     
