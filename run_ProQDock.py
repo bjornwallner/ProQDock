@@ -260,7 +260,7 @@ def dummy_pdb(pdb_str):
         new_pdb.append(line +'\n')
     return "".join(new_pdb)
 
-def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,gauss=False):
+def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     #cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
     amber_crg=os.path.join(PATH,'LIBR','amber.crg')
@@ -313,29 +313,32 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     
     maxdist=os.path.join(PATH,'EXEC','hdist.exe')
     gsz=subprocess.check_output(f'{maxdist} input.pdb', shell=True).decode('UTF-8').strip()
-    
-   # print(float(gsz)))
+
+    gsz=int(float(gsz)
+    # print(float(gsz)))
     gauss=0
+    if gauss_delphi:
+        gauss=1
 
 
     os.symlink(amber_crg,os.path.basename(amber_crg))
     os.symlink(amber_dummy,os.path.basename(amber_dummy))
     logging.info(f'Running Delphi for gridA using {delphi_path}')
-    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {int(float(gsz))} {gauss}'
+    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {gsz} {gauss}'
     cmd2=f'{delphi_path} script.prm > log11;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
-    cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridA.pdb outmod2.pdb outsurf21.pot {int(float(gsz))} {gauss}'
+    cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridA.pdb outmod2.pdb outsurf21.pot {gsz} {gauss}'
     cmd2=f'{delphi_path} script.prm > log21;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
 
     logging.info(f'Running Delphi for gridB using {delphi_path}')
-    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {int(float(gsz))} {gauss}'
+    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {gsz} {gauss}'
     cmd2=f'{delphi_path} script.prm > log12;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
-    cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridB.pdb outmod2.pdb outsurf22.pot {int(float(gsz))} {gauss}'
+    cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridB.pdb outmod2.pdb outsurf22.pot {gsz} {gauss}'
     cmd2=f'{delphi_path} script.prm > log22;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
@@ -390,7 +393,7 @@ def main(argv):
     #pdb=input_pdb
     with tempfile.TemporaryDirectory() as tmpdir:
         logging.info('Starting EC calculation')
-        EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,ESpath=ESpath,diel=FLAGS.diel,gauss=FLAGS.gauss)
+        EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss=FLAGS.gauss)
         print(f"EC={EC:.2f}")
     #print(dir(tempfile))
     
