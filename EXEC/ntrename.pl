@@ -23,31 +23,31 @@ $rnl = int(substr($dat[$l-1],23,3));
 
 for $i (0..$l-1)
 {
-chomp $dat[$i];
-$rt = substr($dat[$i],17,3);
-$rn = int(substr($dat[$i],23,3));
-	if ($rn == $rn1 && $rt eq $rt1)
-	{
+    chomp $dat[$i];
+    $rt = substr($dat[$i],17,3);
+    $rn = int(substr($dat[$i],23,3));
+    if ($rn == $rn1 && $rt eq $rt1)
+    {
 	$dat[$i] =~ s/ HT1/ H  /;
 	$dat[$i] =~ s/ HT2/ H  /;
 	$dat[$i] =~ s/ HT3/ H  /;
-		for $j (0..22)
-		{
-			if ($rt eq $aa3[$j])
-			{
-			$dat[$i] =~ s/$rt/$aan[$j]/;
-			}
-		}
-	}
-	if ($rn == $rnl && $rt eq $rtl)
+	for $j (0..22)
 	{
-		for $j (0..22)
-		{
-			if ($rt eq $aa3[$j])
-			{
-			$dat[$i] =~ s/$rt/$aac[$j]/;
-			}
-		}
+	    if ($rt eq $aa3[$j])
+	    {
+		$dat[$i] =~ s/$rt/$aan[$j]/;
+	    }
 	}
-print OUT $dat[$i],"\n";
+    }
+    if ($rn == $rnl && $rt eq $rtl)
+    {
+	for $j (0..22)
+	{
+	    if ($rt eq $aa3[$j])
+	    {
+		$dat[$i] =~ s/$rt/$aac[$j]/;
+	    }
+	}
+    }
+    print OUT $dat[$i],"\n";
 }

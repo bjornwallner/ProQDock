@@ -28,76 +28,76 @@ open (RES,"<$resf") || die ".res file not found\n";
 
 foreach $k (@rdat)
 {
-chomp $k;
-	if ($k =~ /HIS/)
-	{
-#	print $k,"\n";
+    chomp $k;
+    if ($k =~ /HIS/)
+    {
+	#	print $k,"\n";
 	@store = ();
 	@atom = ();
 	@pointer = ();
 	$d = 0;
 	$e = 0;
 	$c = 0;
-		foreach $p (@dat)
+	foreach $p (@dat)
+	{
+	    chomp $p;
+	    if (substr($p,17,3) eq 'HIS' && int(substr($p,23,3)) == int(substr($k,0,3)))
+	    {
+		@store = (@store,$p);
+		@atom = (@atom,substr($p,13,3));
+		@pointer = (@pointer,$c);
+	    }
+	    $c++;
+	}
+	foreach (@atom)
+	{
+	    if ($_ eq 'HD1')
+	    {
+		$d = 1;
+	    }
+	    if ($_ eq 'HE2')
+	    {
+		$e = 1;
+	    }
+	}
+	if ($d == 1 && $e == 0)
+	{
+	    foreach $r (@store)
+	    {
+		$r =~ s/HIS/HID/;
+	    }
+	}
+	if ($d == 0 && $e == 1)
+	{
+	    foreach $r (@store)
+	    {
+		$r =~ s/HIS/HIE/;
+	    }
+	}
+	if ($d == 1 && $e == 1)
+	{
+	    foreach $r (@store)
+	    {
+		$r =~ s/HIS/HIP/;
+	    }
+	}
+	foreach (@store)
+	{
+	    #		print $_,"\n";
+	}
+	for $n (0..scalar(@pointer)-1)
 		{
-		chomp $p;
-			if (substr($p,17,3) eq 'HIS' && int(substr($p,23,3)) == int(substr($k,0,3)))
-			{
-			@store = (@store,$p);
-			@atom = (@atom,substr($p,13,3));
-			@pointer = (@pointer,$c);
-			}
-		$c++;
+		    $dat[$pointer[$n]] = $store[$n];
 		}
-		foreach (@atom)
-		{
-			if ($_ eq 'HD1')
-			{
-			$d = 1;
-			}
-			if ($_ eq 'HE2')
-			{
-			$e = 1;
-			}
-		}
-		if ($d == 1 && $e == 0)
-		{
-			foreach $r (@store)
-			{
-			$r =~ s/HIS/HID/;
-			}
-		}
-		if ($d == 0 && $e == 1)
-		{
-			foreach $r (@store)
-			{
-			$r =~ s/HIS/HIE/;
-			}
-		}
-		if ($d == 1 && $e == 1)
-		{
-			foreach $r (@store)
-			{
-			$r =~ s/HIS/HIP/;
-			}
-		}
-		foreach (@store)
-		{
-#		print $_,"\n";
-		}
-		for $n (0..scalar(@pointer)-1)
-		{
-		$dat[$pointer[$n]] = $store[$n];
-		}
-	}	
+    }	
 }
 
 foreach $k (@dat)
 {
-chomp $k;
-$str1 = substr($k,0,12);
-$str2 = substr($k,13, );
-print OUT $str1,' ',$str2,"\n";
+    chomp $k;
+    $str1 = substr($k,0,12);
+    $str2 = substr($k,13, );
+    print OUT $str1,' ',$str2,"\n";
 }
 
 close OUT;

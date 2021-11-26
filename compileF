@@ -1,9 +1,9 @@
 #!/bin/bash -x
 
-upath=`echo ${0/compileF/}`
-path=`readlink -f $upath`
-echo $path
-
+#upath=`echo ${0/compileF/}`
+#path=`readlink -f $upath`
+#echo $path
+path='./'
 
 #cp $path/EXEC/resGbur.f.install $path/EXEC/resGbur.f 
 #sed "s%INSTALL_PATH%$path%" $path/EXEC/resGbur.f.install  > $path/EXEC/resGbur.f 
@@ -33,22 +33,22 @@ fi
 
 rm -f $path/EXEC/*.exe
 
-$fortcomp $path/EXEC/globuleN.f -o $path/EXEC/glbN.exe &> compile.log
-$fortcomp $path/EXEC/metsph.f -o $path/EXEC/msph.exe &>> compile.log
-$fortcomp $path/EXEC/intcont6.f -o $path/EXEC/intcont6.exe &>> compile.log
-$fortcomp $path/EXEC/accall.f -o $path/EXEC/accall.exe &>> compile.log
-$fortcomp $path/EXEC/delasa.f -o $path/EXEC/delasa.exe &>> compile.log
-$fortcomp $path/EXEC/hdist.f -o $path/EXEC/hdist.exe &>> compile.log
-$fortcomp $path/EXEC/buryasa.f -o $path/EXEC/buryasa.exe &>> compile.log
-$fortcomp $path/EXEC/intcont.f -o $path/EXEC/intcont.exe &>> compile.log
-$fortcomp $path/EXEC/fetchintsurf.f -o $path/EXEC/fetchds.exe &>> compile.log
-$fortcomp $path/EXEC/corrcoefPsplw.f -o $path/EXEC/ccpsw.exe &>> compile.log
-$fortcomp $path/EXEC/metcoord.f -o $path/EXEC/mcoord.exe &>> compile.log
-$fortcomp $path/EXEC/contpref20CB.f -o $path/EXEC/contpref20CB.exe &>> compile.log
-gfortran  $path/EXEC/linkdenN.f -o $path/MAINEXEC/ldN.exe &>> compile.log
-$fortcomp $path/EXEC/resGbur.f -o $path/EXEC/rGb.exe &>> compile.log
-$fortcomp $path/EXEC/intf2surf.f -o $path/EXEC/isurf.exe &>> compile.log
-$fortcomp $path/EXEC/dsl.f -o $path/EXEC/dsl.exe &>> compile.log
+$fortcomp $path/EXEC/globuleN.f -o $path/EXEC/glbN.exe > compile.log
+$fortcomp $path/EXEC/metsph.f -o $path/EXEC/msph.exe >> compile.log
+$fortcomp $path/EXEC/intcont6.f -o $path/EXEC/intcont6.exe >> compile.log
+$fortcomp $path/EXEC/accall.f -o $path/EXEC/accall.exe >> compile.log
+$fortcomp $path/EXEC/delasa.f -o $path/EXEC/delasa.exe >> compile.log
+$fortcomp $path/EXEC/hdist.f -o $path/EXEC/hdist.exe >> compile.log
+$fortcomp $path/EXEC/buryasa.f -o $path/EXEC/buryasa.exe >> compile.log
+$fortcomp $path/EXEC/intcont.f -o $path/EXEC/intcont.exe >> compile.log
+$fortcomp $path/EXEC/fetchintsurf.f -o $path/EXEC/fetchds.exe >> compile.log
+$fortcomp $path/EXEC/corrcoefPsplw.f -o $path/EXEC/ccpsw.exe >> compile.log
+$fortcomp $path/EXEC/metcoord.f -o $path/EXEC/mcoord.exe >> compile.log
+$fortcomp $path/EXEC/contpref20CB.f -o $path/EXEC/contpref20CB.exe >> compile.log
+gfortran  $path/EXEC/linkdenN.f -o $path/MAINEXEC/ldN.exe >> compile.log
+$fortcomp $path/EXEC/resGbur.f -o $path/EXEC/rGb.exe >> compile.log
+$fortcomp $path/EXEC/intf2surf.f -o $path/EXEC/isurf.exe >> compile.log
+$fortcomp $path/EXEC/dsl.f -o $path/EXEC/dsl.exe >> compile.log
 
 
 Nfort=`ls $path/EXEC/*.f | wc -l`

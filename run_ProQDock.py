@@ -57,6 +57,7 @@ def fix_metals(pdb_str):
 	    'AU    AU':' AU1 GLD',
 	    'AU   AU3':' AU3 GLD',
             'HG    HG':' HG2 MRC'}
+    
     hydrogen={' HT1':' H  ',
               ' HT2':' H  ',
               ' HT3':' H  '}
@@ -112,12 +113,12 @@ def read_pdb(pdb):
     #print(s)
     #return pose
     for chain in chains:
-        chains[chain]="".join(chains[chain])
+        chains[chain]=fix_metals("".join(chains[chain]))
     
     return (fix_metals("".join(fixed_pdb)),chains)
 
 def run_naccess(pdb_str):
-    print(__file__)
+   # print(__file__)
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
     naccess=os.path.join(PATH,'EXEC','naccess.bash')
@@ -127,7 +128,7 @@ def run_naccess(pdb_str):
             f.write(pdb_str)
         cmd=f'{naccess} input.pdb'
         subprocess.check_output(cmd, shell=True)
-        os.system('ls -lrt')
+#        os.system('ls -lrt')
         with open('input.asa','r') as f:
             asa=f.read()
 
@@ -204,7 +205,7 @@ def convert_surf_to_pdb(surf_str):
     return pdb_lines
 
 def run_EDTSurf(pdb_str):
-    print(__file__)
+#    print(__file__)
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
     EDTSurf=os.path.join(PATH,'EDTSurf','EDTSurf')
@@ -215,17 +216,49 @@ def run_EDTSurf(pdb_str):
         cmd=f'{EDTSurf} -i input.pdb -s 3 -f 1 -o out > EDTSurf.log'
         os.system(cmd)
 #        subprocess.check_output(cmd, shell=True)
-        os.system('ls -lrt')
+        #os.system('ls -lrt')
         #os.system('cp out.ply.surf /home/x_bjowa/proj/local/ProQDock/tmp.ply.surf')
         with open('out.ply.surf','r') as f:
             surf=convert_surf_to_pdb(f.read())
-
     os.chdir(cwd)
     return surf
-    
 
 
-    
+def rename_nc_terminals(pdb_str):
+    aa3 = ['GLY','ALA','VAL','LEU','ILE','PHE','TYR','TRP','SER','THR','CYS','CYX','MET','ASP','GLU','ASN','GLN','LYS','ARG','PRO','HID','HIE','HIP'];
+    aan = ['GNN','ANN','VNN','LNN','INN','FNN','YNN','WNN','SNN','TNN','CSN','CXN','MNN','DNN','ENN','NNN','QNN','KNN','RNN','PNN','HDN','HEN','HPN'];
+    aac = ['GCC','ACC','VCC','LCC','ICC','FCC','YCC','WCC','SCC','TCC','CSC','CXC','MCC','DCC','ECC','NCC','QCC','KCC','RCC','PCC','HDC','HEC','HPC'];
+    aan_dict=dict(zip(aa3,aan))
+    aac_dict=dict(zip(aa3,aac))
+    pdb_lines=pdb_str.split('\n')
+    resnum_N=pdb_lines[0][22:26]
+    resnum_C=pdb_lines[-2][22:26]
+#    print(pdb_lines)
+    print(resnum_N,resnum_C)
+    new_pdb=[]
+    for line in pdb_lines[:-1]:
+        res=line[17:20]
+        resnum=line[22:26]
+        if resnum == resnum_N:
+            line=line.replace(res,aan_dict[res])
+        if resnum == resnum_C:
+            line=line.replace(res,aac_dict[res])
+            
+        new_pdb.append(line +'\n')
+    return "".join(new_pdb)
+
+def dummy_res(pdb_str):
+    res = ['GLY','ALA','VAL','LEU','ILE','PHE','TYR','TRP','SER','THR','CYS','CYX','MET','ASP','GLU','ASN','GLN','LYS','ARG','PRO','HID','HIE','HIP','GNN','ANN','VNN','LNN','INN','FNN','YNN','WNN','SNN','TNN','CSN','CXN','MNN','DNN','ENN','NNN','QNN','KNN','RNN','PNN','HDN','HEN','HPN','GCC','ACC','VCC','LCC','ICC','FCC','YCC','WCC','SCC','TCC','CSC','CXC','MCC','DCC','ECC','NCC','QCC','KCC','RCC','PCC','HDC','HEC','HPC','SOD','MAG','ALM','POT','CAL','CRM','MNG','IRN','COB','NIC','COP','ZNC','SLV','CDM','PLT','GLD','MRC']
+    dumm = ['GDD','ADD','VDD','LDD','IDD','FDD','YDD','WDD','SDD','TDD','CSD','CXD','MDD','DDD','EDD','NDD','QDD','KDD','RDD','PDD','HDD','HED','HPD','GDD','ADD','VDD','LDD','IDD','FDD','YDD','WDD','SDD','TDD','CSD','CXD','MDD','DDD','EDD','NDD','QDD','KDD','RDD','PDD','HDD','HED','HPD','GDD','ADD','VDD','LDD','IDD','FDD','YDD','WDD','SDD','TDD','CSD','CXD','MDD','DDD','EDD','NDD','QDD','KDD','RDD','PDD','HDD','HED','HPD','DSO','DMG','DAL','DPT','DCA','DCR','DMN','DIR','DCO','DNI','DCU','DZN','DSL','DCD','DPL','DGL','DMR']
+    dummy=dict(zip(res,dumm))
+    pdb_lines=pdb_str.split('\n')
+    new_pdb=[]
+    for line in pdb_lines[:-1]:
+        res=line[17:20]
+        line=line.replace(res,dummy[res])
+        new_pdb.append(line +'\n')
+    return "".join(new_pdb)
+
 def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,gauss=False):
     #cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
@@ -234,20 +267,33 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
 #    os.chdir(tmpdir)
     asa={}
     grid={}
+    logging.info(f'NACCESS for input pdb')
     asa1=run_naccess(pdb_str)
     chains=sorted(pdb_chains.keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
     for chain in chains:
+        logging.info(f'NACCESS for chain {chain}')
         asa[chain]=run_naccess(pdb_chains[chain])
+        logging.info(f'Calculating grid points for chain {chain}')
         grid[chain]=run_EDTSurf(pdb_chains[chain])
+    
     (interface_A,interface_B,dA,dB,interface_area)=get_interface(asa1,asa[chains[0]],asa[chains[1]])
-
+    logging.info(f'Found {len(interface_A)+len(interface_B)} interface residues')
+    logging.info(f'Chain {chains[0]} buries {dA:.2f}A^2 in the complex')
+    logging.info(f'Chain {chains[1]} buries {dB:.2f}A^2 in the complex')
+    logging.info(f'Average interface area {interface_area:.2f}A^2')
+    
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
     gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
     
 #    gridA=[p[13:27] for p in grid[chains[0]]]
     #print(grid[chains[0]])
-    with open('tmp.pdb','w') as f:
-        f.write("".join(gridA))
+    pdb1=rename_nc_terminals(pdb_chains[chains[0]])
+    pdb2=rename_nc_terminals(pdb_chains[chains[1]])
+    with open('A.pdb','w') as f:
+        #f.write(pdb_chains['A'])
+        f.write(pdb1)
+    with open('B.pdb','w') as f:
+        f.write(pdb2)
     
     
     
@@ -256,11 +302,12 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     os.chdir(tmpdir)
     os.symlink(amber_crg,os.path.basename(amber_crg))
     os.symlink(amber_dummy,os.path.basename(amber_dummy))
-    os.system('pwd;ls -lrt')
+   # os.system('pwd;ls -lrt')
 
     
     #os.chdir(cwd)
         #print(tmpdir)
+
     
     
 
@@ -276,6 +323,7 @@ def main(argv):
     ESpath=os.path.join(os.path.abspath(os.path.dirname(__file__)),'EDTSurf')
     rosetta_db=os.path.join(FLAGS.rosetta,'database')
 
+    logging.info(f'Reading pdb: {input_pdb}')
     (pdb_str,pdb_chains)=read_pdb(input_pdb)
 
     if len(pdb_chains.keys()) != 2:
@@ -283,11 +331,12 @@ def main(argv):
         print("Currently you have to do that outside, support for that might be added in the future\n")
         sys.exit(1)
 
-    logging.info(f"CHAINS: {sorted(pdb_chains.keys())}")
+    logging.info(f"Found these chains: {sorted(pdb_chains.keys())}")
    
     
     #pdb=input_pdb
     with tempfile.TemporaryDirectory() as tmpdir:
+        logging.info('Starting EC calculation')
         calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,ESpath=ESpath,diel=FLAGS.diel,gauss=FLAGS.gauss)
     #print(dir(tempfile))
     

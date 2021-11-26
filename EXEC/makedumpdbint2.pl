@@ -35,8 +35,8 @@ open (OUT2,">real2dum1.pdb");
 
 foreach $a (@rdat1)
 {
-chomp $a;
-print OUT1 $a,"\n";
+    chomp $a;
+    print OUT1 $a,"\n";
 }
 
 #========================================================================================
@@ -44,16 +44,16 @@ print OUT1 $a,"\n";
 
 foreach $a (@ddat2)
 {
-chomp $a;
-$res = substr($a,17,3);
-	for $b (0..scalar(@aa3real)-1)
+    chomp $a;
+    $res = substr($a,17,3);
+    for $b (0..scalar(@aa3real)-1)
+    {
+	if ($res eq $aa3real[$b])
 	{
-		if ($res eq $aa3real[$b])
-		{
-		$a =~ s/$aa3real[$b]/$aa3dummy[$b]/;
-		}
+	    $a =~ s/$aa3real[$b]/$aa3dummy[$b]/;
 	}
-print OUT1 $a,"\n";
+    }
+    print OUT1 $a,"\n";
 }
 
 #========================================================================================
@@ -61,16 +61,16 @@ print OUT1 $a,"\n";
 
 foreach $a (@ddat1)
 {
-chomp $a;
-$res = substr($a,17,3);
-	for $b (0..scalar(@aa3real)-1)
+    chomp $a;
+    $res = substr($a,17,3);
+    for $b (0..scalar(@aa3real)-1)
+    {
+	if ($res eq $aa3real[$b])
 	{
-		if ($res eq $aa3real[$b])
-		{
-		$a =~ s/$aa3real[$b]/$aa3dummy[$b]/;
-		}
+	    $a =~ s/$aa3real[$b]/$aa3dummy[$b]/;
 	}
-print OUT2 $a,"\n";
+    }
+    print OUT2 $a,"\n";
 }
 
 #=========================================================================================
@@ -78,8 +78,8 @@ print OUT2 $a,"\n";
 
 foreach $a (@rdat2)
 {
-chomp $a;
-print OUT2 $a,"\n";
+    chomp $a;
+    print OUT2 $a,"\n";
 }
 
 
