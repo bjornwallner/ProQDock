@@ -234,7 +234,7 @@ def rename_nc_terminals(pdb_str):
     resnum_N=pdb_lines[0][22:26]
     resnum_C=pdb_lines[-2][22:26]
 #    print(pdb_lines)
-    print(resnum_N,resnum_C)
+#    print(resnum_N,resnum_C)
     new_pdb=[]
     for line in pdb_lines[:-1]:
         res=line[17:20]
@@ -247,7 +247,7 @@ def rename_nc_terminals(pdb_str):
         new_pdb.append(line +'\n')
     return "".join(new_pdb)
 
-def dummy_res(pdb_str):
+def dummy_pdb(pdb_str):
     res = ['GLY','ALA','VAL','LEU','ILE','PHE','TYR','TRP','SER','THR','CYS','CYX','MET','ASP','GLU','ASN','GLN','LYS','ARG','PRO','HID','HIE','HIP','GNN','ANN','VNN','LNN','INN','FNN','YNN','WNN','SNN','TNN','CSN','CXN','MNN','DNN','ENN','NNN','QNN','KNN','RNN','PNN','HDN','HEN','HPN','GCC','ACC','VCC','LCC','ICC','FCC','YCC','WCC','SCC','TCC','CSC','CXC','MCC','DCC','ECC','NCC','QCC','KCC','RCC','PCC','HDC','HEC','HPC','SOD','MAG','ALM','POT','CAL','CRM','MNG','IRN','COB','NIC','COP','ZNC','SLV','CDM','PLT','GLD','MRC']
     dumm = ['GDD','ADD','VDD','LDD','IDD','FDD','YDD','WDD','SDD','TDD','CSD','CXD','MDD','DDD','EDD','NDD','QDD','KDD','RDD','PDD','HDD','HED','HPD','GDD','ADD','VDD','LDD','IDD','FDD','YDD','WDD','SDD','TDD','CSD','CXD','MDD','DDD','EDD','NDD','QDD','KDD','RDD','PDD','HDD','HED','HPD','GDD','ADD','VDD','LDD','IDD','FDD','YDD','WDD','SDD','TDD','CSD','CXD','MDD','DDD','EDD','NDD','QDD','KDD','RDD','PDD','HDD','HED','HPD','DSO','DMG','DAL','DPT','DCA','DCR','DMN','DIR','DCO','DNI','DCU','DZN','DSL','DCD','DPL','DGL','DMR']
     dummy=dict(zip(res,dumm))
@@ -284,18 +284,38 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
     gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
+    with open('gridA.pdb','w') as f:
+        f.write("".join(gridA))
+    with open('gridB.pdb','w') as f:
+        f.write("".join(gridB))
     
 #    gridA=[p[13:27] for p in grid[chains[0]]]
     #print(grid[chains[0]])
     pdb1=rename_nc_terminals(pdb_chains[chains[0]])
+    pdb1_dummy=dummy_pdb(pdb_chains[chains[0]])
     pdb2=rename_nc_terminals(pdb_chains[chains[1]])
-    with open('A.pdb','w') as f:
+    pdb2_dummy=dummy_pdb(pdb_chains[chains[1]])
+    with open('A_maskedB.pdb','w') as f:
         #f.write(pdb_chains['A'])
         f.write(pdb1)
-    with open('B.pdb','w') as f:
+        f.write(pdb2_dummy)
+    with open('maskedA_B.pdb','w') as f:
+        f.write(pdb1_dummy)
         f.write(pdb2)
+    with open('input.pdb','w') as f:
+        f.write("".join(pdb_str))
+    delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
+    maxdist=os.path.join(PATH,'EXEC','hdist.exe')
+    gsz=subprocess.check_output(f'{maxdist} input.pdb', shell=True).decode('UTF-8').strip()
     
+   # print(float(gsz)))
+    gauss=0
     
+    cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf12.pot {int(float(gsz))} {gauss}'
+    print(cmd)
+    os.system(cmd)
+    cmd2=f'{delphi_path} script.prm > log11'
+    print(cmd2)
     
    # print(gridA)
    # print(interface_A)

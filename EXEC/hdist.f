@@ -23,7 +23,7 @@
       distmax = 0.000
 
       do i = 1,ic
-           do j = 1,ic
+           do j = i,ic
            dist = sqrt((x(i)-x(j))**2 + (y(i)-y(j))**2 + (z(i)-z(j))**2)
                      if (dist >= distmax)then
                      distmax = dist
@@ -34,7 +34,8 @@
 
 781   format(f12.5)
 34    format(30x,3f8.3)
-
+780   format(i10)
+      
 ! grid points / Angstrom
 
       scalep = 1.2               
@@ -48,5 +49,5 @@
       write(*,781)boxdim 
 
 
-
+      stop 
       endprogram hdist
