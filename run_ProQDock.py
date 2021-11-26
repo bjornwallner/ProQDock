@@ -348,18 +348,20 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,ESpath=None,diel=False,ga
     os.system(f'{extpot} outsurf12.pot > temp12.pot')
     os.system(f'{extpot} outsurf22.pot > temp22.pot')
 
-    os.system(f'{ccpsw} temp11.pot temp21.pot > c1')
+    
+
     os.system(f'{ccpsw} temp12.pot temp22.pot > c2')
+
+    corr1=subprocess.check_output(f'{ccpsw} temp11.pot temp21.pot', shell=True).decode('UTF-8').strip()
+    corr2=subprocess.check_output(f'{ccpsw} temp12.pot temp22.pot', shell=True).decode('UTF-8').strip()
+
+    EC=(float(corr1)+float(corr2))/2
     
     os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
-   # print(gridA)
-   # print(interface_A)
-
-   # os.system('pwd;ls -lrt')
+    os.chdir(cwd)
+    return(EC)
 
     
-    #os.chdir(cwd)
-        #print(tmpdir)
 
     
     
@@ -373,7 +375,6 @@ def main(argv):
     fasta=argv[2]
     rosetta_path=os.path.join(FLAGS.rosetta,'source','bin')
     proqscorepath=rosetta_path
-    ESpath=os.path.join(os.path.abspath(os.path.dirname(__file__)),'EDTSurf')
     rosetta_db=os.path.join(FLAGS.rosetta,'database')
 
     logging.info(f'Reading pdb: {input_pdb}')
@@ -390,7 +391,8 @@ def main(argv):
     #pdb=input_pdb
     with tempfile.TemporaryDirectory() as tmpdir:
         logging.info('Starting EC calculation')
-        calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,ESpath=ESpath,diel=FLAGS.diel,gauss=FLAGS.gauss)
+        EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,ESpath=ESpath,diel=FLAGS.diel,gauss=FLAGS.gauss)
+        print(f"EC={EC:.2f}")
     #print(dir(tempfile))
     
 
