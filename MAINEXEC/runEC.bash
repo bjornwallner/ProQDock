@@ -1,11 +1,11 @@
 #!/bin/bash -f
 
-#upath=`echo ${0/\/MAINEXEC\/runEC.bash/}`
-#echo $upath
+upath=`echo ${0/\/MAINEXEC\/runEC.bash/}`
+echo $upatha
 
-#path=`readlink -f $upath`
-#echo $path
-path='./'
+path=`readlink -f $upath`
+echo $path
+
 rm -f amber.crg 
 rm -f amber_dummy.siz
 
@@ -191,7 +191,7 @@ echo "CHECKING CAHIN-LENGTH"
 echo "==============================================================="
 
 
-if [[ "$lench" -gt "2500" ]] ; then 
+if [ "$lench" -gt "2500" ] ; then 
 echo "============================================================="
 echo "Your PDB file contains "$lench" residues"
 echo "Program will exit"
