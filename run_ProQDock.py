@@ -399,7 +399,7 @@ def main(argv):
     rosetta_path=os.path.join(FLAGS.rosetta,'source','bin')
     proqscorepath=rosetta_path
     rosetta_db=os.path.join(FLAGS.rosetta,'database')
-    sc_path=
+    
     
     logging.info(f'Reading pdb: {input_pdb}')
     (pdb_str,pdb_chains)=read_pdb(input_pdb)
