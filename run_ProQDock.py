@@ -378,12 +378,12 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
 
     with open(run_sc,'w') as f:
         f.write(f'{sc_path} XYZIN {pdb} <<eof\n')
-        f.write('MOLECULE 1\n')
-        f.write('CHAIN {chains[0]}\n')
-        f.write('MOLECULE 2\n')
-        f.write('CHAIN {chains[1]}\n')
-        f.write('END\n')
-        f.write('eof\n')
+        f.write(f'MOLECULE 1\n')
+        f.write(f'CHAIN {chains[0]}\n')
+        f.write(f'MOLECULE 2\n')
+        f.write(f'CHAIN {chains[1]}\n')
+        f.write(f'END\n')
+        f.write(f'eof\n')
 
     os.system(f'cp {run_sc} .')
     Sc=subprocess.check_output(f'source {run_sc}', shell=True).decode('UTF-8').strip()
@@ -415,8 +415,8 @@ def main(argv):
     #pdb=input_pdb
     with tempfile.TemporaryDirectory() as tmpdir:
         logging.info('Starting EC calculation')
-        EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
-        print(f"EC={EC}")
+        #EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
+        #print(f"EC={EC}")
         Sc=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
     #print(dir(tempfile))
     
