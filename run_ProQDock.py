@@ -343,10 +343,10 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
 
 
-
+    logging.info(f'Calculating CPscore')
     CPscore=calc_CPscore(pdb_str,interface_A,interface_B,tmpdir)
     #print(interface_A)
-    sys.exit()
+#    sys.exit()
     
 
     
