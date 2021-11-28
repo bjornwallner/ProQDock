@@ -279,6 +279,9 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
     PATH=os.path.abspath(os.path.dirname(__file__))
     contpref20CB=os.path.join(PATH,'EXEC','contpref20CB.exe')
     contpref_mat=os.path.join(PATH,'LIBR','contpref.mat')
+    generate_svm_param=os.path.join(PATH,'EXEC','contpref20svm.pl')
+    
+    runSVM=os.path.join(PATH,'EXEC','cal.svmCPS')
     os.chdir(tmpdir)
     if not os.path.exists('input.pdb'):
         with open('input.pdb','w') as f:
@@ -293,10 +296,17 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
         f.write("\n")
         
         
-    cmd=f'{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat}'
+    cmd=f'{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat};cp fort.37 input.contpref20'
+    cmd2=f'{generate_svm_param} input.contpref20'
+    cmd3=f'{runSVM} input-C0.svm1 {FLAGS.svm_path}'
     logging.info(f'CMD: {cmd}')
     gsz=subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
     print(gsz)
+    
+    gsz2=subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
+    print(gsz2)
+    gsz3=subprocess.check_output(cmd3, shell=True).decode('UTF-8').strip()
+    print(gsz3)
     os.system('ls -lrt')
     os.chdir(cwd)
     
