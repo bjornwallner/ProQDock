@@ -490,7 +490,7 @@ def main(argv):
     if len(argv) != 3:
         print('./run_ProQDock.py <pdb> <fasta> <options>')
         print('You need to supply a pdb and fasta file')
-
+    PATH=os.path.abspath(os.path.dirname(__file__))
     input_pdb=argv[1]
     fasta=argv[2]
     rosetta_path=os.path.join(FLAGS.rosetta,'source','bin')
@@ -524,6 +524,11 @@ def main(argv):
         features['nBSA']=nBSA
         features['Fintres']=Fintres
         features['CPscore']=CPscore
+        CPMpl=os.path.join(PATH,'MAINEXEC','CPMgSCEC.pl')
+        cmd=f"{CPMpl} {PATH} features['Sc'] features['EC'] features['nBSA']"
+        CPM=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8')
+        print(CPM)
+        
         for feature in features:
             print(f"{feature}={features[feature]}")
         
