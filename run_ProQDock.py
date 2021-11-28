@@ -270,7 +270,7 @@ def convert_atom_to_res(interface):
     residues=[]
     for atom_record in interface:
         (atom,res,chain,resnum)=atom_record.split()
-        residues.append(f'{resnum:>3}-{res} {chain}')
+        residues.append(f'{resnum:>3} {res} {chain}')
     return(set(residues))
     
 
@@ -285,7 +285,7 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
             f.write(pdb_str)
 
 
-    print(convert_atom_to_res(interface_A))
+    print(sorted(convert_atom_to_res(interface_A)))
     sys.exit()
     with open('interface-A.res') as f:
         f.write("\n".join(convert_atom_res(interface_A)))
