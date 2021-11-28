@@ -294,7 +294,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     nBSA=interface_area/total_area
     logging.info(f'nBSA {nBSA}')
     total_residues=len(set([atom.split()[-1] for atom in read_asa(asa1).keys()]))
-    res_interface_A=len(set([atom.split()[-1] for atom in interface_B]))
+    res_interface_A=len(set([atom.split()[-1] for atom in interface_A]))
     res_interface_B=len(set([atom.split()[-1] for atom in interface_B]))
     
     Fintres=(res_interface_A+res_interface_B)/total_residues
