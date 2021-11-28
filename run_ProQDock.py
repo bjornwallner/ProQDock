@@ -298,7 +298,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     res_interface_B=len(set([atom.split()[-1] for atom in interface_B]))
     
     Fintres=(res_interface_A+res_interface_B)/total_residues
-    logging(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
+    logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
     
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
     gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
