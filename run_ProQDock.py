@@ -420,7 +420,8 @@ def main(argv):
         EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         print(f"EC={EC}")
         logging.info('Starting Sc calculation')
-        Sc=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
+#        Sc=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
+        Sc=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
         print(f"Sc={Sc}")
     #print(dir(tempfile))
     
