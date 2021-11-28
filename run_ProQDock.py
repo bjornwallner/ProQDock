@@ -285,15 +285,18 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
             f.write(pdb_str)
 
 
-    print(sorted(convert_atom_to_res(interface_A)))
-    sys.exit()
     with open('interface-A.res') as f:
-        f.write("\n".join(convert_atom_res(interface_A)))
-
+        f.write("\n".join(sorted(convert_atom_res(interface_A))))
+        f.write("\n")
+    with open('interface-B.res') as f:
+        f.write("\n".join(sorted(convert_atom_res(interface_B))))
+        f.write("\n")
+        
+        
     cmd=f'{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat}'
     logging.info(f'CMD: {cmd}')
     gsz=subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
-    
+    print(gsz)
     os.chdir(cwd)
     
 def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
