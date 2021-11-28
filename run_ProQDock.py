@@ -305,12 +305,12 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
         f.write(pdb1_dummy)
         f.write(pdb2)
     with open('input.pdb','w') as f:
-        f.write("".join(pdb_str))
+        f.write(pdb_str)
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
     extpot=os.path.join(PATH,'EXEC','extpot.pl')
     ccpsw=os.path.join(PATH,'EXEC','ccpsw.exe')
 
-    
+    ## implement maxist from coords
     maxdist=os.path.join(PATH,'EXEC','hdist.exe')
     gsz=subprocess.check_output(f'{maxdist} input.pdb', shell=True).decode('UTF-8').strip()
 
@@ -344,16 +344,12 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     os.system(cmd2)
 
     logging.info('Calculating EC')
+    #check if this is just straight correlation on the potentials, then 
     os.system(f'{extpot} outsurf11.pot > temp11.pot')
     os.system(f'{extpot} outsurf21.pot > temp21.pot')
-
     os.system(f'{extpot} outsurf12.pot > temp12.pot')
     os.system(f'{extpot} outsurf22.pot > temp22.pot')
-
-    
-
     os.system(f'{ccpsw} temp12.pot temp22.pot > c2')
-
     corr1=subprocess.check_output(f'{ccpsw} temp11.pot temp21.pot', shell=True).decode('UTF-8').strip()
     corr2=subprocess.check_output(f'{ccpsw} temp12.pot temp22.pot', shell=True).decode('UTF-8').strip()
 
