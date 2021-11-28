@@ -265,6 +265,9 @@ def dummy_pdb(pdb_str):
         new_pdb.append(line +'\n')
     return "".join(new_pdb)
 
+
+
+
 def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
@@ -290,8 +293,11 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     logging.info(f'Average interface area {interface_area:.2f}A^2')
     nBSA=interface_area/total_area
     logging.info(f'nBSA {nBSA}')
-    print(asa1)
-
+    total_residues=len(set([atom.split()[-1] for atom in asa1]))
+    res_interface_A=len(set([atom.split()[-1] for atom in interface_B]))
+    res_interface_B=len(set([atom.split()[-1] for atom in interface_B]))
+    Fintres=(res_interface_A+res_interface_B)/total_residues
+    logging('{total_residues} {res_interace_A} {res_interface_B} {Fintres}')
     
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
     gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
