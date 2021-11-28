@@ -162,7 +162,7 @@ def get_interface(AB,A,B):
     total_area=0
 
     for atom in asa_AB:
-        total_area+=asaAB[atom]
+        total_area+=asa_AB[atom]
     
     for atom in asa_A:
         if atom in asa_AB: #should always be true...
