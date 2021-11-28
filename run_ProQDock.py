@@ -286,10 +286,10 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
 
 
     with open('interface-A.res','w') as f:
-        f.write("\n".join(sorted(convert_atom_res(interface_A))))
+        f.write("\n".join(sorted(convert_atom_to_res(interface_A))))
         f.write("\n")
     with open('interface-B.res','w') as f:
-        f.write("\n".join(sorted(convert_atom_res(interface_B))))
+        f.write("\n".join(sorted(convert_atom_to_res(interface_B))))
         f.write("\n")
         
         
