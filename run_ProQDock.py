@@ -275,6 +275,7 @@ def convert_atom_to_res(interface):
     
 
 def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
+    logging.info('Calculating CPscore')
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
     contpref20CB=os.path.join(PATH,'EXEC','contpref20CB.exe')
@@ -301,9 +302,9 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
     cmd3=f'{runSVM} input-C0.svm1 {FLAGS.svm_path} > /dev/null ;cat input-C0.CPS'
     logging.info(f'CMD: {cmd}')
     subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
-    #  print(gsz)
-    
+    logging.info(f'CMD: {cmd2}')
     subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
+    logging.info(f'CMD: {cmd3}')
     #   print(gsz2)
     CPscore=subprocess.check_output(cmd3, shell=True).decode('UTF-8').strip()
 #    print(gsz3)
@@ -343,7 +344,6 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
 
 
-    logging.info(f'Calculating CPscore')
     CPscore=calc_CPscore(pdb_str,interface_A,interface_B,tmpdir)
     #print(interface_A)
 #    sys.exit()
