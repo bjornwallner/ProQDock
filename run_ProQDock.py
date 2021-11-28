@@ -416,15 +416,19 @@ def main(argv):
     logging.info(f"Found these chains: {sorted(pdb_chains.keys())}")
    
     
-    #pdb=input_pdb
+    #pd=input_pdb
+    features={}
     with tempfile.TemporaryDirectory() as tmpdir:
         logging.info('Starting EC calculation')
-        EC=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
-        print(f"EC={EC}")
+        features['EC']=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         logging.info('Starting Sc calculation')
-#        Sc=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
-        Sc=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
-        print(f"Sc={Sc}")
+        features['Sc']=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
+        #        Sc=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
+
+
+        for feature in features:
+            print(f"{feature}={features[feature]}")
+        
     #print(dir(tempfile))
     
 
