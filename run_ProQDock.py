@@ -458,8 +458,8 @@ def main(argv):
         EC,nBSA,Fintres=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         features['EC']=EC
         logging.info('Starting Sc calculation')
-        features['Sc']=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
-        #        Sc=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
+#        features['Sc']=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
+        features['Sc']=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
 
         features['rGb']=calc_rGb()
         features['Ld']=calc_Ld(pdb_str,tmpdir)
