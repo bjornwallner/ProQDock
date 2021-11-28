@@ -159,6 +159,10 @@ def get_interface(AB,A,B):
     interface_B=[]
     dasa_A=0
     dasa_B=0
+    total_area=0
+
+    for atom in asa_AB:
+        total_area+=asaAB[atom]
     
     for atom in asa_A:
         if atom in asa_AB: #should always be true...
@@ -179,7 +183,8 @@ def get_interface(AB,A,B):
     int_tot=len(interface_A)+len(interface_B)
     
     #print(int_tot,dasa_A,dasa_B,(dasa_A+dasa_B)/2)
-    return(set(interface_A),set(interface_B),dasa_A,dasa_B,(dasa_A+dasa_B)/2)
+    return(set(interface_A),set(interface_B),dasa_A,dasa_B,(dasa_A+dasa_B)/2,total_area)
+
 def by_third(a):
     cols=a.split()
     return (int(cols[2]),cols[0])
@@ -276,12 +281,16 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
         asa[chain]=run_naccess(pdb_chains[chain])
         logging.info(f'Calculating grid points for chain {chain}')
         grid[chain]=run_EDTSurf(pdb_chains[chain])
-    
-    (interface_A,interface_B,dA,dB,interface_area)=get_interface(asa1,asa[chains[0]],asa[chains[1]])
+
+    (interface_A,interface_B,dA,dB,interface_area,total_area)=get_interface(asa1,asa[chains[0]],asa[chains[1]])
     logging.info(f'Found {len(interface_A)+len(interface_B)} interface residues')
     logging.info(f'Chain {chains[0]} buries {dA:.2f}A^2 in the complex')
     logging.info(f'Chain {chains[1]} buries {dB:.2f}A^2 in the complex')
+    logging.info(f'Total surface area {total_area:.2f}A^2')
     logging.info(f'Average interface area {interface_area:.2f}A^2')
+    nBSA=interface_area/total_area
+    logging.info(f'nBSA {nBSA:.2f}A^2')
+
     
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
     gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
