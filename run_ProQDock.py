@@ -280,7 +280,7 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
     contpref20CB=os.path.join(PATH,'EXEC','contpref20CB.exe')
     contpref_mat=os.path.join(PATH,'LIBR','contpref.mat')
     os.chdir(tmpdir)
-    if not os.path.exist('input.pdb'):
+    if not os.path.exists('input.pdb'):
         with open('input.pdb','w') as f:
             f.write(pdb_str)
 
