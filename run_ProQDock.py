@@ -444,7 +444,7 @@ def main(argv):
         #        Sc=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
 
         features['rGb']=calc_rGb()
-        features['Ld']=calc_Ld(pdb_str)
+        features['Ld']=calc_Ld(pdb_str,tmpdir)
         for feature in features:
             print(f"{feature}={features[feature]}")
         
