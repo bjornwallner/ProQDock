@@ -266,8 +266,36 @@ def dummy_pdb(pdb_str):
     return "".join(new_pdb)
 
 
+def convert_atom_to_res(interface):
+    res=[]
+    for atom_record in interface:
+        (atom,res,chain,resnum)=atom_record.split()
+        res.append(f'{resnum:<3}-{res} {chain}')
+    return(set(res))
+    
+
+def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
+    cwd=os.getcwd()
+    PATH=os.path.abspath(os.path.dirname(__file__))
+    contpref20CB=os.path.join(PATH,'EXEC','contpref20CB.exe')
+    contpref_mat=os.path.join(PATH,'LIBR','contpref.mat')
+    os.chdir(tmpdir)
+    if not os.path.exist('input.pdb'):
+        with open('input.pdb','w') as f:
+            f.write(pdb_str)
 
 
+    print(convert_atom_res(interface_A))
+    sys.exit()
+    with open('interface-A.res') as f:
+        f.write("\n".join(convert_atom_res(interface_A)))
+
+    cmd=f'{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat}'
+    logging.info(f'CMD: {cmd}')
+    gsz=subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
+    
+    os.chdir(cwd)
+    
 def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
@@ -302,13 +330,15 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
 
 
 
-    print(interface_A)
+    CPscore=calc_CPscore(pdb_str,interface_A,interface_B,tmpdir)
+    #print(interface_A)
     sys.exit()
     
 
     
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
     gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
+
     os.chdir(tmpdir)
     with open('gridA.pdb','w') as f:
         f.write("".join(gridA))
@@ -330,6 +360,8 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
         f.write(pdb2)
     with open('input.pdb','w') as f:
         f.write(pdb_str)
+
+    
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
     extpot=os.path.join(PATH,'EXEC','extpot.pl')
     ccpsw=os.path.join(PATH,'EXEC','ccpsw.exe')
