@@ -298,18 +298,18 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
         
     cmd=f'{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat};cp fort.37 input.contpref20'
     cmd2=f'{generate_svm_param} input.contpref20'
-    cmd3=f'{runSVM} input-C0.svm1 {FLAGS.svm_path}'
+    cmd3=f'{runSVM} input-C0.svm1 {FLAGS.svm_path};cat input-C0.CPS'
     logging.info(f'CMD: {cmd}')
-    gsz=subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
-    print(gsz)
+    subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
+    #  print(gsz)
     
-    gsz2=subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
-    print(gsz2)
-    gsz3=subprocess.check_output(cmd3, shell=True).decode('UTF-8').strip()
-    print(gsz3)
-    os.system('ls -lrt')
+    subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
+    #   print(gsz2)
+    CPscore=subprocess.check_output(cmd3, shell=True).decode('UTF-8').strip()
+#    print(gsz3)
+#    os.system('ls -lrt')
     os.chdir(cwd)
-    
+    return CPscore
 def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))

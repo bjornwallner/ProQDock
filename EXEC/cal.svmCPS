@@ -16,7 +16,7 @@ CPS=`echo $testset | cut -f1 -d'.'`.CPS
 #echo /home/x_sabas/proj/BACKUP/CompEn-software/$dir
 echo $svmdir
 
-rm temp pred5
+rm -f temp pred5
 
 COUNTER=0
 
