@@ -344,7 +344,8 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
 
 
-    CPscore=calc_CPscore(pdb_str,interface_A,interface_B,tmpdir)
+    #CPscore=calc_CPscore(pdb_str,interface_A,interface_B,tmpdir)
+    CPscore=-1
     #print(interface_A)
 #    sys.exit()
     
@@ -525,7 +526,7 @@ def main(argv):
         features['Fintres']=Fintres
         features['CPscore']=CPscore
         CPMpl=os.path.join(PATH,'MAINEXEC','CPMgSCEC.pl')
-        cmd=f"{CPMpl} {PATH} features['Sc'] features['EC'] features['nBSA']"
+        cmd=f"{CPMpl} {PATH} {features['Sc']} {features['EC']} {features['nBSA']}"
         CPM=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8')
         print(CPM)
         
