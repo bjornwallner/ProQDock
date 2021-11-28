@@ -397,6 +397,8 @@ def calc_rGb():
     return 'Ask Isak for the code..'
 
 def calc_Ld(pdb_str,tmpdir):
+    PATH=os.path.abspath(os.path.dirname(__file__))
+    Ld=os.path.join(PATH,'MAINEXEC','ldN.exe')
     pdb=os.path.join(tmpdir,'input.pdb')
     if not os.path.exists(pdb):
         with open(pdb,'w') as f:
