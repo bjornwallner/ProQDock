@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 upath=`echo ${0/\/MAINEXEC\/run.CPscore/}`
 echo $upath

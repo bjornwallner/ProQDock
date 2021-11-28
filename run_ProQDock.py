@@ -299,6 +299,13 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     
     Fintres=(res_interface_A+res_interface_B)/total_residues
     logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
+
+
+
+    print(interface_A)
+    sys.exit()
+    
+
     
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
     gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
@@ -374,7 +381,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     
     os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
     os.chdir(cwd)
-    return(EC,nBSA,Fintres)
+    return(EC,nBSA,Fintres,CPscore)
 
     
 
@@ -460,16 +467,17 @@ def main(argv):
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
         logging.info('Starting EC calculation')
-        EC,nBSA,Fintres=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
+        EC,nBSA,Fintres,CPscore=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         features['EC']=EC
         logging.info('Starting Sc calculation')
-#        features['Sc']=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
-        features['Sc']=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
+        features['Sc']=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
+#        features['Sc']=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
 
         features['rGb']=calc_rGb()
         features['Ld']=calc_Ld(pdb_str,tmpdir)
         features['nBSA']=nBSA
         features['Fintres']=Fintres
+        features['CPscore']=CPscore
         for feature in features:
             print(f"{feature}={features[feature]}")
         
