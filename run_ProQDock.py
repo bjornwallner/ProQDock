@@ -270,7 +270,7 @@ def convert_atom_to_res(interface):
     residues=[]
     for atom_record in interface:
         (atom,res,chain,resnum)=atom_record.split()
-        residues.append(f'{resnum:<3}-{res} {chain}')
+        residues.append(f'{resnum:>3}-{res} {chain}')
     return(set(residues))
     
 
