@@ -379,6 +379,8 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     chains=sorted(pdb_chains.keys())
 
     with open(run_sc,'w') as f:
+        f.write(f'#!/bin/bash\n')
+        f.write(f'export CCP4_SCR={tmpdir}\n')
         f.write(f'{sc_path} XYZIN {pdb} <<eof\n')
         f.write(f'MOLECULE 1\n')
         f.write(f'CHAIN {chains[0]}\n')
