@@ -290,7 +290,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     logging.info(f'Average interface area {interface_area:.2f}A^2')
     nBSA=interface_area/total_area
     logging.info(f'nBSA {nBSA}')
-    print(interface_A)
+    print(asa1)
 
     
     gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
