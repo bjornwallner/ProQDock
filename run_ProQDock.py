@@ -396,6 +396,19 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
 def calc_rGb():
     return 'Ask Isak for the code..'
 
+def calc_Ld(pdb_str,tmpdir):
+    pdb=os.path.join(tmpdir,'input.pdb')
+    if not os.path.exists(pdb):
+        with open(pdb,'w') as f:
+            f.write(pdb_str)
+            
+    
+    
+    os.system(f'cd {tmpdir};grep ^ATOM {pdb} > input.Ld.pdb;{Ld} input.Ld.pdb')
+    Ld=subprocess.check_output(f"cat {tmpdir}/fort.130", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+    return(float(Ld))
+    
+    
 def main(argv):
     if len(argv) != 3:
         print('./run_ProQDock.py <pdb> <fasta> <options>')
@@ -429,6 +442,7 @@ def main(argv):
         #        Sc=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
 
         features['rGb']=calc_rGb()
+        features['Ld']=calc_Ld(pdb_str)
         for feature in features:
             print(f"{feature}={features[feature]}")
         
