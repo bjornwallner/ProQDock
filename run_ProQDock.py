@@ -267,11 +267,11 @@ def dummy_pdb(pdb_str):
 
 
 def convert_atom_to_res(interface):
-    res=[]
+    residues=[]
     for atom_record in interface:
         (atom,res,chain,resnum)=atom_record.split()
-        res.append(f'{resnum:<3}-{res} {chain}')
-    return(set(res))
+        residues.append(f'{resnum:<3}-{res} {chain}')
+    return(set(residues))
     
 
 def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
