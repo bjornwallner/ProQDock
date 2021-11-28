@@ -297,6 +297,7 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
     logging.info(f'CMD: {cmd}')
     gsz=subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
     print(gsz)
+    os.system('ls -lrt')
     os.chdir(cwd)
     
 def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
