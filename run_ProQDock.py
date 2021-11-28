@@ -296,7 +296,7 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
         f.write("\n")
         
         
-    cmd=f'{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat};cp fort.37 input.contpref20'
+    cmd=f'touch fort.dummy;{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat};cp fort.37 input.contpref20'
     cmd2=f'{generate_svm_param} input.contpref20'
     cmd3=f'{runSVM} input-C0.svm1 {FLAGS.svm_path};cat input-C0.CPS'
     logging.info(f'CMD: {cmd}')
