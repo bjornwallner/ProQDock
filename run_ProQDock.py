@@ -394,10 +394,15 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
         f.write(remove_hydrogen(pdb_str))
     
     chains=sorted(pdb_chains.keys())
-
+    ccp4base=os.path.dirname(os.path.dirname(sc_path))
+    ccplib=os.path.join(ccp4base,'lib','data')
+    ccpinclude=os.path.join(ccp4base,'include')
     with open(run_sc,'w') as f:
         f.write(f'#!/bin/bash\n')
         f.write(f'export CCP4_SCR={tmpdir}\n')
+        f.write(f'export CLIBD={ccplib}\n')
+        f.write(f'export CINCL={ccpinclude}\n')
+        
         f.write(f'{sc_path} XYZIN {pdb} <<eof\n')
         f.write(f'MOLECULE 1\n')
         f.write(f'CHAIN {chains[0]}\n')
