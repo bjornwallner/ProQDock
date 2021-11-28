@@ -393,6 +393,9 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     Sc=float(Sc.split()[-1])
     return(Sc)
 
+def calc_rGb():
+    return 'Ask Isak for the code..'
+
 def main(argv):
     if len(argv) != 3:
         print('./run_ProQDock.py <pdb> <fasta> <options>')
@@ -425,7 +428,7 @@ def main(argv):
         features['Sc']=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
         #        Sc=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
 
-
+        features['rGb']=calc_rGb()
         for feature in features:
             print(f"{feature}={features[feature]}")
         
