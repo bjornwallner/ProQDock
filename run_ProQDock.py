@@ -525,10 +525,10 @@ def main(argv):
         features['nBSA']=nBSA
         features['Fintres']=Fintres
         features['CPscore']=CPscore
-        CPMpl=os.path.join(PATH,'MAINEXEC','CPMgSCEC.pl')
+        CPMpl=os.path.join(PATH,'MAINEXEC','CPMgScEC.pl')
         cmd=f"{CPMpl} {PATH} {features['Sc']} {features['EC']} {features['nBSA']}"
-        CPM=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8')
-        print(CPM)
+        features['CPM']=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip
+#        print(CPM)
         
         for feature in features:
             print(f"{feature}={features[feature]}")
