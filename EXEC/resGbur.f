@@ -81,7 +81,7 @@
                prop = pr(j,ibtag)
                endif
           enddo
-!          write(*,715)rt,bur,ibtag,prop
+          write(*,715)rt,bur,ibtag,prop
           sump =  sump + ((log(prop)/log(10.0)))
           endif
       enddo

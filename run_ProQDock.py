@@ -5,7 +5,7 @@ import sys
 import re
 import tempfile
 import subprocess
-#import numpy as np
+import numpy as np
 from operator import itemgetter
 
 from absl import app
@@ -31,6 +31,10 @@ flags.DEFINE_bool('gauss',False,'Turn on Multidielectric Gaussian (Assuming --di
 
 FLAGS=flags.FLAGS
 #print(dir(flags))
+three_to_one = {'ARG': 'R', 'HIS': 'H', 'LYS': 'K', 'ASP': 'D', 'GLU': 'E', 
+                'SER': 'S', 'THR': 'T', 'ASN': 'N', 'GLN': 'Q', 'CYS': 'C', 
+                'GLY': 'G', 'PRO': 'P', 'ALA': 'A', 'VAL': 'V', 'ILE': 'I', 
+                'LEU': 'L', 'MET': 'M', 'PHE': 'F', 'TYR': 'Y', 'TRP': 'W'}
 
 #implementation of EXEC/metRrename.csh
 def fix_metals(pdb_str):
@@ -115,8 +119,26 @@ def read_pdb(pdb):
     #return pose
     for chain in chains:
         chains[chain]=fix_metals("".join(chains[chain]))
+    pdb_data={}
+    pdb_data['pdb_str']=fix_metals("".join(fixed_pdb))
+    pdb_data['pdb_chains']=chains
+
+    if len(pdb_data['pdb_chains'].keys()) != 2:
+        print("ProQDock only works for two chains. You group chains to hack it evalute different interfaces\n")
+        print("Currently you have to do that outside, support for that might be added in the future\n")
+        sys.exit(1)
+    logging.info(f"Found these chains: {sorted(pdb_data['pdb_chains'].keys())}")
+
+    (pdb_data['asa_pdb_str'],pdb_data['rsa_pdb_str'])=run_naccess(pdb_data['pdb_str'])
+    chains=sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
+    pdb_data['asa_chain']={}
+    for chain in chains:
+        logging.info(f'NACCESS for chain {chain}')
+        pdb_data['asa_chain'][chain],_=run_naccess(pdb_data['pdb_chains'][chain])
+
     
-    return (fix_metals("".join(fixed_pdb)),chains)
+    #return (fix_metals("".join(fixed_pdb)),chains)
+    return(pdb_data)
 
 def run_naccess(pdb_str):
    # print(__file__)
@@ -132,9 +154,11 @@ def run_naccess(pdb_str):
 #        os.system('ls -lrt')
         with open('input.asa','r') as f:
             asa=f.read()
-
+        with open('input.rsa','r') as f:
+            rsa=f.read()
+            
     os.chdir(cwd)
-    return asa
+    return asa,rsa
 #ATOM      1  N   ALA A   1       8.135 -22.074  30.824  37.807  1.65
 
 def read_asa(asa_str):
@@ -151,6 +175,19 @@ def read_asa(asa_str):
     return asa
 #ATOM    3715
 #EXEC/delasa.f
+
+def read_rsa(rsa_str):
+    rsa={}
+
+    lines=rsa_str.split('\n')[:-1]
+    lines=[line for line in lines if line.startswith('RES')]
+    #print(len(lines))
+    
+    exposure = [(three_to_one[line.split()[1]],float(line[16:22].rstrip())) for line in lines]
+    return(exposure)
+    
+
+
 def get_interface(AB,A,B):
     asa_AB=read_asa(AB)
     asa_A=read_asa(A)
@@ -311,6 +348,8 @@ def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
 #    os.system('ls -lrt')
     os.chdir(cwd)
     return CPscore
+
+
 def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
@@ -320,14 +359,21 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     asa={}
     grid={}
     logging.info(f'NACCESS for input pdb')
-    asa1=run_naccess(pdb_str)
+    asa1,rsa1=run_naccess(pdb_str)
     chains=sorted(pdb_chains.keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
     for chain in chains:
         logging.info(f'NACCESS for chain {chain}')
-        asa[chain]=run_naccess(pdb_chains[chain])
+        asa[chain],_=run_naccess(pdb_chains[chain])
         logging.info(f'Calculating grid points for chain {chain}')
         grid[chain]=run_EDTSurf(pdb_chains[chain])
 
+
+    
+    rGb=calc_rGb(read_rsa(rsa1))
+    
+#    print(residue_exposure)
+#    print(rGb)
+#    sys.exit()    
     (interface_A,interface_B,dA,dB,interface_area,total_area)=get_interface(asa1,asa[chains[0]],asa[chains[1]])
     logging.info(f'Found {len(interface_A)+len(interface_B)} interface residues')
     logging.info(f'Chain {chains[0]} buries {dA:.2f}A^2 in the complex')
@@ -344,8 +390,8 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
 
 
-    #CPscore=calc_CPscore(pdb_str,interface_A,interface_B,tmpdir)
-    CPscore=-1
+    CPscore=calc_CPscore(pdb_str,interface_A,interface_B,tmpdir)
+    #CPscore="Turned off to save time"
     #print(interface_A)
 #    sys.exit()
     
@@ -428,7 +474,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     
     os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
     os.chdir(cwd)
-    return(EC,nBSA,Fintres,CPscore)
+    return(EC,nBSA,Fintres,CPscore,rGb)
 
     
 
@@ -469,8 +515,64 @@ def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
     Sc=float(Sc.split()[-1])
     return(Sc)
 
-def calc_rGb():
-    return 'Ask Isak for the code..'
+def calc_rGb(residue_exposure):
+    Log10PropResBur = {'A': [0.1576, -0.0097, -0.0872, -0.1158], 
+                   'C': [0.2842, 0.1824, -0.0851, -0.6021], 
+                   'D': [-0.2883, -0.1158, 0.0233, 0.1688], 
+                   'E': [-0.5952, -0.2111, -0.0334, 0.2271], 
+                   'F': [0.2068, 0.1611, -0.0329, -0.3458], 
+                   'H': [-0.1051, 0.0711, 0.1069, -0.0057], 
+                   'I': [0.2707, 0.0792, -0.0985, -0.3969], 
+                   'K': [-0.9830, -0.3958, -0.0706, 0.2767], 
+                   'L': [0.2271, 0.0973, -0.0223, -0.3478], 
+                   'M': [0.1726, 0.0330, -0.0209, -0.1938], 
+                   'N': [-0.3054, -0.0825, 0.0378, 0.1392], 
+                   'P': [-0.2027, -0.0655, 0.0245, 0.1096], 
+                   'Q': [-0.4237, -0.1385, 0.0422, 0.1735], 
+                   'R': [-0.6383, -0.0899, 0.1129, 0.1741], 
+                   'S': [-0.0762, -0.0119, 0.0179, 0.0441], 
+                   'T': [-0.0501, -0.0110, 0.0492, 0.0158], 
+                   'V': [0.2480, 0.0603, -0.0783, -0.3279], 
+                   'W': [0.1014, 0.2467, 0.1075, -0.3391], 
+                   'Y': [0.0090, 0.2274, 0.1565, -0.2284]} #Use index1 if rASA <= 0.05, index2 if 0.05 < rASA <= 0.15, index3 if 0.15 < rASA <= 0.30, and index4 if rASA >= 0.30
+    ASA_normalisation = {'A': 123.4115, 'C': 147.4431, 'D': 163.7097, 'E': 195.2893, 'F': 203.8527, 
+                     'G': 93.5631, 'H': 198.1719, 'I': 179.6625, 'K': 223.2443, 'L': 193.7956, 
+                     'M': 217.3316, 'N': 161.8336, 'P': 159.6743, 'Q': 195.3820, 'R': 256.8007, 
+                     'S': 135.2496, 'T': 155.6512, 'V': 163.5877, 'W': 252.3393, 'Y': 234.5152}
+    
+    n_residues = 0 #len(residue_exposure)
+    rGb = 0
+    
+    for residue,exposure, in residue_exposure:
+        if residue == 'G':
+            continue
+        n_residues+=1
+        relative_exposure = round(exposure/ASA_normalisation[residue],2)
+       # print(residue,exposure,relative_exposure)
+        #relative_exposure = exposure[index]/ASA_renormalisation[residue]
+        prop=0
+        if relative_exposure > 0.30:
+            prop= Log10PropResBur[residue][3]
+            tag=4
+        elif relative_exposure > 0.15:
+            prop= Log10PropResBur[residue][2]
+            tag=3
+        elif relative_exposure > 0.05:
+            prop= Log10PropResBur[residue][1]
+            tag=2
+        else:
+            prop= Log10PropResBur[residue][0]
+            tag=1
+       # print(f'RES: {residue:3} {relative_exposure:.2f} {tag} {10**prop:.3f}')
+        rGb+=prop
+    if n_residues == 0:
+        return 0
+    rGb = rGb / n_residues
+    return rGb
+
+
+
+
 
 def calc_Ld(pdb_str,tmpdir):
     PATH=os.path.abspath(os.path.dirname(__file__))
@@ -485,8 +587,79 @@ def calc_Ld(pdb_str,tmpdir):
     os.system(f'cd {tmpdir};grep ^ATOM {pdb} > input.Ld.pdb;{Ld} input.Ld.pdb > /dev/null')
     Ld=subprocess.check_output(f"cat {tmpdir}/fort.130", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
     return(float(Ld))
+
+def calc_CPM(Sc,EC,nBSA):
+    logging.info('Starting CPM calculation')
+    PATH=os.path.abspath(os.path.dirname(__file__))
+    CPMpl=os.path.join(PATH,'MAINEXEC','CPMgScEC.pl')
+    cmd=f"{CPMpl} {PATH} {Sc} {EC} {nBSA}"
+    CPM=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
     
+    return CPM
+
+
+def calc_rosetta_terms(pdb_str,tmpdir,rosetta_path,rosetta_db):
+    logging.info('Starting Rosetta calculation')
+    PATH=os.path.abspath(os.path.dirname(__file__))
+    rosettaE=os.path.join(PATH,'MAINEXEC','run.rosettaE')
+    relax_script=os.path.join(PATH,'MAINEXEC','repack.script')
     
+    pdb=os.path.join(tmpdir,'input.pdb')
+#    if not os.path.exists(pdb):
+    with open(pdb,'w') as f:
+        f.write(pdb_str)
+    cmd=f'cd {tmpdir};{rosettaE} input.pdb {rosetta_path} {rosetta_db}'
+    score=subprocess.check_output(f'{cmd}|tail -n 2', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').split('\n')[-3:-1]
+    score =[x.rstrip().split() for x in score]
+    Rterms=dict(zip(score[0],score[1]))
+    return(Rterms)
+
+def calc_ProQ2(pdb_str,fasta,tmpdir,proqpath,rosetta_path):
+    logging.info('Starting ProQ2 calculation')
+    PATH=os.path.abspath(os.path.dirname(__file__))
+    fasta_abspath=os.path.abspath(fasta)
+    proq=os.path.join(PATH,'MAINEXEC','runProQ.bash')
+    pdb=os.path.join(tmpdir,'input.pdb')
+#    if not os.path.exists(pdb):
+    with open(pdb,'w') as f:
+        f.write(pdb_str)
+    residues=[line for line in pdb_str.split('\n') if ' CA ' in line]
+    n_residues=len(residues)
+    cmd=f'cd {tmpdir};{proq} input.pdb {proqpath} {rosetta_path} {fasta_abspath} &> /dev/null;cat input.pdb.ProQ2|tail -n 1'
+    score=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').split()[1]
+    proq2=float(score)/n_residues
+    print(score,n_residues)
+    return(proq2)       
+
+def calc_ProQDock(features,tmpdir):
+    logging.info('ProQDock for features:')
+    PATH=os.path.abspath(os.path.dirname(__file__))
+    svm_model_paths=os.path.join(PATH,'SVMmodels','*.model')
+    svm_classify=os.path.join(FLAGS.svm_path,'svm_classify')
+    svm_input_file=os.path.join(tmpdir,'input.svm')
+    feature_order={1:'rGb', 2:'nBSA', 3:'Fintres', 4:'Sc', 5:'EC', 6:'ProQ', 7:'Isc', 8:'rTs', 9:'Erep', 10:'Etmr', 11:'CPM', 12:'Ld', 13:'CPscore'}
+    svm_input=['0.0']
+    for feature_no in sorted(feature_order):
+        feature=feature_order[feature_no]
+        if feature in features:
+            logging.info(feature)
+            svm_input.append(f'{feature_no}:{features[feature]}')
+    with open(svm_input_file,'w') as f:
+        f.write(" ".join(svm_input))
+        f.write('\n')
+    preds=[]
+    for i,svm_model in enumerate(glob.glob(svm_model_paths)):
+        print(svm_model)
+        svm_output=f'{svm_input_file}.{i}'
+        cmd=f'{svm_classify} {svm_input_file} {svm_model} {svm_output}'
+        os.system(cmd)
+        pred=subprocess.check_output(f'cat {svm_output}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').rstrip().split()[0]
+        preds.append(float(pred))
+
+    print(preds)
+    return(np.mean(preds))
+    
+
 def main(argv):
     if len(argv) != 3:
         print('./run_ProQDock.py <pdb> <fasta> <options>')
@@ -500,38 +673,59 @@ def main(argv):
     
     
     logging.info(f'Reading pdb: {input_pdb}')
-    (pdb_str,pdb_chains)=read_pdb(input_pdb)
+    #pdb_data={}
+    #(pdb_data['pdb_str'],pdb_data['pdb_chains'])=read_pdb(input_pdb)
 
-    if len(pdb_chains.keys()) != 2:
-        print("ProQDock only works for two chains. You group chains to hack it evalute different interfaces\n")
-        print("Currently you have to do that outside, support for that might be added in the future\n")
-        sys.exit(1)
+    pdb_data=read_pdb(input_pdb)
+    
+    print(pdb_data.keys())
+    #if len(pdb_data['pdb_chains'].keys()) != 2:
+    #    print("ProQDock only works for two chains. You group chains to hack it evalute different interfaces\n")
+     #   print("Currently you have to do that outside, support for that might be added in the future\n")
+     #   sys.exit(1)
 
-    logging.info(f"Found these chains: {sorted(pdb_chains.keys())}")
-   
+    #logging.info(f"Found these chains: {sorted(pdb_data['pdb_chains'].keys())}")
+
+    #(pdb_data['asa_pdb_str'],pdb_data['rsa_pdb_str'])=run_naccess(pdb_data['pdb_str'])
+    
+    #chains=sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
+    #pdb_data['asa_chain']={}
+    #for chain in chains:
+    #    logging.info(f'NACCESS for chain {chain}')
+    #    pdb_data['asa_chain'][chain],_=run_naccess(pdb_data['pdb_chains'][chain])
+        
+    sys.exit()
     
     #pd=input_pdb
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
+        
+       # features['ProQ']=calc_ProQ2(pdb_str,fasta,tmpdir,FLAGS.proqpath,rosetta_path)
+       # sys.exit()
         logging.info('Starting EC calculation')
-        EC,nBSA,Fintres,CPscore=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
+        EC,nBSA,Fintres,CPscore,rGb=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         features['EC']=EC
         logging.info('Starting Sc calculation')
         features['Sc']=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
-#        features['Sc']=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
+        #        features['Sc']=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
 
-        features['rGb']=calc_rGb()
+        features['rGb']=rGb #calc_rGb()
         features['Ld']=calc_Ld(pdb_str,tmpdir)
         features['nBSA']=nBSA
         features['Fintres']=Fintres
         features['CPscore']=CPscore
-        CPMpl=os.path.join(PATH,'MAINEXEC','CPMgScEC.pl')
-        cmd=f"{CPMpl} {PATH} {features['Sc']} {features['EC']} {features['nBSA']}"
-        features['CPM']=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
-#        print(CPM)
+        features['CPM']=calc_CPM(features['Sc'],features['EC'],features['nBSA'])
+        #        print(CPM)
         
+        Rterms=calc_rosetta_terms(pdb_str,tmpdir,rosetta_path,rosetta_db)
+        features.update(Rterms)
+        features['ProQ']=calc_ProQ2(pdb_str,fasta,tmpdir,FLAGS.proqpath,rosetta_path)
+        features['ProQDock']=calc_ProQDock(features,tmpdir)
+#        sys.exit()
         for feature in features:
             print(f"{feature}={features[feature]}")
+        
+
         
     #print(dir(tempfile))
     
