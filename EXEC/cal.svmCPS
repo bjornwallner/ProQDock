@@ -31,8 +31,10 @@ do
     cat temp >> pred5
 #    sum1=`cat temp1 | awk 'BEGIN{sum=0}{sum=sum+$1}END {print sum};'`
 #    let COUNTER=COUNTER+1 
-#    echo $sum1
+    #    echo $sum1
+   
 done
+
 
 #Calculate mean
 total=0

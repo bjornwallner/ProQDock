@@ -136,6 +136,14 @@ def read_pdb(pdb):
         logging.info(f'NACCESS for chain {chain}')
         pdb_data['asa_chain'][chain],_=run_naccess(pdb_data['pdb_chains'][chain])
 
+
+    (interface_A,interface_B,dA,dB,interface_area,total_area)=get_interface(pdb_data['asa_pdb_str'],pdb_data['asa_chain'][chains[0]],pdb_data['asa_chain'][chains[1]])
+    pdb_data['interface_A']=interface_A
+    pdb_data['interface_B']=interface_B
+    pdb_data['interface_A_area']=dA
+    pdb_data['interface_B_area']=dB
+    pdb_data['interface_area']=interface_area #mean of the two above
+    pdb_data['total_area']=total_area #total exposed surface area of complex
     
     #return (fix_metals("".join(fixed_pdb)),chains)
     return(pdb_data)
@@ -311,94 +319,126 @@ def convert_atom_to_res(interface):
     return(set(residues))
     
 
-def calc_CPscore(pdb_str,interface_A,interface_B,tmpdir):
+
+def remove_hydrogen(pdb_str):
+    pdb_lines=[]
+    for line in pdb_str.split('\n')[:-1]:
+        atom=line[12:16]
+        if 'H' not in atom:
+            pdb_lines.append(line+'\n')
+    return "".join(pdb_lines)
+        
+    
+def calc_Sc(pdb_data,tmpdir,sc_path):
+    logging.info('Starting Sc calculation')
+    run_sc=os.path.join(tmpdir,'run_sc')
+    pdb=os.path.join(tmpdir,'input.pdb')
+    with open(pdb,'w') as f:
+        f.write(remove_hydrogen(pdb_data['pdb_str']))
+    
+    chains=sorted(pdb_data['pdb_chains'].keys())
+    ccp4base=os.path.dirname(os.path.dirname(sc_path))
+    ccplib=os.path.join(ccp4base,'lib','data')
+    ccpinclude=os.path.join(ccp4base,'include')
+    with open(run_sc,'w') as f:
+        f.write(f'#!/bin/bash\n')
+        f.write(f'export CCP4_SCR={tmpdir}\n')
+        f.write(f'export CLIBD={ccplib}\n')
+        f.write(f'export CINCL={ccpinclude}\n')
+        
+        f.write(f'{sc_path} XYZIN {pdb} <<eof\n')
+        f.write(f'MOLECULE 1\n')
+        f.write(f'CHAIN {chains[0]}\n')
+        f.write(f'MOLECULE 2\n')
+        f.write(f'CHAIN {chains[1]}\n')
+        f.write(f'END\n')
+        f.write(f'eof\n')
+
+    Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+    Sc=float(Sc.split()[-1])
+    return(Sc)
+
+def calc_CPscore(pdb_data,tmpdir):
     logging.info('Calculating CPscore')
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
     contpref20CB=os.path.join(PATH,'EXEC','contpref20CB.exe')
     contpref_mat=os.path.join(PATH,'LIBR','contpref.mat')
     generate_svm_param=os.path.join(PATH,'EXEC','contpref20svm.pl')
-    
+    svm_model_paths=os.path.join(PATH,'SVMmodels.CPscore','*.model')
+    svm_classify=os.path.join(FLAGS.svm_path,'svm_classify')
     runSVM=os.path.join(PATH,'EXEC','cal.svmCPS')
     os.chdir(tmpdir)
     if not os.path.exists('input.pdb'):
         with open('input.pdb','w') as f:
-            f.write(pdb_str)
+            f.write(pdb_data['pdb_str'])
 
 
     with open('interface-A.res','w') as f:
-        f.write("\n".join(sorted(convert_atom_to_res(interface_A))))
+        f.write("\n".join(sorted(convert_atom_to_res(pdb_data['interface_A']))))
         f.write("\n")
     with open('interface-B.res','w') as f:
-        f.write("\n".join(sorted(convert_atom_to_res(interface_B))))
+        f.write("\n".join(sorted(convert_atom_to_res(pdb_data['interface_B']))))
         f.write("\n")
         
         
     cmd=f'touch fort.dummy;{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat};cp fort.37 input.contpref20'
     cmd2=f'{generate_svm_param} input.contpref20'
-    cmd3=f'{runSVM} input-C0.svm1 {FLAGS.svm_path} > /dev/null ;cat input-C0.CPS'
     logging.info(f'CMD: {cmd}')
     subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
     logging.info(f'CMD: {cmd2}')
     subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
-    logging.info(f'CMD: {cmd3}')
+    svm_input_file='input-C0.svm1'
+    preds=[]
+    svm_outputs=[]
+    cmds=[]
+    for i,svm_model in enumerate(glob.glob(svm_model_paths)):
+        #print(svm_model)
+        svm_output=f'{svm_input_file}.{i}'
+        cmd=f'{svm_classify} {svm_input_file} {svm_model} {svm_output} > /dev/null &'
+        cmds.append(cmd)
+        svm_outputs.append(svm_output)
+
+    cmds.append('wait')
+    os.system("".join(cmds))
+    for svm_output in svm_outputs:
+        with open(svm_output) as f:
+            pred=f.read().rstrip().split()[0]
+            #pred=subprocess.check_output(f'cat {svm_output}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').rstrip().split()[0]
+            preds.append(float(pred))
+        
+    #cmd3=f'{runSVM} input-C0.svm1 {FLAGS.svm_path} > /dev/null ;cat input-C0.CPS'
+    #subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
+    #logging.info(f'CMD: {cmd3}')
     #   print(gsz2)
-    CPscore=subprocess.check_output(cmd3, shell=True).decode('UTF-8').strip()
+    #CPscore=subprocess.check_output(cmd3, shell=True).decode('UTF-8').strip()
+    CPscore=np.mean(preds)
 #    print(gsz3)
 #    os.system('ls -lrt')
     os.chdir(cwd)
     return CPscore
 
 
-def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
+def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
+    logging.info('Starting EC calculation')
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
     amber_crg=os.path.join(PATH,'LIBR','amber.crg')
     amber_dummy=os.path.join(PATH,'LIBR','amber_dummy.siz')
 #    os.chdir(tmpdir)
-    asa={}
+ #   asa={}
     grid={}
-    logging.info(f'NACCESS for input pdb')
-    asa1,rsa1=run_naccess(pdb_str)
-    chains=sorted(pdb_chains.keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
+#    logging.info(f'NACCESS for input pdb')
+#    asa1,rsa1=run_naccess(pdb_str)
+    chains=sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
     for chain in chains:
-        logging.info(f'NACCESS for chain {chain}')
-        asa[chain],_=run_naccess(pdb_chains[chain])
+#        logging.info(f'NACCESS for chain {chain}')
+#        asa[chain],_=run_naccess(pdb_chains[chain])
         logging.info(f'Calculating grid points for chain {chain}')
-        grid[chain]=run_EDTSurf(pdb_chains[chain])
-
-
+        grid[chain]=run_EDTSurf(pdb_data['pdb_chains'][chain])
     
-    rGb=calc_rGb(read_rsa(rsa1))
-    
-#    print(residue_exposure)
-#    print(rGb)
-#    sys.exit()    
-    (interface_A,interface_B,dA,dB,interface_area,total_area)=get_interface(asa1,asa[chains[0]],asa[chains[1]])
-    logging.info(f'Found {len(interface_A)+len(interface_B)} interface residues')
-    logging.info(f'Chain {chains[0]} buries {dA:.2f}A^2 in the complex')
-    logging.info(f'Chain {chains[1]} buries {dB:.2f}A^2 in the complex')
-    logging.info(f'Total surface area {total_area:.2f}A^2')
-    logging.info(f'Average interface area {interface_area:.2f}A^2')
-    nBSA=interface_area/total_area
-    logging.info(f'nBSA {nBSA}')
-    total_residues=len(set([atom.split()[-1] for atom in read_asa(asa1).keys()]))
-    res_interface_A=len(set([atom.split()[-1] for atom in interface_A]))
-    res_interface_B=len(set([atom.split()[-1] for atom in interface_B]))
-    
-    Fintres=(res_interface_A+res_interface_B)/total_residues
-    logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
-
-
-    CPscore=calc_CPscore(pdb_str,interface_A,interface_B,tmpdir)
-    #CPscore="Turned off to save time"
-    #print(interface_A)
-#    sys.exit()
-    
-
-    
-    gridA=[p for p in grid[chains[0]] if p[13:27] in interface_A] #intsurf1.pdb
-    gridB=[p for p in grid[chains[1]] if p[13:27] in interface_B] #intsurf2.pdb
+    gridA=[p for p in grid[chains[0]] if p[13:27] in pdb_data['interface_A']] #intsurf1.pdb
+    gridB=[p for p in grid[chains[1]] if p[13:27] in pdb_data['interface_B']] #intsurf2.pdb
 
     os.chdir(tmpdir)
     with open('gridA.pdb','w') as f:
@@ -408,10 +448,10 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     
 #    gridA=[p[13:27] for p in grid[chains[0]]]
     #print(grid[chains[0]])
-    pdb1=rename_nc_terminals(pdb_chains[chains[0]])
-    pdb1_dummy=dummy_pdb(pdb_chains[chains[0]])
-    pdb2=rename_nc_terminals(pdb_chains[chains[1]])
-    pdb2_dummy=dummy_pdb(pdb_chains[chains[1]])
+    pdb1=rename_nc_terminals(pdb_data['pdb_chains'][chains[0]])
+    pdb1_dummy=dummy_pdb(pdb_data['pdb_chains'][chains[0]])
+    pdb2=rename_nc_terminals(pdb_data['pdb_chains'][chains[1]])
+    pdb2_dummy=dummy_pdb(pdb_data['pdb_chains'][chains[1]])
     with open('A_maskedB.pdb','w') as f:
         #f.write(pdb_chains['A'])
         f.write(pdb1)
@@ -420,7 +460,7 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
         f.write(pdb1_dummy)
         f.write(pdb2)
     with open('input.pdb','w') as f:
-        f.write(pdb_str)
+        f.write(pdb_data['pdb_str'])
 
     
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
@@ -460,7 +500,6 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
     os.system(cmd)
     os.system(cmd2)
 
-    logging.info('Calculating EC')
     #check if this is just straight correlation on the potentials, then 
     os.system(f'{extpot} outsurf11.pot > temp11.pot')
     os.system(f'{extpot} outsurf21.pot > temp21.pot')
@@ -472,50 +511,12 @@ def calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=None,diel=False,gauss_delphi=F
 
     EC=(float(corr1)+float(corr2))/2
     
-    os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
+#    os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
     os.chdir(cwd)
-    return(EC,nBSA,Fintres,CPscore,rGb)
+    return EC
 
     
-
-def remove_hydrogen(pdb_str):
-    pdb_lines=[]
-    for line in pdb_str.split('\n')[:-1]:
-        atom=line[12:16]
-        if 'H' not in atom:
-            pdb_lines.append(line+'\n')
-    return "".join(pdb_lines)
-        
-    
-def calc_Sc(pdb_str,pdb_chains,tmpdir,sc_path):
-    run_sc=os.path.join(tmpdir,'run_sc')
-    pdb=os.path.join(tmpdir,'input.pdb')
-    with open(pdb,'w') as f:
-        f.write(remove_hydrogen(pdb_str))
-    
-    chains=sorted(pdb_chains.keys())
-    ccp4base=os.path.dirname(os.path.dirname(sc_path))
-    ccplib=os.path.join(ccp4base,'lib','data')
-    ccpinclude=os.path.join(ccp4base,'include')
-    with open(run_sc,'w') as f:
-        f.write(f'#!/bin/bash\n')
-        f.write(f'export CCP4_SCR={tmpdir}\n')
-        f.write(f'export CLIBD={ccplib}\n')
-        f.write(f'export CINCL={ccpinclude}\n')
-        
-        f.write(f'{sc_path} XYZIN {pdb} <<eof\n')
-        f.write(f'MOLECULE 1\n')
-        f.write(f'CHAIN {chains[0]}\n')
-        f.write(f'MOLECULE 2\n')
-        f.write(f'CHAIN {chains[1]}\n')
-        f.write(f'END\n')
-        f.write(f'eof\n')
-
-    Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
-    Sc=float(Sc.split()[-1])
-    return(Sc)
-
-def calc_rGb(residue_exposure):
+def calc_rGb(pdb_data):
     Log10PropResBur = {'A': [0.1576, -0.0097, -0.0872, -0.1158], 
                    'C': [0.2842, 0.1824, -0.0851, -0.6021], 
                    'D': [-0.2883, -0.1158, 0.0233, 0.1688], 
@@ -539,7 +540,8 @@ def calc_rGb(residue_exposure):
                      'G': 93.5631, 'H': 198.1719, 'I': 179.6625, 'K': 223.2443, 'L': 193.7956, 
                      'M': 217.3316, 'N': 161.8336, 'P': 159.6743, 'Q': 195.3820, 'R': 256.8007, 
                      'S': 135.2496, 'T': 155.6512, 'V': 163.5877, 'W': 252.3393, 'Y': 234.5152}
-    
+
+    residue_exposure=read_rsa(pdb_data['rsa_pdb_str'])
     n_residues = 0 #len(residue_exposure)
     rGb = 0
     
@@ -578,10 +580,9 @@ def calc_Ld(pdb_str,tmpdir):
     PATH=os.path.abspath(os.path.dirname(__file__))
     Ld=os.path.join(PATH,'MAINEXEC','ldN.exe')
     pdb=os.path.join(tmpdir,'input.pdb')
-    if not os.path.exists(pdb):
-        with open(pdb,'w') as f:
-            f.write(pdb_str)
-            
+#    if not os.path.exists(pdb):
+    with open(pdb,'w') as f:
+        f.write(pdb_str)         
     
     
     os.system(f'cd {tmpdir};grep ^ATOM {pdb} > input.Ld.pdb;{Ld} input.Ld.pdb > /dev/null')
@@ -648,17 +649,36 @@ def calc_ProQDock(features,tmpdir):
         f.write(" ".join(svm_input))
         f.write('\n')
     preds=[]
+    svm_outputs=[]
+    cmds=[]
     for i,svm_model in enumerate(glob.glob(svm_model_paths)):
-        print(svm_model)
+        #print(svm_model)
         svm_output=f'{svm_input_file}.{i}'
-        cmd=f'{svm_classify} {svm_input_file} {svm_model} {svm_output}'
-        os.system(cmd)
-        pred=subprocess.check_output(f'cat {svm_output}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').rstrip().split()[0]
-        preds.append(float(pred))
-
-    print(preds)
+        cmd=f'{svm_classify} {svm_input_file} {svm_model} {svm_output} > /dev/null &'
+        cmds.append(cmd)
+        svm_outputs.append(svm_output)
+    cmds.append('wait')
+    os.system("".join(cmds))
+    for svm_output in svm_outputs:
+         with open(svm_output) as f:
+            pred=f.read().rstrip().split()[0]
+            #pred=subprocess.check_output(f'cat {svm_output}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').rstrip().split()[0]
+            preds.append(float(pred))
+    #print(preds)
     return(np.mean(preds))
+
+def calc_nBSA(pdb_data):
+    return pdb_data['interface_area']/pdb_data['total_area']
+
+def calc_Fintres(pdb_data):
+    total_residues=len(set([atom.split()[-1] for atom in read_asa(pdb_data['asa_pdb_str']).keys()]))
+    res_interface_A=len(set([atom.split()[-1] for atom in pdb_data['interface_A']]))
+    res_interface_B=len(set([atom.split()[-1] for atom in pdb_data['interface_B']]))
     
+    Fintres=(res_interface_A+res_interface_B)/total_residues
+    logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
+    return(Fintres)
+
 
 def main(argv):
     if len(argv) != 3:
@@ -693,8 +713,15 @@ def main(argv):
     #for chain in chains:
     #    logging.info(f'NACCESS for chain {chain}')
     #    pdb_data['asa_chain'][chain],_=run_naccess(pdb_data['pdb_chains'][chain])
-        
-    sys.exit()
+    chains=sorted(pdb_data['pdb_chains'].keys())
+    logging.info(f'Found {len(pdb_data["interface_A"])+len(pdb_data["interface_B"])} interface residues')
+    logging.info(f'Chain {chains[0]} buries {pdb_data["interface_A_area"]:.2f}A^2 in the complex')
+    logging.info(f'Chain {chains[1]} buries {pdb_data["interface_B_area"]:.2f}A^2 in the complex')
+    logging.info(f'Total surface area {pdb_data["total_area"]:.2f}A^2')
+    logging.info(f'Average interface area {pdb_data["interface_area"]:.2f}A^2')
+    
+    
+    #sys.exit()
     
     #pd=input_pdb
     features={}
@@ -702,24 +729,18 @@ def main(argv):
         
        # features['ProQ']=calc_ProQ2(pdb_str,fasta,tmpdir,FLAGS.proqpath,rosetta_path)
        # sys.exit()
-        logging.info('Starting EC calculation')
-        EC,nBSA,Fintres,CPscore,rGb=calc_EC(pdb_str,pdb_chains,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
-        features['EC']=EC
-        logging.info('Starting Sc calculation')
-        features['Sc']=calc_Sc(pdb_str,pdb_chains,tmpdir,FLAGS.sc_path)
-        #        features['Sc']=calc_Sc(pdb_str,pdb_chains,'./',FLAGS.sc_path)
 
-        features['rGb']=rGb #calc_rGb()
-        features['Ld']=calc_Ld(pdb_str,tmpdir)
-        features['nBSA']=nBSA
-        features['Fintres']=Fintres
-        features['CPscore']=CPscore
+        features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
+        features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
+        features['rGb']=calc_rGb(pdb_data)
+        features['Ld']=calc_Ld(pdb_data['pdb_str'],tmpdir)
+        features['nBSA']=calc_nBSA(pdb_data) 
+        features['Fintres']=calc_Fintres(pdb_data)
+        features['CPscore']=calc_CPscore(pdb_data,tmpdir)
         features['CPM']=calc_CPM(features['Sc'],features['EC'],features['nBSA'])
-        #        print(CPM)
-        
-        Rterms=calc_rosetta_terms(pdb_str,tmpdir,rosetta_path,rosetta_db)
+        Rterms=calc_rosetta_terms(pdb_data['pdb_str'],tmpdir,rosetta_path,rosetta_db)
         features.update(Rterms)
-        features['ProQ']=calc_ProQ2(pdb_str,fasta,tmpdir,FLAGS.proqpath,rosetta_path)
+        features['ProQ']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
         features['ProQDock']=calc_ProQDock(features,tmpdir)
 #        sys.exit()
         for feature in features:
