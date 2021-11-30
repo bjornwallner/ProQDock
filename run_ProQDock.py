@@ -613,6 +613,8 @@ def calc_rosetta_terms(pdb_str,tmpdir,rosetta_path,rosetta_db):
     score=subprocess.check_output(f'{cmd}|tail -n 2', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').split('\n')[-3:-1]
     score =[x.rstrip().split() for x in score]
     Rterms=dict(zip(score[0],score[1]))
+    #for x in Rterms:
+    #    Rterms[x]=float(Rterms[x])
     return(Rterms)
 
 def calc_ProQ2(pdb_str,fasta,tmpdir,proqpath,rosetta_path):
@@ -638,7 +640,7 @@ def calc_ProQDock(features,tmpdir):
     svm_model_paths=os.path.join(PATH,'SVMmodels','*.model')
     svm_classify=os.path.join(FLAGS.svm_path,'svm_classify')
     svm_input_file=os.path.join(tmpdir,'input.svm')
-    feature_order={1:'rGb', 2:'nBSA', 3:'Fintres', 4:'Sc', 5:'EC', 6:'ProQ', 7:'Isc', 8:'rTs', 9:'Erep', 10:'Etmr', 11:'CPM', 12:'Ld', 13:'CPscore'}
+    feature_order={1:'rGb', 2:'nBSA', 3:'Fintres', 4:'Sc', 5:'EC', 6:'ProQ2', 7:'Isc', 8:'rTs', 9:'Erep', 10:'Etmr', 11:'CPM', 12:'Ld', 13:'CPscore'}
     svm_input=['0.0']
     for feature_no in sorted(feature_order):
         feature=feature_order[feature_no]
@@ -661,10 +663,11 @@ def calc_ProQDock(features,tmpdir):
     os.system("".join(cmds))
     for svm_output in svm_outputs:
          with open(svm_output) as f:
+            #print(svm_output)
             pred=f.read().rstrip().split()[0]
             #pred=subprocess.check_output(f'cat {svm_output}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').rstrip().split()[0]
             preds.append(float(pred))
-    #print(preds)
+    #rint(preds)
     return(np.mean(preds))
 
 def calc_nBSA(pdb_data):
@@ -685,34 +688,16 @@ def main(argv):
         print('./run_ProQDock.py <pdb> <fasta> <options>')
         print('You need to supply a pdb and fasta file')
     PATH=os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(PATH,'HELP','proqdock.ascii')) as f:
+        proqdock_ascii=f.read()
     input_pdb=argv[1]
     fasta=argv[2]
     rosetta_path=os.path.join(FLAGS.rosetta,'source','bin')
     proqscorepath=rosetta_path
     rosetta_db=os.path.join(FLAGS.rosetta,'database')
     
-    
     logging.info(f'Reading pdb: {input_pdb}')
-    #pdb_data={}
-    #(pdb_data['pdb_str'],pdb_data['pdb_chains'])=read_pdb(input_pdb)
-
     pdb_data=read_pdb(input_pdb)
-    
-    print(pdb_data.keys())
-    #if len(pdb_data['pdb_chains'].keys()) != 2:
-    #    print("ProQDock only works for two chains. You group chains to hack it evalute different interfaces\n")
-     #   print("Currently you have to do that outside, support for that might be added in the future\n")
-     #   sys.exit(1)
-
-    #logging.info(f"Found these chains: {sorted(pdb_data['pdb_chains'].keys())}")
-
-    #(pdb_data['asa_pdb_str'],pdb_data['rsa_pdb_str'])=run_naccess(pdb_data['pdb_str'])
-    
-    #chains=sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
-    #pdb_data['asa_chain']={}
-    #for chain in chains:
-    #    logging.info(f'NACCESS for chain {chain}')
-    #    pdb_data['asa_chain'][chain],_=run_naccess(pdb_data['pdb_chains'][chain])
     chains=sorted(pdb_data['pdb_chains'].keys())
     logging.info(f'Found {len(pdb_data["interface_A"])+len(pdb_data["interface_B"])} interface residues')
     logging.info(f'Chain {chains[0]} buries {pdb_data["interface_A_area"]:.2f}A^2 in the complex')
@@ -720,16 +705,9 @@ def main(argv):
     logging.info(f'Total surface area {pdb_data["total_area"]:.2f}A^2')
     logging.info(f'Average interface area {pdb_data["interface_area"]:.2f}A^2')
     
-    
-    #sys.exit()
-    
-    #pd=input_pdb
+
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
-        
-       # features['ProQ']=calc_ProQ2(pdb_str,fasta,tmpdir,FLAGS.proqpath,rosetta_path)
-       # sys.exit()
-
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
@@ -740,22 +718,19 @@ def main(argv):
         features['CPM']=calc_CPM(features['Sc'],features['EC'],features['nBSA'])
         Rterms=calc_rosetta_terms(pdb_data['pdb_str'],tmpdir,rosetta_path,rosetta_db)
         features.update(Rterms)
-        features['ProQ']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
-        features['ProQDock']=calc_ProQDock(features,tmpdir)
-#        sys.exit()
+        features['ProQ2']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
+        ProQDock=calc_ProQDock(features,tmpdir)
+
+        with open(os.path.join(PATH,'HELP','features.description')) as f:
+            desc=f.read()
+        sys.stdout.write(proqdock_ascii)
+        sys.stdout.write(desc)
         for feature in features:
-            print(f"{feature}={features[feature]}")
-        
+            print(f"{feature}={float(features[feature]):.3f}")
 
-        
-    #print(dir(tempfile))
-    
+        print('==========================') 
+        print(f'ProQDock={ProQDock:.3f}')
 
-
-    
-  # print(FLAGS)
-    
- #  print(argv)
         
 
 
@@ -764,5 +739,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-   # flags.mark_flags_as_required(['pdb','fasta'])
     app.run(main)

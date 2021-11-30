@@ -1,7 +1,8 @@
 # ProQDock
 
-Requires PERL (v.5.8 or higher), and a fortran90 compiler (prefered: ifort)
-and six additional packages to be pre-installed
+
+
+Requires Python 3.x, `absl-py` and `numpy`
 
 1. sc from ccp4 (http://www.ccp4.ac.uk/) [executable_name: sc]
 2. delphi v.6.2 (http://compbio.clemson.edu/delphi) [executable_name: delphi95]
@@ -17,22 +18,20 @@ $ cd ProQDock
 $ chmod +x compileF
 $ ./compileF <fortran90-compiler>  (Default: ifort)
 ```
-open `ProQDock` in any text editor and change the fullpaths for the following fields according to your system: 
+edit the `flagfile` and change the fullpaths for the following fields according to your system and save it as `myflagfile`: 
 
-- sc_path=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
-- delphi_path=/home/x_sabas/bin
-- rosetta_path=/proj/wallner/users/x_bjowa/github/Rosetta/main/source/bin
-- rosetta_db=/proj/wallner/users/x_bjowa/github/Rosetta/main/database
-- svm_path=/home/x_sabas/proj/svm_light
-- ESpath=/home/x_sabas/proj/EDTSurf
-- proqpath=/home/x_sabas/proj/BACKUP/ProQ_scripts/bin
+--sc_path=/software/presto/software/CCP4/7.1.016-foss-2019b-SHELX-ARP-8.0-1/ccp4-7.1/bin/sc
+--delphi_path=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/delphi95
+--rosetta=/proj/wallner/apps/rosetta/Rosetta/main/
+--svm_path=/proj/wallner/users/x_bjowa/local/svm_light_linux64/
+--proqpath=/proj/wallner/users/x_bjowa/github/ProQ_scripts/bin/
 
 ## The program has two mandatory inputs :
 
         1. The coordinate (PDB) file for the model
-        2. The full-length target sequence
+        2. The full-length target sequence (in FASTA format) 
 
-- The model must be a perfect or imperfect subset of the target sequence 
+- The model must be either the full-length sequence or subset of the target sequence 
 - i.e., Any and all sub-sequence present in the model must be present in the tareget
 - PDB file MUST contain corrdinates of geometrically fixed Hydrogen atoms 
 - preferably fixed by REDUCE v.2 or atleast compatible with the REDUCE format 
@@ -49,7 +48,7 @@ $ ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
 
 ##### Run Step: 
 ```sh
-$ ProQDock/ProQDock <model.PDB> <fulllength.fasta>
+$ ./run_ProQDock.py <model.PDB> <fulllength.fasta> --flagfile myflagfile
 ```
 where,
 - model.pdb: The input pdb (coordinate file in Brrokheaven format; http://www.ccp4.ac.uk/html/procheck_man/manappb.html) file
