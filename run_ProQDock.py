@@ -596,7 +596,7 @@ def calc_CPM(Sc,EC,nBSA):
     cmd=f"{CPMpl} {PATH} {Sc} {EC} {nBSA}"
     CPM=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
     
-    return CPM
+    return float(CPM)
 
 
 def calc_rosetta_terms(pdb_str,tmpdir,rosetta_path,rosetta_db):
@@ -613,8 +613,8 @@ def calc_rosetta_terms(pdb_str,tmpdir,rosetta_path,rosetta_db):
     score=subprocess.check_output(f'{cmd}|tail -n 2', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').split('\n')[-3:-1]
     score =[x.rstrip().split() for x in score]
     Rterms=dict(zip(score[0],score[1]))
-    #for x in Rterms:
-    #    Rterms[x]=float(Rterms[x])
+    for x in Rterms:
+        Rterms[x]=float(Rterms[x])
     return(Rterms)
 
 def calc_ProQ2(pdb_str,fasta,tmpdir,proqpath,rosetta_path):
@@ -726,7 +726,7 @@ def main(argv):
         sys.stdout.write(proqdock_ascii)
         sys.stdout.write(desc)
         for feature in features:
-            print(f"{feature}={float(features[feature]):.3f}")
+            print(f"{feature}={features[feature]:.3f}")
 
         print('==========================') 
         print(f'ProQDock={ProQDock:.3f}')
