@@ -635,7 +635,7 @@ def calc_ProQ2(pdb_str,fasta,tmpdir,proqpath,rosetta_path):
     return(proq2)       
 
 def calc_ProQDock(features,tmpdir):
-    logging.info('ProQDock for features:')
+    logging.info('Calculating ProQDock score')
     PATH=os.path.abspath(os.path.dirname(__file__))
     svm_model_paths=os.path.join(PATH,'SVMmodels','*.model')
     svm_classify=os.path.join(FLAGS.svm_path,'svm_classify')
@@ -645,7 +645,7 @@ def calc_ProQDock(features,tmpdir):
     for feature_no in sorted(feature_order):
         feature=feature_order[feature_no]
         if feature in features:
-            logging.info(feature)
+            #logging.info(feature)
             svm_input.append(f'{feature_no}:{features[feature]}')
     with open(svm_input_file,'w') as f:
         f.write(" ".join(svm_input))
