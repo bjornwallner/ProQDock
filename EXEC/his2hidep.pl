@@ -31,7 +31,7 @@ foreach $k (@rdat)
     chomp $k;
     if ($k =~ /HIS/)
     {
-	#	print $k,"\n";
+	print $k,"\n";
 	@store = ();
 	@atom = ();
 	@pointer = ();
@@ -40,9 +40,14 @@ foreach $k (@rdat)
 	$c = 0;
 	foreach $p (@dat)
 	{
-	    chomp $p;
-	    if (substr($p,17,3) eq 'HIS' && int(substr($p,23,3)) == int(substr($k,0,3)))
+	    #chomp $p;
+	   # $r1=int(substr($p,23,3));
+	   # $r2=int(substr($k,0,4));
+	   # print("$r1 $r2\n");
+		
+	    if (substr($p,17,3) eq 'HIS' && int(substr($p,23,3)) == int(substr($k,0,4)))
 	    {
+		print($p);
 		@store = (@store,$p);
 		@atom = (@atom,substr($p,13,3));
 		@pointer = (@pointer,$c);
@@ -51,6 +56,7 @@ foreach $k (@rdat)
 	}
 	foreach (@atom)
 	{
+	    
 	    if ($_ eq 'HD1')
 	    {
 		$d = 1;

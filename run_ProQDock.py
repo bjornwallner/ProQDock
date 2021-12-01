@@ -19,6 +19,7 @@ flags.DEFINE_string('outfile',None,'outfile otherwise stdout')
 flags.DEFINE_string('sc_path',None,'path to sc (Shape Complementarity') #=/software/apps/ccp4/ccp4-6.5.0/ccp4-6.5/bin
 flags.DEFINE_string('delphi_path',None,'path to delphi') #=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/
 flags.DEFINE_string('rosetta',None,'path to rosetta') #=/proj/wallner/apps/rosetta/Rosetta/main/
+
 #                    source/bin
 #rosetta_db=/proj/wallner/apps/rosetta/Rosetta/main/database
 #ESpath=$path/EDTSurf
@@ -26,6 +27,7 @@ flags.DEFINE_string('svm_path',None,'path to svmlight') #=/proj/wallner/users/x_
 flags.DEFINE_string('proqpath',None,'path to ProQ2') #/proj/wallner/users/x_bjowa/github/ProQ_scripts/bin/
 flags.DEFINE_bool('diel',False,'Turn on multi dielectric Delphi')
 flags.DEFINE_bool('gauss',False,'Turn on Multidielectric Gaussian (Assuming --diel is on)')
+flags.DEFINE_bool('AF',False,'[Experimental use at own risk]. For AlphaFold models. This will use the average B-factor (plDDT) in the model instead of ProQ2. (No need to give fasta sequence)')
 
 #                    proqscorepath=$rosetta_path
 
@@ -76,6 +78,57 @@ def fix_metals(pdb_str):
     #return pdb_str.translate(metals)
     return pdb_str
 
+# Renames HIS to HID, HIE, or HIP dependent on the hydrogens present from EXEC/his2hidep.pl
+def fix_his(pdb_str):
+
+    res_map={}
+    old_resnum='undef'
+    old_res='UNK'
+    residues=[]
+    pdb=[]
+    d=0
+    e=0
+    for line in pdb_str.split('\n')[:-1]:
+        if line.startswith('ATOM'):
+            atom=line[12:16].strip()
+            res=line[17:20]
+            resnum=line[22:26]
+            if  resnum != old_resnum and old_resnum != 'undef': # new res
+                if old_res =='HIS':
+                    his='HID'
+                    if d == 1 and e == 1:
+                        his='HIP'
+                    if d == 0 and e == 1:
+                        his='HIE'                        
+                    residues=[line.replace('HIS',his) for line in residues]
+                pdb+=residues
+                residues=[]
+                d=0
+                e=0
+
+            if res=='HIS':
+                if atom == 'HD1':
+                    d=1
+                elif atom == 'HE2':
+                    e=1
+            old_resnum=resnum
+            old_res=res
+            residues.append(line+'\n')
+                      
+    if len(residues) > 0:
+        if old_res == 'HIS':
+            his='HID'
+            if d == 1 and e == 1:
+                his='HIP'
+            if d == 0 and e == 1:
+                his='HIE'                        
+            residues=[line.replace('HIS',his) for line in residues]
+        pdb+=residues
+
+    return("".join(pdb))
+            
+            
+        
 #implementation of EXEC/reducemap.pl
 def read_pdb(pdb):
     fixed_pdb=[]
@@ -110,8 +163,8 @@ def read_pdb(pdb):
                         #print('Hello',line)
                         pass
                 line=line[0:12] + ' ' + line[13:] #remove numbers before hydrogens, Delphi does not seem to like them
-            chains[chain].append(line)
-            fixed_pdb.append(line)
+                chains[chain].append(line)
+                fixed_pdb.append(line)
             
     
     #s=fix_metals('HG    HG\nFE   FE2')
@@ -384,9 +437,9 @@ def calc_CPscore(pdb_data,tmpdir):
         
     cmd=f'touch fort.dummy;{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat};cp fort.37 input.contpref20'
     cmd2=f'{generate_svm_param} input.contpref20'
-    logging.info(f'CMD: {cmd}')
+    #logging.info(f'CMD: {cmd}')
     subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
-    logging.info(f'CMD: {cmd2}')
+    #logging.info(f'CMD: {cmd2}')
     subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
     svm_input_file='input-C0.svm1'
     preds=[]
@@ -419,6 +472,52 @@ def calc_CPscore(pdb_data,tmpdir):
     return CPscore
 
 
+def dist(a,b):
+    return np.sqrt(np.sum((a-b)**2))
+
+def _maxdist(pdb_str):
+    pdb_lines=pdb_str.split('\n')
+    new_pdb=[]
+    coords=[]
+    mdist=0
+    for line in pdb_lines[:-1]:
+        if line.startswith('ATOM'):
+            x=float(line[30:38])
+            y=float(line[38:46])
+            z=float(line[47:54])
+            #print(line)
+            #print(x,y,z)
+            c=[x,y,z]
+            coords.append([x,y,z])
+    a=np.array(coords)
+    m = np.sqrt(np.sum((a[:,np.newaxis,:] - a[np.newaxis,:,:])**2, axis=2))
+    mdist=m.max()
+    return mdist
+
+
+def read_delphi_potential(pot):
+    get_line=False
+    pots=[]
+    with open(pot,'r') as f:
+        for line in f.readlines():
+            if 'total energy' in line:
+                get_line=False
+
+            if get_line:    
+                pot=line.split()[8]
+                pots.append(float(pot))    
+            if line.startswith('ATOM DESCRIPTOR'):
+                get_line=True
+    return(pots)
+
+def EC_corr(pot1,pot2):
+    pots1=read_delphi_potential(pot1)
+    pots2=read_delphi_potential(pot2)
+    c=np.corrcoef(pots1,pots2)[1,0]
+    return(-c)
+    
+           
+
 def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     logging.info('Starting EC calculation')
     cwd=os.getcwd()
@@ -448,10 +547,12 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     
 #    gridA=[p[13:27] for p in grid[chains[0]]]
     #print(grid[chains[0]])
-    pdb1=rename_nc_terminals(pdb_data['pdb_chains'][chains[0]])
-    pdb1_dummy=dummy_pdb(pdb_data['pdb_chains'][chains[0]])
-    pdb2=rename_nc_terminals(pdb_data['pdb_chains'][chains[1]])
-    pdb2_dummy=dummy_pdb(pdb_data['pdb_chains'][chains[1]])
+    chain1=fix_his(pdb_data['pdb_chains'][chains[0]])
+    chain2=fix_his(pdb_data['pdb_chains'][chains[1]])
+    pdb1=rename_nc_terminals(chain1)
+    pdb1_dummy=dummy_pdb(chain1)
+    pdb2=rename_nc_terminals(chain2)
+    pdb2_dummy=dummy_pdb(chain2)
     with open('A_maskedB.pdb','w') as f:
         #f.write(pdb_chains['A'])
         f.write(pdb1)
@@ -464,15 +565,9 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
 
     
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
-    extpot=os.path.join(PATH,'EXEC','extpot.pl')
-    ccpsw=os.path.join(PATH,'EXEC','ccpsw.exe')
-
-    ## implement maxist from coords
-    maxdist=os.path.join(PATH,'EXEC','hdist.exe')
-    gsz=subprocess.check_output(f'{maxdist} input.pdb', shell=True).decode('UTF-8').strip()
-
+    gsz=_maxdist(pdb_data['pdb_str'])+25
+    #print(gsz)
     gsz=int(float(gsz))
-    # print(float(gsz)))
     gauss=0
     if gauss_delphi:
         gauss=1
@@ -489,7 +584,9 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     cmd2=f'{delphi_path} script.prm > log21;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
+    corr1=EC_corr('outsurf11.pot','outsurf21.pot')
 
+    
     logging.info(f'Running Delphi for gridB using {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {gsz} {gauss}'
     cmd2=f'{delphi_path} script.prm > log12;rm -f ARCDAT'
@@ -499,19 +596,13 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     cmd2=f'{delphi_path} script.prm > log22;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
-
-    #check if this is just straight correlation on the potentials, then 
-    os.system(f'{extpot} outsurf11.pot > temp11.pot')
-    os.system(f'{extpot} outsurf21.pot > temp21.pot')
-    os.system(f'{extpot} outsurf12.pot > temp12.pot')
-    os.system(f'{extpot} outsurf22.pot > temp22.pot')
-    os.system(f'{ccpsw} temp12.pot temp22.pot > c2')
-    corr1=subprocess.check_output(f'{ccpsw} temp11.pot temp21.pot', shell=True).decode('UTF-8').strip()
-    corr2=subprocess.check_output(f'{ccpsw} temp12.pot temp22.pot', shell=True).decode('UTF-8').strip()
+    corr2=EC_corr('outsurf12.pot','outsurf22.pot')
 
     EC=(float(corr1)+float(corr2))/2
+
     
-#    os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
+    #os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
+    #sys.exit()
     os.chdir(cwd)
     return EC
 
@@ -671,33 +762,66 @@ def calc_ProQDock(features,tmpdir):
     return(np.mean(preds))
 
 def calc_nBSA(pdb_data):
+    logging.info('Calculating nBSA')
     return pdb_data['interface_area']/pdb_data['total_area']
 
 def calc_Fintres(pdb_data):
+    logging.info(f'Calculating Fintres')
     total_residues=len(set([atom.split()[-1] for atom in read_asa(pdb_data['asa_pdb_str']).keys()]))
     res_interface_A=len(set([atom.split()[-1] for atom in pdb_data['interface_A']]))
     res_interface_B=len(set([atom.split()[-1] for atom in pdb_data['interface_B']]))
     
     Fintres=(res_interface_A+res_interface_B)/total_residues
-    logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
+    #logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
     return(Fintres)
 
 
+def get_quality_from_B_factor(pdb_str):
+    logging.info('Calculating mean plDDT from B-factor (AF-mode)')
+    plldts=[]
+    for line in pdb_str.split('\n'):
+        if line.startswith('ATOM') and line[12:15] == ' CA':
+            #chain=line[21]
+            #resnum=int(line[22:26])
+            #key=f'{resnum}{chain}'
+            plldt=float(line[60:66])
+            plldts.append(plldt)
+    return np.mean(plldts)/100
+
 def main(argv):
-    if len(argv) != 3:
+
+
+    if len(argv) != 3 and not FLAGS.AF: #previous default run-mode
         print('./run_ProQDock.py <pdb> <fasta> <options>')
-        print('You need to supply a pdb and fasta file')
+        print('You need to supply a pdb and fasta file or only a pdb if you like to run in --AF mode (still experimental).')
+        sys.exit()
+    if FLAGS.AF and len(argv)<2:
+        print('./run_ProQDock.py <pdb> --AF <options>')
+        print('You need to supply a pdb when running in --AF mode (still experimental).')
+        sys.exit()
+        
+    input_pdb=argv[1]
+
+    if FLAGS.AF:
+        logging.info('Running in AF-mode (experimental)')
+        fasta='AF-mode'
+    else:
+        fasta=argv[2]
+
     PATH=os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(PATH,'HELP','proqdock.ascii')) as f:
         proqdock_ascii=f.read()
-    input_pdb=argv[1]
-    fasta=argv[2]
+
     rosetta_path=os.path.join(FLAGS.rosetta,'source','bin')
     proqscorepath=rosetta_path
     rosetta_db=os.path.join(FLAGS.rosetta,'database')
     
     logging.info(f'Reading pdb: {input_pdb}')
     pdb_data=read_pdb(input_pdb)
+    
+    with open('AFhis2.pdb','w') as f:
+        f.write(pdb_data['pdb_str'])
+   # sys.exit()
     chains=sorted(pdb_data['pdb_chains'].keys())
     logging.info(f'Found {len(pdb_data["interface_A"])+len(pdb_data["interface_B"])} interface residues')
     logging.info(f'Chain {chains[0]} buries {pdb_data["interface_A_area"]:.2f}A^2 in the complex')
@@ -710,6 +834,7 @@ def main(argv):
     with tempfile.TemporaryDirectory() as tmpdir:
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
+#        features['Sc']=calc_Sc(pdb_data,'./',FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
         features['Ld']=calc_Ld(pdb_data['pdb_str'],tmpdir)
         features['nBSA']=calc_nBSA(pdb_data) 
@@ -718,7 +843,12 @@ def main(argv):
         features['CPM']=calc_CPM(features['Sc'],features['EC'],features['nBSA'])
         Rterms=calc_rosetta_terms(pdb_data['pdb_str'],tmpdir,rosetta_path,rosetta_db)
         features.update(Rterms)
-        features['ProQ2']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
+
+        if FLAGS.AF:
+            features['ProQ2']=get_quality_from_B_factor(pdb_data['pdb_str']) #average plldt
+        else:
+            features['ProQ2']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
+
         ProQDock=calc_ProQDock(features,tmpdir)
 
         with open(os.path.join(PATH,'HELP','features.description')) as f:
@@ -726,7 +856,10 @@ def main(argv):
         sys.stdout.write(proqdock_ascii)
         sys.stdout.write(desc)
         for feature in features:
-            print(f"{feature}={features[feature]:.3f}")
+            if feature=='ProQ2' and FLAGS.AF:
+                print(f"ProQ2 (plDDT)={features[feature]:.3f}")
+            else:
+                print(f"{feature}={features[feature]:.3f}")
 
         print('==========================') 
         print(f'ProQDock={ProQDock:.3f}')

@@ -48,15 +48,12 @@ $ ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
 
 ##### Run Step: 
 ```sh
-$ ./run_ProQDock.py <model.PDB> <fulllength.fasta> --flagfile myflagfile
+$ ./run_ProQDock.py <model.PDB> <full-length.fasta> --flagfile myflagfile
 ```
 where,
 - model.pdb: The input pdb (coordinate file in Brrokheaven format; http://www.ccp4.ac.uk/html/procheck_man/manappb.html) file
-- fulllength.fasta: The fulllength fasta sequence of the target
+- full-length.fasta: The full-length fasta sequence of the target
 
-- optional arguments: -d (0/1) : delphi_mode: 
->            0: Single_internal_dielectric (epsilon=2) 
->            1: Multidielctric mode (internal dielectric modeled as a Gaussian Function)
                            
 > If you intend to Run ProQDock for a list of PDB files (models) corresponding to the same target sequence,
 then, SKIP repeating the profile generation step more than once, by providing a [consistent basename] for the fasta file.
