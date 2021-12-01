@@ -33,13 +33,10 @@ fi
 
 rm -f $path/EXEC/*.exe
 
-$fortcomp $path/EXEC/globuleN.f -o $path/EXEC/glbN.exe > compile.log
 $fortcomp $path/EXEC/metsph.f -o $path/EXEC/msph.exe >> compile.log
 $fortcomp $path/EXEC/intcont6.f -o $path/EXEC/intcont6.exe >> compile.log
 $fortcomp $path/EXEC/accall.f -o $path/EXEC/accall.exe >> compile.log
-$fortcomp $path/EXEC/delasa.f -o $path/EXEC/delasa.exe >> compile.log
-$fortcomp $path/EXEC/hdist.f -o $path/EXEC/hdist.exe >> compile.log
-$fortcomp $path/EXEC/buryasa.f -o $path/EXEC/buryasa.exe >> compile.log
+
 $fortcomp $path/EXEC/intcont.f -o $path/EXEC/intcont.exe >> compile.log
 $fortcomp $path/EXEC/fetchintsurf.f -o $path/EXEC/fetchds.exe >> compile.log
 $fortcomp $path/EXEC/corrcoefPsplw.f -o $path/EXEC/ccpsw.exe >> compile.log
