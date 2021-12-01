@@ -475,23 +475,45 @@ def calc_CPscore(pdb_data,tmpdir):
 def dist(a,b):
     return np.sqrt(np.sum((a-b)**2))
 
-def _maxdist(pdb_str):
+
+def get_coords(pdb_str,exclude='H'):
     pdb_lines=pdb_str.split('\n')
-    new_pdb=[]
     coords=[]
-    mdist=0
+    names=[]
     for line in pdb_lines[:-1]:
         if line.startswith('ATOM'):
+            atom=line[12:16]
+            res=line[17:20]
+            resnum=line[22:26]
+            chain=line[21]
+#            if exclude in atom:
+#                print(line)
+#                continue
+            if atom[1] == 'H':
+                continue
+          #  print(line)
             x=float(line[30:38])
             y=float(line[38:46])
             z=float(line[47:54])
             #print(line)
             #print(x,y,z)
             c=[x,y,z]
+            name={}
+            name['atom']=atom
+            name['res']=res
+            name['resnum']=resnum
+            name['chain']=chain
             coords.append([x,y,z])
-    a=np.array(coords)
+            names.append(name)
+    return(names,np.array(coords))
+
+
+def _maxdist(pdb_str):
+    
+    _,a=get_coords(pdb_str,exclude='nothing') #to reproduce previous
     m = np.sqrt(np.sum((a[:,np.newaxis,:] - a[np.newaxis,:,:])**2, axis=2))
     mdist=m.max()
+    print(mdist)
     return mdist
 
 
@@ -667,17 +689,62 @@ def calc_rGb(pdb_data):
 
 
 
-def calc_Ld(pdb_str,tmpdir):
+def calc_Ld(pdb_data,tmpdir):
+    pdb_str=pdb_data['pdb_str']
+    
     PATH=os.path.abspath(os.path.dirname(__file__))
-    Ld=os.path.join(PATH,'MAINEXEC','ldN.exe')
-    pdb=os.path.join(tmpdir,'input.pdb')
+#    Ld=os.path.join(PATH,'MAINEXEC','ldN.exe')
+#    pdb=os.path.join(tmpdir,'input.pdb')
 #    if not os.path.exists(pdb):
-    with open(pdb,'w') as f:
-        f.write(pdb_str)         
+#    with open(pdb,'w') as f:
+#        f.write(pdb_str)
+#    os.system(f'cd {tmpdir};grep ^ATOM {pdb} > input.Ld.pdb;{Ld} input.Ld.pdb')
+#    out=subprocess.check_output(f'cd {tmpdir};grep ^ATOM {pdb} > input.Ld.pdb;{Ld} input.Ld.pdb').decode('UTF-8')
+#    print(out)
+#    Ld=subprocess.check_output(f"cat {tmpdir}/fort.130", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+#    print(Ld)
+
+    (A,B)=sorted(pdb_data['pdb_chains'].keys())
+    A_name,A_coord=get_coords(pdb_data['pdb_chains'][A],exclude='H')
+    B_name,B_coord=get_coords(pdb_data['pdb_chains'][B],exclude='H')
+#    print(A_coord.shape)
+#    print(len(A_name))
+#    print(B_coord.shape)
+    dist = np.sqrt(np.sum((A_coord[:,np.newaxis,:] - B_coord[np.newaxis,:,:])**2, axis=2))
+#    print(dist.shape)
     
+    a=np.where(dist<=6.0)
+#    print(len(a[0]))
+#    print(lan(a[1]))
     
-    os.system(f'cd {tmpdir};grep ^ATOM {pdb} > input.Ld.pdb;{Ld} input.Ld.pdb > /dev/null')
-    Ld=subprocess.check_output(f"cat {tmpdir}/fort.130", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+    #    print(a)
+    res_dist={}
+    for i,j in zip(a[0],a[1]):
+        res_i=A_name[i]['resnum']+A_name[i]['chain']
+        res_j=B_name[j]['resnum']+B_name[j]['chain']
+        if res_i not in res_dist:
+            res_dist[res_i]={}
+        if res_j not in res_dist[res_i]:
+            res_dist[res_i][res_j]=dist[i,j]
+
+        if dist[i,j] < res_dist[res_i][res_j]:
+            res_dist[res_i][res_j]=dist[i,j]
+    n=0
+    setA=set()
+    setB=set()
+    for i in res_dist:
+        setA.add(i)
+        for j in res_dist[i]:
+            setB.add(j)
+           # print(i,j,res_dist[i][j])
+            n+=1
+    #print(n,len(setA),len(setB))
+            
+            #        print(A_name[i],B_name[j],dist[i,j])
+
+    Ld=n/(len(setA)*len(setB))
+#    print(Ld)
+#    sys.exit()
     return(float(Ld))
 
 def calc_CPM(Sc,EC,nBSA):
@@ -836,7 +903,7 @@ def main(argv):
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
 #        features['Sc']=calc_Sc(pdb_data,'./',FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
-        features['Ld']=calc_Ld(pdb_data['pdb_str'],tmpdir)
+        features['Ld']=calc_Ld(pdb_data,tmpdir)
         features['nBSA']=calc_nBSA(pdb_data) 
         features['Fintres']=calc_Fintres(pdb_data)
         features['CPscore']=calc_CPscore(pdb_data,tmpdir)

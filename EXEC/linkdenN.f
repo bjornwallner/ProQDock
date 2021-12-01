@@ -18,6 +18,7 @@
       real::xB(30),yB(30),zB(20)
       integer::itar(1000),inei(1000)
       real::ld
+      real::dist2
 
       call getarg(1,pdbfile)
 
@@ -121,6 +122,7 @@
      &(yA(ii)-yB(jj))**2 + (zA(ii)-zB(jj))**2)
                                 if (dist <= cutoff)then 
                                 icnt = icnt + 1
+                                dist2=dist
                                 endif
                            enddo
                     enddo
@@ -128,7 +130,7 @@
          Ncon = Ncon + 1
          itar(Ncon) = iresA
          inei(Ncon) = iresB
-         write(85,98)iresA,resA,chain1,' <=> ',iresB,resB,chain2,icnt
+         write(85,98)iresA,resA,chain1,' <=> ',iresB,resB,chain2,icnt,dist2
          write(56,71)'select ',iresA,' and :',chain1
          write(56,*)'color white'
          write(56,71)'select ',iresB,' and :',chain2
@@ -137,7 +139,7 @@
               enddo     
       enddo     
 
-98    format(i3,2x,a3,2x,a1,2x,a5,2x,i3,2x,a3,2x,a1,2x,i5)
+98    format(i3,2x,a3,2x,a1,2x,a5,2x,i3,2x,a3,2x,a1,2x,i5,f8.2)
 81    format(i4,2x,a3,2x,i3,5x,i4,2x,a3,2x,i3,2x,i5)
 !      print*,Ncon
 71    format(a7,i4,a6,a1)
@@ -173,10 +175,10 @@
 
       ld = Ncon/float(idimn)
       Fintres=float(itot)/float(itotres)
-      write(*,235)ld,idimn,itot,itotres,Fintres
+      write(*,235)ld,idimn,itot,itotres,Fintres,Ncon
       write(130,236)ld
 
-235   format(f8.5,2x,i10,2x,i5,2x,i5,2x,f8.5)
+235   format(f8.5,2x,i10,2x,i5,2x,i5,2x,f8.5,i5)
 236   format(f8.5)
 
       endprogram linkden
