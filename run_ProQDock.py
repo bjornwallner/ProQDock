@@ -3,6 +3,7 @@ import glob
 import os
 import sys
 import re
+import time
 import tempfile
 import subprocess
 import numpy as np
@@ -174,6 +175,7 @@ def read_pdb(pdb):
         chains[chain]=fix_metals("".join(chains[chain]))
     pdb_data={}
     pdb_data['pdb_str']=fix_metals("".join(fixed_pdb))
+    pdb_data['pdb_coords']=get_coords(pdb_data['pdb_str'])
     pdb_data['pdb_chains']=chains
 
     if len(pdb_data['pdb_chains'].keys()) != 2:
@@ -183,14 +185,17 @@ def read_pdb(pdb):
     logging.info(f"Found these chains: {sorted(pdb_data['pdb_chains'].keys())}")
 
     (pdb_data['asa_pdb_str'],pdb_data['rsa_pdb_str'])=run_naccess(pdb_data['pdb_str'])
-    chains=sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
+    pdb_data['chains']=sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
+
     pdb_data['asa_chain']={}
-    for chain in chains:
+    pdb_data['coord_chain']={}
+    for chain in pdb_data['chains']:
         logging.info(f'NACCESS for chain {chain}')
         pdb_data['asa_chain'][chain],_=run_naccess(pdb_data['pdb_chains'][chain])
+        pdb_data['coord_chain'][chain]=get_coords(pdb_data['pdb_chains'][chain])
 
-
-    (interface_A,interface_B,dA,dB,interface_area,total_area)=get_interface(pdb_data['asa_pdb_str'],pdb_data['asa_chain'][chains[0]],pdb_data['asa_chain'][chains[1]])
+    (A,B)=pdb_data['chains']
+    (interface_A,interface_B,dA,dB,interface_area,total_area)=get_interface(pdb_data['asa_pdb_str'],pdb_data['asa_chain'][A],pdb_data['asa_chain'][B])
     pdb_data['interface_A']=interface_A
     pdb_data['interface_B']=interface_B
     pdb_data['interface_A_area']=dA
@@ -389,7 +394,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
     with open(pdb,'w') as f:
         f.write(remove_hydrogen(pdb_data['pdb_str']))
     
-    chains=sorted(pdb_data['pdb_chains'].keys())
+    chains=pdb_data['chains'] #sorted(pdb_data['pdb_chains'].keys())
     ccp4base=os.path.dirname(os.path.dirname(sc_path))
     ccplib=os.path.join(ccp4base,'lib','data')
     ccpinclude=os.path.join(ccp4base,'include')
@@ -489,7 +494,7 @@ def get_coords(pdb_str,exclude='H'):
 #            if exclude in atom:
 #                print(line)
 #                continue
-            if atom[1] == 'H':
+            if atom[1] == exclude:
                 continue
           #  print(line)
             x=float(line[30:38])
@@ -508,12 +513,14 @@ def get_coords(pdb_str,exclude='H'):
     return(names,np.array(coords))
 
 
-def _maxdist(pdb_str):
-    
-    _,a=get_coords(pdb_str,exclude='nothing') #to reproduce previous
-    m = np.sqrt(np.sum((a[:,np.newaxis,:] - a[np.newaxis,:,:])**2, axis=2))
+def _maxdist(a): #a = coords
+    #_,a=get_coords(pdb_str,exclude='nothing') #to reproduce previous
+    t0=time.time()
+    m = np.sqrt(np.sum((a[:,np.newaxis,:] -a[np.newaxis,:,:])**2, axis=2))
+    t1=time.time()-t0
+    logging.info(f'All pairs ({m.shape[0]*m.shape[0]}) distances calculations took: {t1}s')
     mdist=m.max()
-    print(mdist)
+#    print(mdist)
     return mdist
 
 
@@ -551,7 +558,7 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     grid={}
 #    logging.info(f'NACCESS for input pdb')
 #    asa1,rsa1=run_naccess(pdb_str)
-    chains=sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
+    chains=pdb_data['chains'] #sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
     for chain in chains:
 #        logging.info(f'NACCESS for chain {chain}')
 #        asa[chain],_=run_naccess(pdb_chains[chain])
@@ -587,7 +594,9 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
 
     
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
-    gsz=_maxdist(pdb_data['pdb_str'])+25
+    _,coords=get_coords(pdb_data['pdb_str'],exclude='nothing') #to reproduce previous hydrogens included
+    gsz=_maxdist(coords)+25
+    #gsz=_maxdist(pdb_data['pdb_coords'][1])+25 #exclude hydrogen in coords.
     #print(gsz)
     gsz=int(float(gsz))
     gauss=0
@@ -691,33 +700,12 @@ def calc_rGb(pdb_data):
 
 def calc_Ld(pdb_data,tmpdir):
     pdb_str=pdb_data['pdb_str']
-    
     PATH=os.path.abspath(os.path.dirname(__file__))
-#    Ld=os.path.join(PATH,'MAINEXEC','ldN.exe')
-#    pdb=os.path.join(tmpdir,'input.pdb')
-#    if not os.path.exists(pdb):
-#    with open(pdb,'w') as f:
-#        f.write(pdb_str)
-#    os.system(f'cd {tmpdir};grep ^ATOM {pdb} > input.Ld.pdb;{Ld} input.Ld.pdb')
-#    out=subprocess.check_output(f'cd {tmpdir};grep ^ATOM {pdb} > input.Ld.pdb;{Ld} input.Ld.pdb').decode('UTF-8')
-#    print(out)
-#    Ld=subprocess.check_output(f"cat {tmpdir}/fort.130", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
-#    print(Ld)
-
-    (A,B)=sorted(pdb_data['pdb_chains'].keys())
-    A_name,A_coord=get_coords(pdb_data['pdb_chains'][A],exclude='H')
-    B_name,B_coord=get_coords(pdb_data['pdb_chains'][B],exclude='H')
-#    print(A_coord.shape)
-#    print(len(A_name))
-#    print(B_coord.shape)
+    (A,B)=pdb_data['chains'] 
+    A_name,A_coord=pdb_data['coord_chain'][A]
+    B_name,B_coord=pdb_data['coord_chain'][B]
     dist = np.sqrt(np.sum((A_coord[:,np.newaxis,:] - B_coord[np.newaxis,:,:])**2, axis=2))
-#    print(dist.shape)
-    
     a=np.where(dist<=6.0)
-#    print(len(a[0]))
-#    print(lan(a[1]))
-    
-    #    print(a)
     res_dist={}
     for i,j in zip(a[0],a[1]):
         res_i=A_name[i]['resnum']+A_name[i]['chain']
@@ -726,7 +714,6 @@ def calc_Ld(pdb_data,tmpdir):
             res_dist[res_i]={}
         if res_j not in res_dist[res_i]:
             res_dist[res_i][res_j]=dist[i,j]
-
         if dist[i,j] < res_dist[res_i][res_j]:
             res_dist[res_i][res_j]=dist[i,j]
     n=0
@@ -738,12 +725,8 @@ def calc_Ld(pdb_data,tmpdir):
             setB.add(j)
            # print(i,j,res_dist[i][j])
             n+=1
-    #print(n,len(setA),len(setB))
-            
-            #        print(A_name[i],B_name[j],dist[i,j])
-
+#    print(n,len(res_dist.keys()),len(setA),len(setB))
     Ld=n/(len(setA)*len(setB))
-#    print(Ld)
 #    sys.exit()
     return(float(Ld))
 
@@ -899,6 +882,8 @@ def main(argv):
 
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
+        features['Ld']=calc_Ld(pdb_data,tmpdir)
+        #sys.exit()        
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
 #        features['Sc']=calc_Sc(pdb_data,'./',FLAGS.sc_path)
