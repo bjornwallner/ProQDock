@@ -15,16 +15,17 @@ Requires Python 3.x, `absl-py` and `numpy`
 ```sh
 $ git clone https://github.com/bjornwallner/ProQDock
 $ cd ProQDock
-$ chmod +x compileF
-$ ./compileF <fortran90-compiler>  (Default: ifort)
+$ ./compileF # Assumes you have gfortran installed
 ```
 edit the `flagfile` and change the fullpaths for the following fields according to your system and save it as `myflagfile`: 
 
+```sh
 --sc_path=/software/presto/software/CCP4/7.1.016-foss-2019b-SHELX-ARP-8.0-1/ccp4-7.1/bin/sc
 --delphi_path=/proj/wallner/users/x_bjowa/local/DelPhi_Linux_SP_F95/delphi95
 --rosetta=/proj/wallner/apps/rosetta/Rosetta/main/
 --svm_path=/proj/wallner/users/x_bjowa/local/svm_light_linux64/
 --proqpath=/proj/wallner/users/x_bjowa/github/ProQ_scripts/bin/
+```
 
 ## The program has two mandatory inputs :
 

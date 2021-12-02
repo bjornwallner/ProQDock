@@ -1,66 +1,13 @@
 #!/bin/bash -x
 
-#upath=`echo ${0/compileF/}`
-#path=`readlink -f $upath`
-#echo $path
-path='./'
-
-#cp $path/EXEC/resGbur.f.install $path/EXEC/resGbur.f 
-#sed "s%INSTALL_PATH%$path%" $path/EXEC/resGbur.f.install  > $path/EXEC/resGbur.f 
-#sed "s%INSTALL_PATH%$path%" $path/EXEC/contpref20CB.f.install >  $path/EXEC/contpref20CB.f
-
-fortcomp=$1
-
-if [ "$#" == "0" ]; then 
-echo "Fortran90 compiler not specified"
-echo "Default fortran 90 compiler: ifort"
-fortcomp=ifort
-fi
-
-chmod +x $path/ProQDock
-
-#chs=`which $fortcomp`
-#echo $chs 
-
-#if [[ $chs == *"$fortcomp"* ]]; then
-
-if hash $fortcomp 2>/dev/null; then
-echo "$fortcomp FOUND"
-else
-echo "$fortcomp NOT FOUND to be installed"
-exit;
-fi
-
-rm -f $path/EXEC/*.exe
-$fortcomp $path/EXEC/accall.f -o $path/EXEC/accall.exe >> compile.log
-$fortcomp $path/EXEC/contpref20CB.f -o $path/EXEC/contpref20CB.exe >> compile.log
-gfortran  $path/EXEC/linkdenN.f -o $path/MAINEXEC/ldN.exe >> compile.log
 
 
-
-#$fortcomp $path/EXEC/metsph.f -o $path/EXEC/msph.exe >> compile.log
-#$fortcomp $path/EXEC/intcont6.f -o $path/EXEC/intcont6.exe >> compile.log
-#$fortcomp $path/EXEC/intcont.f -o $path/EXEC/intcont.exe >> compile.log
-#$fortcomp $path/EXEC/fetchintsurf.f -o $path/EXEC/fetchds.exe >> compile.log
-#$fortcomp $path/EXEC/metcoord.f -o $path/EXEC/mcoord.exe >> compile.log
-#$fortcomp $path/EXEC/resGbur.f -o $path/EXEC/rGb.exe >> compile.log
-#$fortcomp $path/EXEC/intf2surf.f -o $path/EXEC/isurf.exe >> compile.log
-#$fortcomp $path/EXEC/dsl.f -o $path/EXEC/dsl.exe >> compile.log
-
-
-Nfort=`ls $path/EXEC/*.f | wc -l`
-#Nfort=`echo ${Nfort}-1 | bc -l` 
-echo $Nfort
-
-Nexec1=`ls $path/EXEC/*.exe | wc -l`
-Nexec2=`ls $path/MAINEXEC/*.exe | wc -l`
-Nexec=`echo $Nexec1+$Nexec2 | bc -l`
-echo $Nexec
-
-if [ "$Nexec" == "$Nfort" ] && [ -e "$path/MAINEXEC/ldN.exe" ]; 
-then
-echo "Compilation Successful"
-fi
+cd EXEC
+#rm -f *.exe
+#rm -f EXEC/*.exe
+gfortan accall.f -o accall.exe
+gfortan contpref20CB.f -o contpref20CB.exe
+cd ..
 
 echo "Compiling EDTsurf"
 cd EDTSurf
