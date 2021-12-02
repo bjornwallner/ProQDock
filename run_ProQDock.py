@@ -661,7 +661,9 @@ def calc_rGb(pdb_data):
     ASA_normalisation = {'A': 123.4115, 'C': 147.4431, 'D': 163.7097, 'E': 195.2893, 'F': 203.8527, 
                      'G': 93.5631, 'H': 198.1719, 'I': 179.6625, 'K': 223.2443, 'L': 193.7956, 
                      'M': 217.3316, 'N': 161.8336, 'P': 159.6743, 'Q': 195.3820, 'R': 256.8007, 
-                     'S': 135.2496, 'T': 155.6512, 'V': 163.5877, 'W': 252.3393, 'Y': 234.5152}
+                     'S': 135.2496, 'T': 155.6512, 'V': 163.5877, 'W': 252.3393, 'Y': 234.5152} #Gly-X-Gly, Ala-X-Ala
+
+    
 
     residue_exposure=read_rsa(pdb_data['rsa_pdb_str'])
     n_residues = 0 #len(residue_exposure)
@@ -772,7 +774,7 @@ def calc_ProQ2(pdb_str,fasta,tmpdir,proqpath,rosetta_path):
     cmd=f'cd {tmpdir};{proq} input.pdb {proqpath} {rosetta_path} {fasta_abspath} &> /dev/null;cat input.pdb.ProQ2|tail -n 1'
     score=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').split()[1]
     proq2=float(score)/n_residues
-    print(score,n_residues)
+    #print(score,n_residues)
     return(proq2)       
 
 def calc_ProQDock(features,tmpdir):
@@ -868,11 +870,7 @@ def main(argv):
     
     logging.info(f'Reading pdb: {input_pdb}')
     pdb_data=read_pdb(input_pdb)
-    
-    with open('AFhis2.pdb','w') as f:
-        f.write(pdb_data['pdb_str'])
-   # sys.exit()
-    chains=sorted(pdb_data['pdb_chains'].keys())
+    chains=pdb_data['chains']
     logging.info(f'Found {len(pdb_data["interface_A"])+len(pdb_data["interface_B"])} interface residues')
     logging.info(f'Chain {chains[0]} buries {pdb_data["interface_A_area"]:.2f}A^2 in the complex')
     logging.info(f'Chain {chains[1]} buries {pdb_data["interface_B_area"]:.2f}A^2 in the complex')
@@ -882,11 +880,9 @@ def main(argv):
 
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
-        features['Ld']=calc_Ld(pdb_data,tmpdir)
-        #sys.exit()        
+
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
-#        features['Sc']=calc_Sc(pdb_data,'./',FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
         features['Ld']=calc_Ld(pdb_data,tmpdir)
         features['nBSA']=calc_nBSA(pdb_data) 

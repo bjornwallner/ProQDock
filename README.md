@@ -27,7 +27,7 @@ edit the `flagfile` and change the fullpaths for the following fields according 
 --proqpath=/proj/wallner/users/x_bjowa/github/ProQ_scripts/bin/
 ```
 
-## The program has two mandatory inputs :
+## Running:
 
         1. The coordinate (PDB) file for the model
         2. The full-length target sequence (in FASTA format) 
@@ -39,15 +39,15 @@ edit the `flagfile` and change the fullpaths for the following fields according 
   (http://kinemage.biochem.duke.edu/downloads/software/reduce/)
 
 
-##### Preparatory Step: 
+#### Preparatory Step: 
 The full length (FASTA) target sequence (one letter amino acid code followed by a header starting with >) should be prepared and provided alongside the coordinate (PDB) file for the model.
 
 You can generate the fasta sequence by using:
 ```sh
-$ ProQDock/EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
+$ EXEC/pdb2fasta.pl <input.pdb>  >  input.pdb.fasta
 ```
 
-##### Run Step: 
+#### Run Step: 
 ```sh
 $ ./run_ProQDock.py <model.PDB> <full-length.fasta> --flagfile myflagfile
 ```
@@ -85,22 +85,27 @@ $ cat EXAMPLE_CASE_STUDY/D1OYV-models.status.results
 Example Output for a single PDB file: 
 
 ```sh
-$ ./ProQDock ./TESTPDBS/1u07.pdb ./TEMP/1u07.pdb.fasta
+$ ./run_ProQDock.py ./TESTPDBS/1u07.pdb ./TEMP/1u07.pdb.fasta --flagfile flagfile
 ```
 
 ```
-The file has a Proper extension (.pdb / .PDB)
-=============================================================
-Normal Delphi (single internal dielectric, epsilon = 2.0) will be executed
-
-Setting CCP4_SCR to /tmp/tmp.hAw2aARLGb/ccp4_scr!
-Cleaning of the temp files in this
-directory is not done automatically.
-
-===========================================================
-Total number of residues in the Complex: 178
+                                                  ....                   ....                                      ..      
+                                               .n~8888888nx           .xH888888Hx.                            < .z@8"`      
+     .d``            .u    .          u.     :88>'8888888888:       .H8888888888888:           u.              !@88E        
+     @8Ne.   .u    .d88B :@8c   ...ue888b   :8888 "*888888888k      888*"""?""*88888X    ...ue888b        .    '888E   u    
+     %8888:u@88N  ="8888f8888r  888R Y888r  '88888.         "8>    'f     d8x.   ^%88k   888R Y888r  .udR88N    888E u@8NL  
+      `888I  888.   4888>'88"   888R I888>   ?88888          'X    '>    <88888X   '?8   888R I888> <888'888k   888E`"88*"  
+       888I  888I   4888> '     888R I888> ?  %888!           !     `:..:`888888>    8>  888R I888> 9888 'Y"    888E .dN.   
+       888I  888I   4888>       888R I888>  ".:88"            !            `"*88     X   888R I888> 9888        888E~8888   
+     uW888L  888'  .d888L .+   u8888cJ888     xHH8Hx.        .X  :    .xHHhx.."      !  u8888cJ888  9888        888E '888&  
+    '*88888Nu88P   ^"8888*"     "*888*P"    :888888888hx....x\8..X   X88888888hx. ..!    "*888*P"   ?8888u../   888E  9888. 
+    ~ '88888F`        "Y"         'Y"      :~  `"8888888888!`'8888  !   "*888888888"       'Y"       "8888P'  '"888*" 4888" 
+       888 ^                                      `""*8*""`   "*"          ^"***"`                     "P'       ""    ""   
+       *8E                                                                                                                  
+       '8>                                                                                                                  
+        "
 =================================================================================================================================
-Feature   Range  Direction  Description                                            Feature_Type   Stability* Native_values (DB3)
+Feature   Range  Direction  Description                                            Feature_Type   Stability   Native_values (DB3)
 ---------------------------------------------------------------------------------------------------------------------------------
 EC:       [-1,1] Positive   Electrostatic balance at the interface                 Interface      Variable    0.20 (+/-0.38)
 Sc:       [-1,1] Positive   Geometric / Steric fit at the interface                Interface       Stable     0.68 (+/-0.17)
@@ -123,24 +128,22 @@ ProQDock  [0, 1] Positive   The predicted DockQ score, Basu and Wallner, 2016, h
     0.49 <= DockQ <  0.80 - Medium quality
             DockQ >= 0.80 - High quality
 =================================================================================================================================
-EC=0.443
-Sc=0.767
-rGb=0.07170
-Ld=0.14815
-nBSA=0.115345
-Fintres=0.286517
-CPscore=0.490153
-CPM=0.94593
-rTs=0.04831
-Isc=0.00000
-Erep=0.34970
-Etmr=0.09889
-ProQ=0.845
-================The ProQDock Score ====================
-ProQDock:    1.10501
-Features:  /tmp/x_bjowa/ProQDock/TESTPDB/1u07.SVMfeatures
-ProQDock score:  /tmp/x_bjowa/lProQDock/TESTPDB/1u07.ProQDock
-Raw Rosetta terms:  /tmp/x_bjowa/ProQDock/TESTPDB/1u07.Rterms
+EC=0.259
+Sc=0.495
+rGb=0.028
+Ld=0.102
+nBSA=0.054
+Fintres=0.193
+CPscore=0.161
+CPM=0.422
+Isc=0.923
+rTs=0.898
+Eatr=0.085
+Erep=0.549
+Etmr=0.873
+ProQ2=0.794
+==========================
+ProQDock=0.266
 
 ``` 
 

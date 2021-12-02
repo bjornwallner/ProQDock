@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 pdb=$1
 proqpath=$2
@@ -10,6 +10,7 @@ if [ ! -s "$fulllength_fasta.acc" ]; then
 fi
 
 if [ ! -e "$fulllength_fasta.acc" ]; then
+    echo $proqpath/run_all_external.pl -cpu 4 -fasta $fulllength_fasta;
     $proqpath/run_all_external.pl -cpu 4 -fasta $fulllength_fasta;
 fi
 
