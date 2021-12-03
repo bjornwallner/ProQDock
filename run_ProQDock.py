@@ -624,38 +624,22 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     PATH=os.path.abspath(os.path.dirname(__file__))
     amber_crg=os.path.join(PATH,'LIBR','amber.crg')
     amber_dummy=os.path.join(PATH,'LIBR','amber_dummy.siz')
-#    os.chdir(tmpdir)
- #   asa={}
     grid={}
-#    logging.info(f'NACCESS for input pdb')
-#    asa1,rsa1=run_naccess(pdb_str)
+
     (A,B)=pdb_data['chains'] #sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
     for chain in [A,B]: #chains:
-#        logging.info(f'NACCESS for chain {chain}')
-#        asa[chain],_=run_naccess(pdb_chains[chain])
         logging.info(f'Calculating grid points for chain {chain}')
         grid[chain]=run_EDTSurf(pdb_data['pdb_chains'][chain])
-
         
     gridA=[grid[A][p] for p in grid[A] if p in pdb_data['interface_A']] #intsurf1.pdb
     gridB=[grid[B][p] for p in grid[B] if p in pdb_data['interface_B']] #intsurf2.pdb
-    #print(pdb_data['interface_A'])
-
-
-    #for p in grid[chains[0]]:
-        #print(p)
-    #    if p in pdb_data['interface_A']:
-    #        print(p)
     
     os.chdir(tmpdir)
     with open('gridA.pdb','w') as f:
         f.write("".join(gridA))
     with open('gridB.pdb','w') as f:
         f.write("".join(gridB))
-    #print("".join(gridA))    
-    #sys.exit()
-#    gridA=[p[13:27] for p in grid[chains[0]]]
-    #print(grid[chains[0]])
+
     chain1=fix_his(pdb_data['pdb_chains'][A])
     chain2=fix_his(pdb_data['pdb_chains'][B])
     pdb1=rename_nc_terminals(chain1)
@@ -671,7 +655,6 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
         f.write(pdb2)
     with open('input.pdb','w') as f:
         f.write(pdb_data['pdb_str'])
-
     
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
     _,coords=get_coords(pdb_data['pdb_str'],exclude='nothing') #to reproduce previous hydrogens included
@@ -709,10 +692,6 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
 
     EC=(float(corr1)+float(corr2))/2
 
-    
-    #os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
-    #sys.exit()
-    #print(EC)
     os.chdir(cwd)
     return EC
 
@@ -960,11 +939,8 @@ def main(argv):
 
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
-        features['CPscore']=calc_CPscore(pdb_data,tmpdir)
-        sys.exit()
+
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
-
-
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
         features['Ld']=calc_Ld(pdb_data,tmpdir)
@@ -975,8 +951,10 @@ def main(argv):
         Rterms=calc_rosetta_terms(pdb_data['pdb_str'],tmpdir,rosetta_path,rosetta_db)
         features.update(Rterms)
 
+        AFmode=''
         if FLAGS.AF:
             features['ProQ2']=get_quality_from_B_factor(pdb_data['pdb_str']) #average plldt
+            AFmode='note: in AF mode (experimental)'
         else:
             features['ProQ2']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
 
@@ -993,7 +971,7 @@ def main(argv):
                 print(f"{feature}={features[feature]:.3f}")
 
         print('==========================') 
-        print(f'ProQDock={ProQDock:.3f}')
+        print(f'ProQDock={ProQDock:.3f} {AFmode}')
 
         
 
