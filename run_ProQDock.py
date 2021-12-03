@@ -233,7 +233,7 @@ def read_asa(asa_str):
     for line in asa_str.split('\n')[:-1]: #last element will be empty
         line=line.rstrip()
         if line.startswith('ATOM'):
-            key=line[13:27] #.lstrip()
+            key=tuple(line[13:27].strip().split())
             saa=line[54:62]
             asa[key]=float(saa)
             #print(line)
@@ -292,8 +292,8 @@ def by_third(a):
     cols=a.split()
     return (int(cols[2]),cols[0])
 
-def convert_surf_to_pdb(surf_str):
-    pdb_lines=[]
+def convert_surf_to_pdb_lines(surf_str):
+    pdb_lines={}
     #print(surf_str)
     #sys.exit()
     #sort surf_str
@@ -307,7 +307,10 @@ def convert_surf_to_pdb(surf_str):
         
         (atom,res,resnum,chain,x,y,z,r,g,b)=line.strip().split()
         i=''
-        pdb_lines.append(f'ATOM  {i:>5s}  {atom:3} {res:3} {chain:1}{resnum:>4}    {x:>8}{y:>8}{z:>8}\n')
+        atom_record=(atom,res,chain,resnum)
+        pdb_line=f'ATOM  {i:>5s}  {atom:3} {res:3} {chain:1}{resnum:>4}    {x:>8}{y:>8}{z:>8}\n'
+        
+        pdb_lines[atom_record]=pdb_line
 #        i+=1
     #sys.exit()
 
@@ -328,7 +331,7 @@ def run_EDTSurf(pdb_str):
         #os.system('ls -lrt')
         #os.system('cp out.ply.surf /home/x_bjowa/proj/local/ProQDock/tmp.ply.surf')
         with open('out.ply.surf','r') as f:
-            surf=convert_surf_to_pdb(f.read())
+            surf=convert_surf_to_pdb_lines(f.read())
     os.chdir(cwd)
     return surf
 
@@ -376,7 +379,13 @@ def convert_atom_to_res(interface):
         residues.append(f'{resnum:>3} {res} {chain}')
     return(set(residues))
     
-
+def convert_atom_to_res2(interface):
+    residues=[]
+    for atom_record in interface:
+        (atom,res,chain,resnum)=atom_record.split()
+        residues.append(f'{resnum} {res} {chain}')
+    return(set(residues))
+    
 
 def remove_hydrogen(pdb_str):
     pdb_lines=[]
@@ -416,37 +425,99 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
     Sc=float(Sc.split()[-1])
     return(Sc)
 
+
+
+def _read_contpref(contpref_file):
+    aa=['ILE','VAL','LEU','PHE','CYS','MET','ALA','GLY','THR','SER','TRP','TYR','PRO','HIS','GLU','GLN','ASP','ASN','LYS','ARG']
+    mat=np.loadtxt(contpref_file)
+#    print(mat.shape)
+    return(aa,mat)
+
+def get_interface_res_coords(record_coords,interface):
+    #print(interface)
+    #print(len(record_coords))
+    icoords=[]
+    inames=[]
+
+    interface_res=set([atom_record[1:] for atom_record in interface])
+    #print(interface_res)
+    #sys.exit()
+    
+    for record,coord in zip(record_coords[0],record_coords[1]):
+       # print(record)
+       # continue
+        atom_record=(record['atom'].strip(),record['res'].strip(),record['chain'].strip(),record['resnum'].strip())
+        res_record=atom_record[1:]
+        #print(atom_record)
+        if res_record in interface_res:
+            #print(atom_record)
+#            interface_coords[atom_record]=coord
+            inames.append(atom_record)
+            icoords.append(coord)
+            
+    
+
+    return inames,np.array(icoords)
+
+
 def calc_CPscore(pdb_data,tmpdir):
     logging.info('Calculating CPscore')
     cwd=os.getcwd()
     PATH=os.path.abspath(os.path.dirname(__file__))
-    contpref20CB=os.path.join(PATH,'EXEC','contpref20CB.exe')
+
     contpref_mat=os.path.join(PATH,'LIBR','contpref.mat')
-    generate_svm_param=os.path.join(PATH,'EXEC','contpref20svm.pl')
     svm_model_paths=os.path.join(PATH,'SVMmodels.CPscore','*.model')
     svm_classify=os.path.join(FLAGS.svm_path,'svm_classify')
     runSVM=os.path.join(PATH,'EXEC','cal.svmCPS')
-    os.chdir(tmpdir)
-    if not os.path.exists('input.pdb'):
-        with open('input.pdb','w') as f:
-            f.write(pdb_data['pdb_str'])
+
+    aa_mat,mat=_read_contpref(contpref_mat)
+    (A,B)=pdb_data['chains'] 
+    A_name,A_coord=get_interface_res_coords(pdb_data['coord_chain'][A],pdb_data['interface_A'])
+    B_name,B_coord=get_interface_res_coords(pdb_data['coord_chain'][B],pdb_data['interface_B'])
 
 
-    with open('interface-A.res','w') as f:
-        f.write("\n".join(sorted(convert_atom_to_res(pdb_data['interface_A']))))
-        f.write("\n")
-    with open('interface-B.res','w') as f:
-        f.write("\n".join(sorted(convert_atom_to_res(pdb_data['interface_B']))))
-        f.write("\n")
+    
+    dist = np.sqrt(np.sum((A_coord[:,np.newaxis,:] - B_coord[np.newaxis,:,:])**2, axis=2))
+    a=np.where(dist<=10.0)
+    res_dist={}
+    cont={}
+    cpcont={}
+    total=0
+    #print
+    for aa1 in aa_mat:
+        cont[aa1]={}
+        cpcont[aa1]={}
+        for aa2 in aa_mat:
+            cont[aa1][aa2]=0
+            cpcont[aa1][aa2]=0.0
+    for i,j in zip(a[0],a[1]):
         
-        
-    cmd=f'touch fort.dummy;{contpref20CB} input.pdb interface-A.res interface-B.res {contpref_mat};cp fort.37 input.contpref20'
-    cmd2=f'{generate_svm_param} input.contpref20'
-    #logging.info(f'CMD: {cmd}')
-    subprocess.check_output(cmd, shell=True).decode('UTF-8').strip()
-    #logging.info(f'CMD: {cmd2}')
-    subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
-    svm_input_file='input-C0.svm1'
+        if ((A_name[i][0]=='CA' and A_name[i][1] == 'GLY') or A_name[i][0]=='CB' ) \
+        and ((B_name[j][0]=='CA' and B_name[j][1] == 'GLY') or B_name[j][0]=='CB'):  
+            res_i=A_name[i][1]
+            res_j=B_name[j][1]
+            cont[res_i][res_j]+=1
+            if res_j != res_i:
+                cont[res_j][res_i]+=1
+                #if res_j != res_i:
+            
+            #    total+=1
+            total+=1
+
+    n=1
+    svm_input_file=os.path.join(tmpdir,'input.CPscore.svm')
+    with open(svm_input_file, 'w') as f:
+        f.write('0.0 ')
+        for i,aa1 in enumerate(aa_mat):
+            for j,aa2 in enumerate(aa_mat):
+                if j>=i:
+                    cpcont[aa1][aa2]=float(cont[aa1][aa2])*mat[i,j]/total
+                    if cpcont[aa1][aa2]==0:
+                        cpcont[aa1][aa2]=0
+                    f.write(f'{n}:{cpcont[aa1][aa2]} ')
+                    n+=1
+        f.write("\n")
+
     preds=[]
     svm_outputs=[]
     cmds=[]
@@ -454,6 +525,7 @@ def calc_CPscore(pdb_data,tmpdir):
         #print(svm_model)
         svm_output=f'{svm_input_file}.{i}'
         cmd=f'{svm_classify} {svm_input_file} {svm_model} {svm_output} > /dev/null &'
+        #print(cmd)
         cmds.append(cmd)
         svm_outputs.append(svm_output)
 
@@ -464,16 +536,13 @@ def calc_CPscore(pdb_data,tmpdir):
             pred=f.read().rstrip().split()[0]
             #pred=subprocess.check_output(f'cat {svm_output}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').rstrip().split()[0]
             preds.append(float(pred))
+
         
-    #cmd3=f'{runSVM} input-C0.svm1 {FLAGS.svm_path} > /dev/null ;cat input-C0.CPS'
-    #subprocess.check_output(cmd2, shell=True).decode('UTF-8').strip()
-    #logging.info(f'CMD: {cmd3}')
-    #   print(gsz2)
-    #CPscore=subprocess.check_output(cmd3, shell=True).decode('UTF-8').strip()
+    #os.system(f'cp {tmpdir}/* /home/x_bjowa/proj/local/ProQDock/bar10/')
+
     CPscore=np.mean(preds)
-#    print(gsz3)
-#    os.system('ls -lrt')
-    os.chdir(cwd)
+    #print(preds)
+    #print(CPscore)
     return CPscore
 
 
@@ -489,8 +558,9 @@ def get_coords(pdb_str,exclude='H'):
         if line.startswith('ATOM'):
             atom=line[12:16]
             res=line[17:20]
-            resnum=line[22:26]
             chain=line[21]
+            resnum=line[22:26]
+            
 #            if exclude in atom:
 #                print(line)
 #                continue
@@ -508,6 +578,7 @@ def get_coords(pdb_str,exclude='H'):
             name['res']=res
             name['resnum']=resnum
             name['chain']=chain
+#            coords[(atom,res,resnum,chain)]=[x,y,z]
             coords.append([x,y,z])
             names.append(name)
     return(names,np.array(coords))
@@ -558,26 +629,35 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     grid={}
 #    logging.info(f'NACCESS for input pdb')
 #    asa1,rsa1=run_naccess(pdb_str)
-    chains=pdb_data['chains'] #sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
-    for chain in chains:
+    (A,B)=pdb_data['chains'] #sorted(pdb_data['pdb_chains'].keys()) #as of python 3 dicts keys are not random put in the order they were created, so this is not needed...
+    for chain in [A,B]: #chains:
 #        logging.info(f'NACCESS for chain {chain}')
 #        asa[chain],_=run_naccess(pdb_chains[chain])
         logging.info(f'Calculating grid points for chain {chain}')
         grid[chain]=run_EDTSurf(pdb_data['pdb_chains'][chain])
-    
-    gridA=[p for p in grid[chains[0]] if p[13:27] in pdb_data['interface_A']] #intsurf1.pdb
-    gridB=[p for p in grid[chains[1]] if p[13:27] in pdb_data['interface_B']] #intsurf2.pdb
 
+        
+    gridA=[grid[A][p] for p in grid[A] if p in pdb_data['interface_A']] #intsurf1.pdb
+    gridB=[grid[B][p] for p in grid[B] if p in pdb_data['interface_B']] #intsurf2.pdb
+    #print(pdb_data['interface_A'])
+
+
+    #for p in grid[chains[0]]:
+        #print(p)
+    #    if p in pdb_data['interface_A']:
+    #        print(p)
+    
     os.chdir(tmpdir)
     with open('gridA.pdb','w') as f:
         f.write("".join(gridA))
     with open('gridB.pdb','w') as f:
         f.write("".join(gridB))
-    
+    #print("".join(gridA))    
+    #sys.exit()
 #    gridA=[p[13:27] for p in grid[chains[0]]]
     #print(grid[chains[0]])
-    chain1=fix_his(pdb_data['pdb_chains'][chains[0]])
-    chain2=fix_his(pdb_data['pdb_chains'][chains[1]])
+    chain1=fix_his(pdb_data['pdb_chains'][A])
+    chain2=fix_his(pdb_data['pdb_chains'][B])
     pdb1=rename_nc_terminals(chain1)
     pdb1_dummy=dummy_pdb(chain1)
     pdb2=rename_nc_terminals(chain2)
@@ -596,8 +676,6 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
     _,coords=get_coords(pdb_data['pdb_str'],exclude='nothing') #to reproduce previous hydrogens included
     gsz=_maxdist(coords)+25
-    #gsz=_maxdist(pdb_data['pdb_coords'][1])+25 #exclude hydrogen in coords.
-    #print(gsz)
     gsz=int(float(gsz))
     gauss=0
     if gauss_delphi:
@@ -634,6 +712,7 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     
     #os.system('cp * /home/x_bjowa/proj/local/ProQDock/foo100/')
     #sys.exit()
+    #print(EC)
     os.chdir(cwd)
     return EC
 
@@ -819,9 +898,10 @@ def calc_nBSA(pdb_data):
 
 def calc_Fintres(pdb_data):
     logging.info(f'Calculating Fintres')
-    total_residues=len(set([atom.split()[-1] for atom in read_asa(pdb_data['asa_pdb_str']).keys()]))
-    res_interface_A=len(set([atom.split()[-1] for atom in pdb_data['interface_A']]))
-    res_interface_B=len(set([atom.split()[-1] for atom in pdb_data['interface_B']]))
+#    total_residues=len(set([atom.split()[-1] for atom in read_asa(pdb_data['asa_pdb_str']).keys()]))
+    total_residues=len(set([atom_record[1:] for atom_record in read_asa(pdb_data['asa_pdb_str']).keys()])) #atom_record = tuple(atom,res,resnum,chain)
+    res_interface_A=len(set([atom_record[1:] for atom_record in pdb_data['interface_A']]))
+    res_interface_B=len(set([atom_record[1:] for atom_record in pdb_data['interface_B']]))
     
     Fintres=(res_interface_A+res_interface_B)/total_residues
     #logging.info(f'{total_residues} {res_interface_A} {res_interface_B} {Fintres}')
@@ -880,8 +960,11 @@ def main(argv):
 
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
-
+        features['CPscore']=calc_CPscore(pdb_data,tmpdir)
+        sys.exit()
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
+
+
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
         features['Ld']=calc_Ld(pdb_data,tmpdir)
