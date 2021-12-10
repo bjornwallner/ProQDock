@@ -5,8 +5,7 @@
 cd EXEC
 #rm -f *.exe
 #rm -f EXEC/*.exe
-gfortan accall.f -o accall.exe
-gfortan contpref20CB.f -o contpref20CB.exe
+gfortran accall.f -o accall.exe
 cd ..
 
 echo "Compiling EDTsurf"

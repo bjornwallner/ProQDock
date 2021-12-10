@@ -399,6 +399,7 @@ def remove_hydrogen(pdb_str):
 def calc_Sc(pdb_data,tmpdir,sc_path):
     logging.info('Starting Sc calculation')
     run_sc=os.path.join(tmpdir,'run_sc')
+    run_sc_env=os.path.join(tmpdir,'run_sc_env')
     pdb=os.path.join(tmpdir,'input.pdb')
     with open(pdb,'w') as f:
         f.write(remove_hydrogen(pdb_data['pdb_str']))
@@ -407,12 +408,14 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
     ccp4base=os.path.dirname(os.path.dirname(sc_path))
     ccplib=os.path.join(ccp4base,'lib','data')
     ccpinclude=os.path.join(ccp4base,'include')
-    with open(run_sc,'w') as f:
+    
+    with open(run_sc_env,'w') as f:
         f.write(f'#!/bin/bash\n')
         f.write(f'export CCP4_SCR={tmpdir}\n')
         f.write(f'export CLIBD={ccplib}\n')
         f.write(f'export CINCL={ccpinclude}\n')
-        
+    with open(run_sc,'w') as f:
+        f.write(f'#!/bin/bash\n')
         f.write(f'{sc_path} XYZIN {pdb} <<eof\n')
         f.write(f'MOLECULE 1\n')
         f.write(f'CHAIN {chains[0]}\n')
@@ -421,8 +424,18 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         f.write(f'END\n')
         f.write(f'eof\n')
 
-    Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
-    Sc=float(Sc.split()[-1])
+    try:
+        Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+        Sc=float(Sc.split()[-1])
+    except:
+        logging.info('Failed Sc, will try setting the default environment')
+    try:
+        Sc=subprocess.check_output(f"source {run_sc_env};source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+        Sc=float(Sc.split()[-1])
+    except:
+        logging.info('Failed Sc, with the the default environment make use you can run {sc_path} in the terminal')
+        
+    
     return(Sc)
 
 
