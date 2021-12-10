@@ -436,6 +436,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
     try:
         Sc=subprocess.check_output(f"source {run_sc_env};source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
         Sc=float(Sc.split()[-1])
+        logging.info('Sc seemed to have worked...')
     except:
         logging.info('Failed Sc, with the the default environment make sure you can run {sc_path} in the terminal')
         sys.exit()
