@@ -406,7 +406,7 @@ def get_Sc(output):
         
     
     
-def calc_Sc(pdb_data,tmpdir,sc_path):
+def calc_Sc(pdb_data,tmpdir,sc_bin):
     logging.info('Starting Sc calculation')
     run_sc=os.path.join(tmpdir,'run_sc')
     run_sc_env=os.path.join(tmpdir,'run_sc_env')
@@ -415,8 +415,8 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         f.write(remove_hydrogen(pdb_data['pdb_str']))
     
     chains=pdb_data['chains'] #sorted(pdb_data['pdb_chains'].keys())
-    sc_bin=os.path.join(sc_path,'sc')
-    ccp4base=os.path.dirname(os.path.dirname(sc_bin))
+    sc_path=os.path.dirname(sc_bin)
+    ccp4base=os.path.dirname(os.path.dirname(sc_path))
     ccplib=os.path.join(ccp4base,'lib','data')
     ccpinclude=os.path.join(ccp4base,'include')
     
