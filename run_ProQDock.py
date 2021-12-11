@@ -884,7 +884,7 @@ def calc_ProQ2(pdb_str,fasta,tmpdir,proqpath,rosetta_path):
     (exitcode,output)=subprocess.getstatusoutput(f"{run_proq2_cmd}")#.decode('UTF-8').strip()
     if exitcode==0:
         proq2output=os.path.join(tmpdir,'input.pdb.ProQ2')
-        (exitcode,proq2)=subprocess.getstatusoutput(f"cat {proq2output} | tail -n 1")#.decode('UTF-8').strip()
+        (exitcode,score)=subprocess.getstatusoutput(f"cat {proq2output} | tail -n 1")#.decode('UTF-8').strip()
         proq2=float(score)/n_residues
         #print(score,n_residues)
         return(proq2)       
