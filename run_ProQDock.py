@@ -416,7 +416,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
     
     chains=pdb_data['chains'] #sorted(pdb_data['pdb_chains'].keys())
     sc_bin=os.path.join(sc_path,'sc')
-    ccp4base=os.path.dirname(os.path.dirname(sc_path))
+    ccp4base=os.path.dirname(os.path.dirname(sc_bin))
     ccplib=os.path.join(ccp4base,'lib','data')
     ccpinclude=os.path.join(ccp4base,'include')
     
