@@ -415,6 +415,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         f.write(remove_hydrogen(pdb_data['pdb_str']))
     
     chains=pdb_data['chains'] #sorted(pdb_data['pdb_chains'].keys())
+    sc_bin=os.path.dirname(sc_path,'sc')
     ccp4base=os.path.dirname(os.path.dirname(sc_path))
     ccplib=os.path.join(ccp4base,'lib','data')
     ccpinclude=os.path.join(ccp4base,'include')
@@ -427,7 +428,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
     with open(run_sc,'w') as f:
         f.write(f'#!/bin/bash\n')
         f.write(f'export CCP4_SCR={tmpdir}\n')
-        f.write(f'{sc_path} XYZIN {pdb} <<eof\n')
+        f.write(f'{sc_bin} XYZIN {pdb} <<eof\n')
         f.write(f'MOLECULE 1\n')
         f.write(f'CHAIN {chains[0]}\n')
         f.write(f'MOLECULE 2\n')
@@ -703,6 +704,7 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
         f.write(pdb_data['pdb_str'])
     
     delphi_script=os.path.join(PATH,'EXEC','generateprm26.pl')
+    delphi_bin=os.path.join(delphi_path,'delphi95')
     _,coords=get_coords(pdb_data['pdb_str'],exclude='nothing') #to reproduce previous hydrogens included
     gsz=_maxdist(coords)+25
     gsz=int(float(gsz))
@@ -715,11 +717,11 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     os.symlink(amber_dummy,os.path.basename(amber_dummy))
     logging.info(f'Running Delphi for gridA using {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridA.pdb outmod1.pdb outsurf11.pot {gsz} {gauss}'
-    cmd2=f'{delphi_path} script.prm > log11;rm -f ARCDAT'
+    cmd2=f'{delphi_bin} script.prm > log11;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
     cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridA.pdb outmod2.pdb outsurf21.pot {gsz} {gauss}'
-    cmd2=f'{delphi_path} script.prm > log21;rm -f ARCDAT'
+    cmd2=f'{delphi_bin} script.prm > log21;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
     corr1=EC_corr('outsurf11.pot','outsurf21.pot')
@@ -727,11 +729,11 @@ def calc_EC(pdb_data,tmpdir,delphi_path=None,diel=False,gauss_delphi=False):
     
     logging.info(f'Running Delphi for gridB using {delphi_path}')
     cmd=f'{delphi_script} {tmpdir} A_maskedB.pdb gridB.pdb outmod1.pdb outsurf12.pot {gsz} {gauss}'
-    cmd2=f'{delphi_path} script.prm > log12;rm -f ARCDAT'
+    cmd2=f'{delphi_bin} script.prm > log12;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
     cmd=f'{delphi_script} {tmpdir} maskedA_B.pdb gridB.pdb outmod2.pdb outsurf22.pot {gsz} {gauss}'
-    cmd2=f'{delphi_path} script.prm > log22;rm -f ARCDAT'
+    cmd2=f'{delphi_bin} script.prm > log22;rm -f ARCDAT'
     os.system(cmd)
     os.system(cmd2)
     corr2=EC_corr('outsurf12.pot','outsurf22.pot')
