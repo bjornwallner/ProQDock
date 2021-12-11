@@ -433,7 +433,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         f.write(f'END\n')
         f.write(f'eof\n')
 
-    (exitcode,output)=subprocess.getstatusoutput(f"source {run_sc}",stderr=subprocess.STDOUT)#.decode('UTF-8').strip()
+    (exitcode,output)=subprocess.getstatusoutput(f"source {run_sc}")#.decode('UTF-8').strip()
 
     
     #Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
@@ -450,7 +450,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
                 line=line.rstrip()
                 logging.info(f'{line}')
                 
-    (exitcode,output)=subprocess.getstatusoutput(f"source {run_sc_env};source {run_sc}",stderr=subprocess.STDOUT)#.decode('UTF-8').strip()
+    (exitcode,output)=subprocess.getstatusoutput(f"source {run_sc_env};source {run_sc}")#.decode('UTF-8').strip()
     if exicode==0:
         #        Sc=subprocess.check_output(f"source {run_sc_env};source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
         #Sc=float(Sc.split()[-1])
