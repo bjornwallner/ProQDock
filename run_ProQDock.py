@@ -437,7 +437,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
 
     
     #Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
-    if exicode==0:
+    if exitcode==0:
         Sc=get_Sc(output)
        # Sc=float(Sc.split()[-1])
         return(Sc)
@@ -980,7 +980,7 @@ def main(argv):
 
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
-
+        features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
