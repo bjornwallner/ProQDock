@@ -436,7 +436,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         f.write(f'END\n')
         f.write(f'eof\n')
 
-    os.system(f'cat {run_sc}')
+#    os.system(f'cat {run_sc}')
     (exitcode,output)=subprocess.getstatusoutput(f"chmod a+x {run_sc};{run_sc}")#.decode('UTF-8').strip()
 
     
@@ -879,10 +879,23 @@ def calc_ProQ2(pdb_str,fasta,tmpdir,proqpath,rosetta_path):
     residues=[line for line in pdb_str.split('\n') if ' CA ' in line]
     n_residues=len(residues)
     cmd=f'cd {tmpdir};{proq} input.pdb {proqpath} {rosetta_path} {fasta_abspath} &> /dev/null;cat input.pdb.ProQ2|tail -n 1'
-    score=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').split()[1]
-    proq2=float(score)/n_residues
-    #print(score,n_residues)
-    return(proq2)       
+    run_proq2_cmd=f'cd {tmpdir};{proq} input.pdb {proqpath} {rosetta_path} {fasta_abspath}' #&> /dev/null;cat input.pdb.ProQ2|tail -n 1'
+    #score=subprocess.check_output(f'{cmd}', shell=True,stderr=subprocess.STDOUT).decode('UTF-8').split()[1]
+    (exitcode,output)=subprocess.getstatusoutput(f"{run_proq2_cmd}")#.decode('UTF-8').strip()
+    if exitcode==0:
+        proq2output=os.path.join(tmpdir,'input.pdb.ProQ2')
+        (exitcode,proq2)=subprocess.getstatusoutput(f"cat {proq2output} | tail -n 1")#.decode('UTF-8').strip()
+        proq2=float(score)/n_residues
+        #print(score,n_residues)
+        return(proq2)       
+    else:
+        print(exitcode)
+        print(output)
+        logging.info('ProQ2 failed')
+        sys.exit()
+    
+    
+    
 
 def calc_ProQDock(features,tmpdir):
     logging.info('Calculating ProQDock score')
