@@ -445,6 +445,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         logging.info(f'Failed Sc, will try setting the default environment based on location of {sc_path}')
         print('exitcode',exitcode)
         print(output)
+        logging.info('ENV VARIABLES:')
         with open(run_sc_env,'r') as f:
             for line in f:
                 line=line.rstrip()
@@ -455,7 +456,8 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         #        Sc=subprocess.check_output(f"source {run_sc_env};source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
         #Sc=float(Sc.split()[-1])
         Sc=get_Sc(output)
-        logging.info('Sc seemed to have worked...')
+        
+        logging.info(f'Sc seemed to have worked... {Sc}')
         return(Sc)
     else:
 #    except:
@@ -982,7 +984,6 @@ def main(argv):
     with tempfile.TemporaryDirectory() as tmpdir:
         features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
-        features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
         features['Ld']=calc_Ld(pdb_data,tmpdir)
         features['nBSA']=calc_nBSA(pdb_data) 
