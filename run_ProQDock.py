@@ -397,7 +397,7 @@ def remove_hydrogen(pdb_str):
         
 
 def get_Sc(output):
-    print(output)
+    #print(output)
     match=re.search('Sc =\s+(\S+)',output)
     if match:
         return float(match.group(1))
@@ -421,11 +421,12 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
     
     with open(run_sc_env,'w') as f:
         f.write(f'#!/bin/bash\n')
-        f.write(f'export CCP4_SCR={tmpdir}\n')
+
         f.write(f'export CLIBD={ccplib}\n')
         f.write(f'export CINCL={ccpinclude}\n')
     with open(run_sc,'w') as f:
         f.write(f'#!/bin/bash\n')
+        f.write(f'export CCP4_SCR={tmpdir}\n')
         f.write(f'{sc_path} XYZIN {pdb} <<eof\n')
         f.write(f'MOLECULE 1\n')
         f.write(f'CHAIN {chains[0]}\n')
@@ -434,6 +435,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         f.write(f'END\n')
         f.write(f'eof\n')
 
+    os.system(f'cat {run_sc}')
     (exitcode,output)=subprocess.getstatusoutput(f"source {run_sc}")#.decode('UTF-8').strip()
 
     
