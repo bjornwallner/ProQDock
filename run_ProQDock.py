@@ -438,7 +438,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         Sc=float(Sc.split()[-1])
         logging.info('Sc seemed to have worked...')
     except:
-        logging.info('Failed Sc, with the the default environment make sure you can run {sc_path} in the terminal')
+        logging.info(f'Failed Sc, with the the default environment make sure you can run {sc_path} in the terminal')
         sys.exit()
     
     return(Sc)
