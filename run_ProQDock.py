@@ -1001,8 +1001,16 @@ def main(argv):
 
     features={}
     with tempfile.TemporaryDirectory() as tmpdir:
-        features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
+        AFmode=''
+        if FLAGS.AF:
+            features['ProQ2']=get_quality_from_B_factor(pdb_data['pdb_str']) #average plldt
+            AFmode='note: in AF mode (experimental)'
+        else:
+            features['ProQ2']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
+            
+        
         features['EC']=calc_EC(pdb_data,tmpdir,delphi_path=FLAGS.delphi_path,diel=FLAGS.diel,gauss_delphi=FLAGS.gauss)
+        features['Sc']=calc_Sc(pdb_data,tmpdir,FLAGS.sc_path)
         features['rGb']=calc_rGb(pdb_data)
         features['Ld']=calc_Ld(pdb_data,tmpdir)
         features['nBSA']=calc_nBSA(pdb_data) 
@@ -1012,12 +1020,13 @@ def main(argv):
         Rterms=calc_rosetta_terms(pdb_data['pdb_str'],tmpdir,rosetta_path,rosetta_db)
         features.update(Rterms)
 
-        AFmode=''
-        if FLAGS.AF:
-            features['ProQ2']=get_quality_from_B_factor(pdb_data['pdb_str']) #average plldt
-            AFmode='note: in AF mode (experimental)'
-        else:
-            features['ProQ2']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
+        
+        #AFmode=''
+        #if FLAGS.AF:
+        #    features['ProQ2']=get_quality_from_B_factor(pdb_data['pdb_str']) #average plldt
+        #    AFmode='note: in AF mode (experimental)'
+        #else:
+        #    features['ProQ2']=calc_ProQ2(pdb_data['pdb_str'],fasta,tmpdir,FLAGS.proqpath,rosetta_path)
 
         ProQDock=calc_ProQDock(features,tmpdir)
 
