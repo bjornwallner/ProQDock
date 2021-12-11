@@ -888,7 +888,9 @@ def calc_ProQ2(pdb_str,fasta,tmpdir,proqpath,rosetta_path):
         with open(proq2output,'r') as f:
             for line in f.readlines():
                 if line.startswith('SCORE'):
+                    print(line)
                     score=line.split()[1]
+                    print(score)
                     proq2=float(score)/n_residues
                     #print(score,n_residues)
                     return(proq2)       
