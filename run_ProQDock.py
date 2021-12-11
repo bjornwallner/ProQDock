@@ -436,7 +436,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         f.write(f'END\n')
         f.write(f'eof\n')
 
-    #os.system(f'cat {run_sc}')
+    os.system(f'cat {run_sc}')
     (exitcode,output)=subprocess.getstatusoutput(f"chmod a+x {run_sc};{run_sc}")#.decode('UTF-8').strip()
 
     
