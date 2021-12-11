@@ -451,7 +451,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
                 logging.info(f'{line}')
                 
     (exitcode,output)=subprocess.getstatusoutput(f"source {run_sc_env};source {run_sc}")#.decode('UTF-8').strip()
-    if exicode==0:
+    if exitcode==0:
         #        Sc=subprocess.check_output(f"source {run_sc_env};source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
         #Sc=float(Sc.split()[-1])
         Sc=get_Sc(output)
