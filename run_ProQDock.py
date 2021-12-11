@@ -397,6 +397,7 @@ def remove_hydrogen(pdb_str):
         
 
 def get_Sc(output):
+    print(output)
     match=re.match('Sc = (\S+)',output)
     if match:
         return float(match.group(1))
