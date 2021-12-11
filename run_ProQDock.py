@@ -446,7 +446,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
        # Sc=float(Sc.split()[-1])
         return(Sc)
     else:
-        logging.info(f'Failed Sc, will try setting the default environment based on location of {sc_path}')
+        logging.info(f'Failed Sc, will try setting the default environment based on location of {sc_bin}')
         
         print('exitcode',exitcode)
         print(output)
@@ -468,7 +468,7 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
 #    except:
         print('exitcode',exitcode)
         print(output)
-        logging.info(f'Failed Sc, with the the default environment make sure you can run {sc_path} in the terminal')
+        logging.info(f'Failed Sc, with the the default environment make sure you can run {sc_bin} in the terminal')
         sys.exit()
     
     return(Sc)
