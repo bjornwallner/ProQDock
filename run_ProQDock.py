@@ -395,6 +395,15 @@ def remove_hydrogen(pdb_str):
             pdb_lines.append(line+'\n')
     return "".join(pdb_lines)
         
+
+def get_Sc(output):
+    re.match('Sc = (\S+)')
+    if match:
+        return float(match.group(1))
+    else:
+        return None
+        
+    
     
 def calc_Sc(pdb_data,tmpdir,sc_path):
     logging.info('Starting Sc calculation')
@@ -424,20 +433,34 @@ def calc_Sc(pdb_data,tmpdir,sc_path):
         f.write(f'END\n')
         f.write(f'eof\n')
 
-    try:
-        Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
-        Sc=float(Sc.split()[-1])
-    except:
+    (exitcode,output)=subprocess.getstatusoutput(f"source {run_sc}",stderr=subprocess.STDOUT)#.decode('UTF-8').strip()
+
+    
+    #Sc=subprocess.check_output(f"source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+    if exicode==0:
+        Sc=get_Sc(output)
+       # Sc=float(Sc.split()[-1])
+        return(Sc)
+    else:
         logging.info(f'Failed Sc, will try setting the default environment based on location of {sc_path}')
+        print('exitcode',exitcode)
+        print(output)
         with open(run_sc_env,'r') as f:
             for line in f:
                 line=line.rstrip()
                 logging.info(f'{line}')
-    try:
-        Sc=subprocess.check_output(f"source {run_sc_env};source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
-        Sc=float(Sc.split()[-1])
+                
+    (exitcode,output)=subprocess.getstatusoutput(f"source {run_sc_env};source {run_sc}",stderr=subprocess.STDOUT)#.decode('UTF-8').strip()
+    if exicode==0:
+        #        Sc=subprocess.check_output(f"source {run_sc_env};source {run_sc}|grep 'Sc ='", shell=True,stderr=subprocess.STDOUT).decode('UTF-8').strip()
+        #Sc=float(Sc.split()[-1])
+        Sc=get_Sc(output)
         logging.info('Sc seemed to have worked...')
-    except:
+        return(Sc)
+    else:
+#    except:
+        print('exitcode',exitcode)
+        print(output)
         logging.info(f'Failed Sc, with the the default environment make sure you can run {sc_path} in the terminal')
         sys.exit()
     
